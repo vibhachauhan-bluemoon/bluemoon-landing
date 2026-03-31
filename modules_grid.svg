@@ -1,0 +1,66 @@
+<svg width="640" height="480" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg">
+  <rect width="640" height="480" fill="#050505"/>
+  <!-- Grid background -->
+  <rect x="80" y="80" width="480" height="320" rx="24" fill="#0A0B10" stroke="rgba(255,255,255,0.1)"/>
+  <!-- Cell positions -->
+  <!-- Row 1 -->
+  <g transform="translate(110,110)">
+    <!-- Genetics -->
+    <rect width="150" height="100" rx="16" fill="#0A0B10" stroke="rgba(0,240,255,0.4)"/>
+    <circle cx="32" cy="50" r="18" fill="rgba(0,240,255,0.1)"/>
+    <path d="M26 38 C36 46 22 54 32 62" stroke="#00f0ff" stroke-width="2" fill="none"/>
+    <path d="M32 38 C22 46 36 54 26 62" stroke="#00f0ff" stroke-width="2" fill="none"/>
+    <text x="70" y="48" font-size="12" fill="#ffffff" font-family="system-ui">Genetic</text>
+    <text x="70" y="64" font-size="11" fill="#a1a1aa" font-family="system-ui">contributors</text>
+  </g>
+  <g transform="translate(310,110)">
+    <!-- Immune -->
+    <rect width="150" height="100" rx="16" fill="#0A0B10" stroke="rgba(163,113,247,0.4)"/>
+    <circle cx="32" cy="50" r="18" fill="rgba(163,113,247,0.1)"/>
+    <circle cx="32" cy="50" r="10" fill="none" stroke="#a371f7" stroke-width="2"/>
+    <circle cx="32" cy="50" r="3" fill="#a371f7"/>
+    <circle cx="46" cy="44" r="3" fill="#a371f7"/>
+    <circle cx="22" cy="60" r="3" fill="#a371f7"/>
+    <text x="70" y="48" font-size="12" fill="#ffffff" font-family="system-ui">Inflammation</text>
+    <text x="70" y="64" font-size="11" fill="#a1a1aa" font-family="system-ui">&amp; immune</text>
+  </g>
+  <!-- Row 2 -->
+  <g transform="translate(110,230)">
+    <!-- Hormonal -->
+    <rect width="150" height="100" rx="16" fill="#0A0B10" stroke="rgba(248,113,113,0.4)"/>
+    <circle cx="32" cy="50" r="18" fill="rgba(248,113,113,0.1)"/>
+    <path d="M20 55 C26 40 38 40 44 55" stroke="#f87171" stroke-width="2" fill="none"/>
+    <circle cx="32" cy="44" r="4" fill="#f87171"/>
+    <text x="70" y="48" font-size="12" fill="#ffffff" font-family="system-ui">Hormonal</text>
+    <text x="70" y="64" font-size="11" fill="#a1a1aa" font-family="system-ui">&amp; metabolic</text>
+  </g>
+  <g transform="translate(310,230)">
+    <!-- Neural -->
+    <rect width="150" height="100" rx="16" fill="#0A0B10" stroke="rgba(255,255,255,0.4)"/>
+    <circle cx="32" cy="50" r="18" fill="rgba(255,255,255,0.1)"/>
+    <circle cx="24" cy="44" r="3" fill="#ffffff"/>
+    <circle cx="40" cy="44" r="3" fill="#ffffff"/>
+    <circle cx="32" cy="58" r="3" fill="#ffffff"/>
+    <line x1="24" y1="44" x2="40" y2="44" stroke="#ffffff" stroke-width="2"/>
+    <line x1="24" y1="44" x2="32" y2="58" stroke="#ffffff" stroke-width="2"/>
+    <line x1="40" y1="44" x2="32" y2="58" stroke="#ffffff" stroke-width="2"/>
+    <text x="70" y="48" font-size="12" fill="#ffffff" font-family="system-ui">Neural</text>
+    <text x="70" y="64" font-size="11" fill="#a1a1aa" font-family="system-ui">circuits</text>
+  </g>
+  <!-- Row 3 -->
+  <g transform="translate(110,350)">
+    <!-- Treatment -->
+    <rect width="150" height="80" rx="16" fill="#0A0B10" stroke="rgba(255,255,255,0.1)"/>
+    <rect x="18" y="38" width="28" height="10" rx="5" fill="#f87171"/>
+    <rect x="32" y="34" width="28" height="10" rx="5" fill="rgba(248,113,113,0.4)"/>
+    <text x="70" y="52" font-size="12" fill="#ffffff" font-family="system-ui">Treatment</text>
+  </g>
+  <g transform="translate(310,350)">
+    <!-- Context -->
+    <rect width="150" height="80" rx="16" fill="#0A0B10" stroke="rgba(255,255,255,0.1)"/>
+    <circle cx="32" cy="48" r="14" fill="rgba(255,255,255,0.1)"/>
+    <circle cx="32" cy="44" r="4" fill="#a1a1aa"/>
+    <path d="M24 56 C26 52 28 50 32 50 C36 50 38 52 40 56" stroke="#a1a1aa" stroke-width="2" fill="none"/>
+    <text x="70" y="52" font-size="12" fill="#ffffff" font-family="system-ui">Context</text>
+  </g>
+</svg>

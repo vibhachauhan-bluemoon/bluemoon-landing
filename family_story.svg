@@ -1,0 +1,24 @@
+<svg width="640" height="360" viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="halo" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="rgba(0,240,255,0.2)"/>
+      <stop offset="100%" stop-color="#050505"/>
+    </radialGradient>
+  </defs>
+  <rect width="640" height="360" fill="#050505"/>
+  <circle cx="320" cy="160" r="140" fill="url(#halo)"/>
+  <!-- Parent silhouette -->
+  <g transform="translate(260,150)">
+    <circle cx="40" cy="0" r="22" fill="#00f0ff"/>
+    <path d="M18 40 C22 20 58 20 62 40 L62 90 L18 90 Z" fill="#00f0ff"/>
+  </g>
+  <!-- Teen silhouette -->
+  <g transform="translate(340,170)">
+    <circle cx="20" cy="-4" r="16" fill="#a371f7"/>
+    <path d="M6 26 C8 12 32 12 34 26 L34 70 L6 70 Z" fill="#a371f7"/>
+  </g>
+  <!-- Ground -->
+  <rect x="140" y="240" width="360" height="6" rx="3" fill="rgba(255,255,255,0.2)"/>
+  <!-- Subtle layered motif -->
+  <path d="M180 260 C220 250 260 270 300 260 C340 250 380 270 420 260" stroke="rgba(255,255,255,0.1)" stroke-width="2" fill="none"/>
+</svg>

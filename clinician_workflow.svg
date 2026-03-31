@@ -1,0 +1,30 @@
+<svg width="640" height="260" viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg">
+  <rect width="640" height="260" fill="#050505"/>
+  <!-- Step 1 -->
+  <rect x="60" y="70" width="140" height="120" rx="18" fill="#0A0B10" stroke="rgba(255,255,255,0.1)"/>
+  <circle cx="130" cy="96" r="14" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="130" cy="92" r="4" fill="#a1a1aa"/>
+  <path d="M120 108 C122 102 124 100 130 100 C136 100 138 102 140 108" stroke="#a1a1aa" stroke-width="2" fill="none"/>
+  <text x="90" y="150" font-size="12" fill="#ffffff" font-family="system-ui">Patient</text>
+  <text x="90" y="166" font-size="12" fill="#a1a1aa" font-family="system-ui">history</text>
+  <!-- Arrow 1 -->
+  <path d="M200 130 H250" stroke="#00f0ff" stroke-width="3" fill="none"/>
+  <path d="M246 126 L254 130 L246 134" fill="#00f0ff"/>
+  <!-- Step 2 -->
+  <rect x="260" y="70" width="140" height="120" rx="18" fill="#0A0B10" stroke="rgba(255,255,255,0.1)"/>
+  <circle cx="330" cy="104" r="18" fill="rgba(0,240,255,0.1)"/>
+  <path d="M324 92 C334 100 320 108 330 116" stroke="#00f0ff" stroke-width="2" fill="none"/>
+  <path d="M330 92 C320 100 334 108 324 116" stroke="#00f0ff" stroke-width="2" fill="none"/>
+  <text x="285" y="150" font-size="12" fill="#ffffff" font-family="system-ui">Biological</text>
+  <text x="285" y="166" font-size="12" fill="#a1a1aa" font-family="system-ui">context</text>
+  <!-- Arrow 2 -->
+  <path d="M400 130 H450" stroke="#00f0ff" stroke-width="3" fill="none"/>
+  <path d="M446 126 L454 130 L446 134" fill="#00f0ff"/>
+  <!-- Step 3 -->
+  <rect x="460" y="70" width="140" height="120" rx="18" fill="#0A0B10" stroke="rgba(255,255,255,0.1)"/>
+  <circle cx="500" cy="104" r="10" fill="rgba(255,255,255,0.2)"/>
+  <circle cx="540" cy="104" r="10" fill="rgba(255,255,255,0.2)"/>
+  <line x1="510" y1="104" x2="530" y2="104" stroke="#ffffff" stroke-width="2"/>
+  <text x="480" y="150" font-size="12" fill="#ffffff" font-family="system-ui">Shared</text>
+  <text x="480" y="166" font-size="12" fill="#a1a1aa" font-family="system-ui">decisions</text>
+</svg>

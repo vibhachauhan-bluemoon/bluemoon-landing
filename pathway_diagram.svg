@@ -1,0 +1,26 @@
+<svg width="640" height="360" viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg">
+  <rect width="640" height="360" fill="#050505"/>
+  <rect x="60" y="60" width="520" height="240" rx="24" fill="#0A0B10" stroke="rgba(255,255,255,0.1)"/>
+  <!-- Converging node -->
+  <circle cx="420" cy="180" r="26" fill="#ffffff"/>
+  <circle cx="420" cy="180" r="18" fill="#0A0B10"/>
+  <path d="M412 176 L420 188 L428 176" stroke="#ffffff" stroke-width="2" fill="none"/>
+  <!-- Path 1: Genetics -->
+  <circle cx="160" cy="110" r="18" fill="rgba(0,240,255,0.1)" stroke="#00f0ff"/>
+  <path d="M178 110 C230 110 280 130 330 150 C360 162 390 170 410 176"
+        stroke="#00f0ff" stroke-width="3" fill="none"/>
+  <text x="130" y="90" font-size="12" fill="#ffffff" font-family="system-ui">Genetic</text>
+  <!-- Path 2: Immune -->
+  <circle cx="160" cy="180" r="18" fill="rgba(163,113,247,0.1)" stroke="#a371f7"/>
+  <path d="M178 180 C230 180 280 180 330 180 C360 180 390 180 410 180"
+        stroke="#a371f7" stroke-width="3" fill="none"/>
+  <text x="120" y="200" font-size="12" fill="#ffffff" font-family="system-ui">Immune</text>
+  <!-- Path 3: Neural -->
+  <circle cx="160" cy="250" r="18" fill="rgba(248,113,113,0.1)" stroke="#f87171"/>
+  <path d="M178 250 C230 250 280 230 330 210 C360 198 390 190 410 184"
+        stroke="#f87171" stroke-width="3" fill="none"/>
+  <text x="125" y="272" font-size="12" fill="#ffffff" font-family="system-ui">Neural</text>
+  <!-- Labels -->
+  <text x="390" y="230" font-size="12" fill="#a1a1aa" font-family="system-ui">Converging</text>
+  <text x="380" y="246" font-size="12" fill="#a1a1aa" font-family="system-ui">biological insight</text>
+</svg>

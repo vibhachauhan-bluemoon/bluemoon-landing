@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>BlueMoonBio | Patient Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="BlueMoonBio illuminates the biology behind mood, anxiety, and treatment response with precision mental health insights."
+  />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: #ffffff;
+      background-color: #030407;
+      line-height: 1.5;
+    }
+    a { color: inherit; text-decoration: none; transition: 0.2s all; }
+    a:hover { color: #00f0ff; }
+    header, main, footer { max-width: 1120px; margin: 0 auto; padding: 1.5rem; }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+    }
+    .nav-left { font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #fff; }
+    .nav-right a { margin-left: 1.25rem; font-size: 0.9rem; opacity: 0.85; }
+    .hero {
+      padding: 3rem 0 2.5rem;
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      gap: 2.5rem;
+      align-items: center;
+    }
+    .hero-title {
+      font-size: clamp(2.2rem, 3vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+    .hero-subtitle {
+      font-size: 1.05rem;
+      max-width: 34rem;
+      color: #a1a1aa;
+      margin-bottom: 1.75rem;
+    }
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .btn-primary, .btn-secondary {
+      padding: 0.7rem 1.4rem;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border: 1px solid transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-primary {
+      background: #00f0ff;
+      color: #000;
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+    }
+    .btn-secondary {
+      background: rgba(0, 240, 255, 0.05);
+      color: #00f0ff;
+      border-color: #00f0ff;
+    }
+    .hero-tagline {
+      font-size: 0.9rem;
+      color: #a1a1aa;
+      max-width: 26rem;
+    }
+    .hero-panel {
+      background: #0A0B10;
+      border: 1px solid rgba(255,255,255,0.05);
+      color: #e5e7eb;
+      border-radius: 1.25rem;
+      padding: 1.75rem 1.5rem;
+    }
+    .hero-panel-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #00f0ff;
+      margin-bottom: 0.75rem;
+    }
+    .hero-panel-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.75rem;
+    }
+    .hero-panel-body {
+      font-size: 0.9rem;
+      color: #a1a1aa;
+      margin-bottom: 1.25rem;
+    }
+    .hero-panel-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 0.85rem;
+      color: #a1a1aa;
+    }
+    .hero-panel-list li {
+      margin-bottom: 0.4rem;
+    }
+    .section {
+      padding: 4.5rem 0;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .section-header {
+      max-width: 40rem;
+      margin-bottom: 1.75rem;
+    }
+    .section-kicker {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #00f0ff;
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+    .section-body {
+      font-size: 0.98rem;
+      color: #a1a1aa;
+    }
+    .three-columns {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    .card {
+      background: #0A0B10;
+      border-radius: 0.9rem;
+      border: 1px solid rgba(255,255,255,0.05);
+      padding: 1.5rem;
+    }
+    .card-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #00f0ff;
+      margin-bottom: 0.4rem;
+    }
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.4rem;
+    }
+    .card-body {
+      font-size: 0.9rem;
+      color: #a1a1aa;
+    }
+    .segmentation {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.25rem;
+      margin-top: 1.5rem;
+    }
+    .seg-card {
+      border-radius: 0.9rem;
+      border: 1px solid rgba(255,255,255,0.05);
+      padding: 1.1rem 1.2rem;
+      background: #0A0B10;
+    }
+    .seg-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.3rem;
+    }
+    .seg-body {
+      font-size: 0.88rem;
+      color: #a1a1aa;
+      margin-bottom: 0.6rem;
+    }
+    .seg-link {
+      font-size: 0.85rem;
+      color: #00f0ff;
+      font-weight: 500;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 2rem;
+      align-items: flex-start;
+    }
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1.25rem;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      background: rgba(0, 240, 255, 0.1);
+      color: #00f0ff;
+      margin-right: 0.4rem;
+      margin-bottom: 0.4rem;
+    }
+    .story {
+      background: #0A0B10;
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #e5e7eb;
+      border-radius: 1.25rem;
+      padding: 1.75rem 1.5rem;
+      margin-top: 1.5rem;
+    }
+    .story-kicker {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #00f0ff;
+      margin-bottom: 0.5rem;
+    }
+    .story-quote {
+      font-size: 0.98rem;
+      margin-bottom: 0.9rem;
+      color: #fff;
+    }
+    .story-meta {
+      font-size: 0.8rem;
+      color: #a1a1aa;
+    }
+    .cred-list {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.25rem;
+      margin-top: 1.5rem;
+      font-size: 0.85rem;
+      color: #a1a1aa;
+    }
+    .cred-item-title {
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.25rem;
+      font-size: 0.9rem;
+    }
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding-top: 1.5rem;
+      padding-bottom: 2rem;
+      font-size: 0.8rem;
+      color: #a1a1aa;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: minmax(0, 1fr); }
+      .grid-2 { grid-template-columns: minmax(0, 1fr); }
+      .three-columns { grid-template-columns: minmax(0, 1fr); }
+      .segmentation { grid-template-columns: minmax(0, 1fr); }
+      .modules-grid { grid-template-columns: minmax(0, 1fr); }
+      .cred-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 640px) {
+      header, main, footer { padding: 1.25rem; }
+      .cred-list { grid-template-columns: minmax(0, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="nav">
+      <div class="nav-left">BlueMoonBio</div>
+      <div class="nav-right">
+        <a href="#why">Why biology</a>
+        <a href="#framework">How it works</a>
+        <a href="#audiences">Who we serve</a>
+        <a href="#modules">Insights</a>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div>
+        <h1 class="hero-title">
+          When someone you love is struggling, you deserve more than guesswork.
+        </h1>
+        <p class="hero-subtitle">
+          BlueMoonBio illuminates the biology behind mood, anxiety, and treatment response—so families and clinicians can move beyond trial‑and‑error toward more informed care decisions.
+        </p>
+        <div class="hero-ctas">
+          <a href="#audiences" class="btn-primary">For families</a>
+          <a href="#audiences" class="btn-secondary">For clinicians</a>
+        </div>
+        <p class="hero-tagline">
+          We translate complex genetic, immune, hormonal, and neural signals into clear, human‑readable insights that respect dignity and context.
+        </p>
+      </div>
+      <aside class="hero-panel">
+        <div class="hero-panel-label">Biological insight snapshot</div>
+        <div class="hero-panel-title">A layered view of what may be driving symptoms</div>
+        <p class="hero-panel-body">
+          Instead of a single score, BlueMoonBio surfaces converging signals—genetic contributors, inflammation, hormonal balance, and neural circuit patterns—to help explain why symptoms may be so hard to treat.
+        </p>
+        <ul class="hero-panel-list">
+          <li>• Genetic variants linked to mood and anxiety</li>
+          <li>• Immune and inflammatory stress markers</li>
+          <li>• Hormonal and metabolic context</li>
+          <li>• Pathways tied to emotional regulation</li>
+        </ul>
+      </aside>
+    </section>
+  </header>
+
+  <main>
+    <!-- WHY IT MATTERS -->
+    <section id="why" class="section">
+      <div class="section-header">
+        <div class="section-kicker">Why biology matters in mental health</div>
+        <h2 class="section-title">Mental health shouldn’t be a maze of trial‑and‑error.</h2>
+        <p class="section-body">
+          For many families, the path to care is a series of difficult guesses—new medications, new combinations, new side effects. Yet behind every symptom is a biological story: genes that shape sensitivity, immune signals that amplify stress, hormones that shift mood, and neural circuits that struggle to reset.
+          <br /><br />
+          BlueMoonBio brings these layers together, so the question is no longer “What do we try next?” but “What might be driving this, and where could we focus first?”
+        </p>
+      </div>
+      <div class="three-columns">
+        <div class="card">
+          <div class="card-label">From fragments</div>
+          <div class="card-title">Scattered data, unclear meaning</div>
+          <p class="card-body">
+            Lab results, family history, lived experience, and genetics often sit in separate silos. Each offers a clue, but rarely a coherent picture that families and clinicians can act on with confidence.
+          </p>
+        </div>
+        <div class="card">
+          <div class="card-label">To patterns</div>
+          <div class="card-title">Layered biological context</div>
+          <p class="card-body">
+            We integrate genetic, immune, hormonal, and neural pathway information into a structured view of potential contributors to mood and anxiety symptoms—without reducing anyone to a single score.
+          </p>
+        </div>
+        <div class="card">
+          <div class="card-label">Toward action</div>
+          <div class="card-title">Insights that guide conversations</div>
+          <p class="card-body">
+            Our goal is not to replace clinical judgment, but to support it—offering clarity that can inform care plans, referrals, and shared decision‑making between families and clinicians.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- THREE-WORD FRAMEWORK -->
+    <section id="framework" class="section">
+      <div class="section-header">
+        <div class="section-kicker">How BlueMoonBio works</div>
+        <h2 class="section-title">Illuminate. Understand. Guide.</h2>
+        <p class="section-body">
+          BlueMoonBio is built as a biological discovery engine for mental health—designed to illuminate relevant signals, help everyone involved understand their context, and guide more grounded next steps.
+        </p>
+      </div>
+      <div class="three-columns">
+        <div class="card">
+          <div class="card-label">Step 1</div>
+          <div class="card-title">Illuminate</div>
+          <p class="card-body">
+            We identify biological contributors that may be relevant to mood, anxiety, and treatment response, including genetic variants, immune activation, hormonal shifts, and neural pathway patterns.
+          </p>
+        </div>
+        <div class="card">
+          <div class="card-label">Step 2</div>
+          <div class="card-title">Understand</div>
+          <p class="card-body">
+            Instead of isolated findings, we surface how these signals may interact—highlighting converging pathways, potential sensitivities, and areas where additional evaluation could be helpful.
+          </p>
+        </div>
+        <div class="card">
+          <div class="card-label">Step 3</div>
+          <div class="card-title">Guide</div>
+          <p class="card-body">
+            We translate complex biology into clear, human‑readable narratives that can support conversations about care options, monitoring, and long‑term planning—always as a complement to clinical judgment.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEGMENTATION -->
+    <section id="audiences" class="section">
+      <div class="section-header">
+        <div class="section-kicker">Who we serve</div>
+        <h2 class="section-title">Different roles, shared goal: clarity with dignity.</h2>
+        <p class="section-body">
+          Whether you are a family member, a clinician, or a researcher, the need is the same: a clearer view of what might be driving symptoms, without losing sight of the person at the center.
+        </p>
+      </div>
+      <div class="segmentation">
+        <div class="seg-card">
+          <div class="seg-title">For families</div>
+          <p class="seg-body">
+            You’ve tried to do everything right, but the path still feels uncertain. We focus on explanations that are understandable, non‑stigmatizing, and grounded in biology—so you can ask more precise questions and advocate with confidence.
+          </p>
+          <a href="#modules" class="seg-link">See the types of insights we surface →</a>
+        </div>
+        <div class="seg-card">
+          <div class="seg-title">For clinicians</div>
+          <p class="seg-body">
+            You balance limited time with complex cases and incomplete data. BlueMoonBio is designed to fit alongside your workflow, offering structured biological context that can inform assessment, referrals, and shared decision‑making.
+          </p>
+          <a href="#modules" class="seg-link">Explore biological insight modules →</a>
+        </div>
+        <div class="seg-card">
+          <div class="seg-title">For researchers</div>
+          <p class="seg-body">
+            You are building the next generation of evidence in psychiatry and neuroscience. Our platform is architected for multi‑omic integration, transparent reasoning, and cohort‑level pattern discovery.
+          </p>
+          <span class="seg-link">Research collaborations by invitation.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- INSIGHT MODULES + CREDIBILITY + STORY -->
+    <section id="modules" class="section">
+      <div class="grid-2">
+        <div>
+          <div class="section-kicker">Biological insight modules</div>
+          <h2 class="section-title" style="color:#fff;">A structured view of potential contributors.</h2>
+          <p class="section-body">
+            Instead of a single “risk score,” BlueMoonBio organizes findings into insight modules. Each module highlights a different layer of biology that may be relevant to mood, anxiety, and treatment response.
+          </p>
+          <div class="modules-grid">
+            <div class="card">
+              <div class="card-title">Genetic contributors</div>
+              <p class="card-body">
+                Identifies variants associated with mood, anxiety, and treatment response, with emphasis on pathways rather than single genes.
+              </p>
+            </div>
+            <div class="card">
+              <div class="card-title">Inflammation & immune signals</div>
+              <p class="card-body">
+                Highlights patterns of immune activation and inflammatory stress that may interact with mood and cognitive symptoms.
+              </p>
+            </div>
+            <div class="card">
+              <div class="card-title">Hormonal & metabolic factors</div>
+              <p class="card-body">
+                Surfaces biological context related to energy, sleep, and mood stability, including hormonal and metabolic influences.
+              </p>
+            </div>
+            <div class="card">
+              <div class="card-title">Neural circuit patterns</div>
+              <p class="card-body">
+                Maps findings to neural pathways involved in emotional regulation, stress response, and cognitive flexibility.
+              </p>
+            </div>
+            <div class="card">
+              <div class="card-title">Treatment response indicators</div>
+              <p class="card-body">
+                Illuminates biological clues that may inform medication sensitivity, side‑effect risk, or non‑pharmacologic strategies.
+              </p>
+            </div>
+            <div class="card">
+              <div class="card-title">Context & lived experience</div>
+              <p class="card-body">
+                Integrates self‑reported history and environment, ensuring that biology is always interpreted in human context—not in isolation.
+              </p>
+            </div>
+          </div>
+          <div style="margin-top: 1.25rem;">
+            <span class="badge">Multi‑omic architecture</span>
+            <span class="badge">Transparent reasoning</span>
+            <span class="badge">Designed for explainability</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-kicker">Grounded and accountable</div>
+          <h3 class="section-title" style="font-size:1.4rem;">Built for clarity, not hype.</h3>
+          <p class="section-body">
+            BlueMoonBio is founded by scientists and clinicians who have spent their careers in biologics, psychiatry, and AI. Our work is guided by three commitments: scientific rigor, transparent communication, and respect for the people behind every data point.
+          </p>
+          <div class="cred-list">
+            <div>
+              <div class="cred-item-title">Scientific roots</div>
+              <div>Experience in cell line development, antibody engineering, and multi‑omic integration.</div>
+            </div>
+            <div>
+              <div class="cred-item-title">Precision focus</div>
+              <div>Architected specifically for mental health and comorbid traits, not generic risk scoring.</div>
+            </div>
+            <div>
+              <div class="cred-item-title">Explainable by design</div>
+              <div>Reasoning steps and evidence layers are structured for review, not hidden behind a black box.</div>
+            </div>
+            <div>
+              <div class="cred-item-title">Dignity first</div>
+              <div>Language, visuals, and outputs are designed to reduce stigma and support shared understanding.</div>
+            </div>
+          </div>
+
+          <div class="story">
+            <div class="story-kicker">A familiar story</div>
+            <p class="story-quote">
+              “We had tried multiple medications over several years. Each new option came with hope, side effects, and more uncertainty. Seeing the biological context didn’t give us a single answer—but it finally gave us a map. We could see why things might be so hard, and where to focus next.”
+            </p>
+            <div class="story-meta">
+              Composite narrative based on real family experiences, de‑identified and adapted for privacy.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>© BlueMoonBio. All rights reserved.</div>
+    <div>For collaboration or early access inquiries, contact: <a href="mailto:info@bluemoonbio.ai">info@bluemoonbio.ai</a></div>
+  </footer>
+</body>
+</html>

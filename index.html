@@ -23,7 +23,7 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--darker-bg);
             background-image: 
-                linear-gradient(to bottom, rgba(3,4,7,0.92), rgba(3,4,7,0.98)),
+                linear-gradient(to bottom, rgba(3,4,7,0.2), rgba(3,4,7,0.5)),
                 url('./background1.png');
             background-size: cover;
             background-position: center top;
@@ -34,23 +34,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* -------------------------------------
-           CLINICAL GRID BACKGROUND (NO SPACE)
-           ------------------------------------- */
-        .technical-grid {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background-image: 
-                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 80px 80px;
-            z-index: -2;
-            pointer-events: none;
-        }
-        .technical-grid::after {
-            content: ''; position: absolute; top:0; left:0; width:100%; height:100%;
-            background: radial-gradient(circle at 50% 10%, transparent 0%, var(--darker-bg) 80%);
-        }
+
 
         /* -------------------------------------
            NAVIGATION
@@ -175,8 +159,6 @@
 </head>
 <body>
 
-    <div class="technical-grid"></div>
-
     <!-- COMMAND NAVIGATION -->
     <nav>
         <div class="nav-container">
@@ -194,9 +176,9 @@
         
         <!-- HERO (TOP) -->
         <section class="hero" style="margin-bottom: 50px;">
-            <h1>Every patient is treated as an average. No one actually is.</h1>
+            <h1>When someone is struggling, they deserve precision—not guesswork.</h1>
             <p class="tagline" style="font-size: 2.2rem; margin-bottom: 20px;">We simulate how treatments change a patient’s biology — <strong>before intervention.</strong></p>
-            <p class="tagline" style="font-size: 1.5rem; color: #fff; margin-bottom: 30px;">This changes how therapies are chosen and how clinical trials are run.</p>
+            <p class="tagline" style="font-size: 1.5rem; color: #fff; margin-bottom: 30px;">This brings clarity to families, solves how therapies are chosen, and de-risks clinical trials.</p>
             <div class="line">Powered by BlueMoon, our biological simulation engine.</div>
 
             <div>
@@ -220,9 +202,9 @@
                     </defs>
                     
                     <!-- Coordinate Labels -->
-                    <g fill="rgba(255,255,255,0.4)" font-family="Courier New" font-size="14" font-weight="bold">
+                    <g fill="rgba(255,255,255,0.4)" font-family="Courier New" font-size="24" font-weight="bold">
                         <text x="20" y="580">BIOLOGICAL STARTING STATE</text>
-                        <text x="700" y="40">THERAPEUTIC INTERCEPTION</text>
+                        <text x="580" y="40">THERAPEUTIC INTERCEPTION</text>
                     </g>
                     
                     <!-- Topological Field Curves -->
@@ -262,9 +244,9 @@
                 <h2 class="sec-title">What this enables</h2>
             </div>
             <div style="font-size: 1.8rem; font-weight: 300; line-height: 2.2; color: #ffffff;">
-                <div>Choose the right therapy before failure occurs</div>
+                <div>Provide families the right intervention before failure occurs</div>
                 <div>Reduce clinical trial size by 30–40%</div>
-                <div>Explain why treatments don’t work</div>
+                <div>Deliver clear, biological context for why past treatments failed</div>
                 <div>Simulate outcomes across drugs and combinations</div>
             </div>
         </section>
@@ -303,7 +285,7 @@
                     <!-- Node 5 -->
                     <div class="pillar-node">
                         <h3>Explain Failure</h3>
-                        <p>> Identify misalignment between biology and treatment</p>
+                        <p>> Illuminate the biological context of why past treatments failed</p>
                     </div>
                     <!-- Node 6 -->
                     <div class="pillar-node">
@@ -320,7 +302,7 @@
                 <h2 class="sec-title">Drug Projection Map</h2>
                 <p class="sec-lead" style="color:#fff; font-weight: 600;">Drugs are vectors in biological space.</p>
                 <p class="sec-lead" style="margin-top: 10px; font-size: 1.3rem;">We can place any therapy into this space and predict how it will move a patient.</p>
-                <p class="sec-lead" style="margin-top: 15px; font-size: 1.2rem;">Mechanisms from psychiatry, immunology, and oncology map into the same biological geometry.</p>
+                <p class="sec-lead" style="margin-top: 15px; font-size: 1.2rem;">This enables us to end the trial-and-error cycle by mathematically finding the correct biological fit.</p>
             </div>
 
             <div class="drug-map-container">
@@ -447,7 +429,7 @@
 
         <!-- CASE STUDY -->
             <div class="case-header" style="margin-bottom: 20px;">Single Patient Case Study</div>
-            <p style="font-size: 1.3rem; color: var(--text-secondary); margin-bottom: 50px;">A patient presents with depression. Standard care assigns an SSRI.</p>
+            <p style="font-size: 1.3rem; color: var(--text-secondary); margin-bottom: 50px;">When a patient presents with depression, standard care assigns an SSRI—often beginning months of painful trial and error.</p>
             
             <div class="case-row case-ssri" style="font-size: 1.4rem;">
                 <span style="font-weight: 900;">SSRI</span> <span>→</span> <span style="font-family: inherit;">no biological movement</span> <span>→</span> <span style="font-family: inherit;">no response</span>
@@ -458,7 +440,7 @@
 
             <div class="case-punchline">
                 The patient didn't fail the drug.<br>
-                <strong>The drug failed the biology.</strong>
+                <strong>The biological alignment was wrong.</strong>
             </div>
         </section>
 
@@ -477,7 +459,7 @@
 
         <div style="text-align: center; margin: 100px 0; font-size: 2rem; color: #fff; font-weight: 300; line-height: 1.4;">
             Failure is not random. <br>
-            <strong style="color: var(--neon-blue);">It is misalignment between patient biology and treatment mechanism.</strong>
+            <strong style="color: var(--neon-blue);">It is a biological misalignment between the patient and the treatment mechanism.</strong>
         </div>
 
         <!-- IMPACT -->

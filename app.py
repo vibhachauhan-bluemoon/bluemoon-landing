@@ -300,5 +300,3 @@ with col1:
 
 with col2:
     st.link_button("Schedule a Demo", "https://calendly.com/")
-
-st.caption("<div style='text-align:center; margin-top: 40px;'>BlueMoonBio — Palantir-Grade Biological Operating System</div>", unsafe_allow_html=True)

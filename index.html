@@ -220,9 +220,9 @@
                     </defs>
                     
                     <!-- Coordinate Labels -->
-                    <g fill="rgba(255,255,255,0.4)" font-family="Courier New" font-size="12" font-weight="bold">
+                    <g fill="rgba(255,255,255,0.4)" font-family="Courier New" font-size="14" font-weight="bold">
                         <text x="20" y="580">BIOLOGICAL STARTING STATE</text>
-                        <text x="750" y="40">THERAPEUTIC INTERCEPTION</text>
+                        <text x="700" y="40">THERAPEUTIC INTERCEPTION</text>
                     </g>
                     
                     <!-- Topological Field Curves -->
@@ -232,26 +232,26 @@
 
                     <!-- Health Centroid (Target) -->
                     <circle cx="850" cy="150" r="180" fill="url(#targetGlow)" />
-                    <circle cx="850" cy="150" r="8" fill="#00f0ff" filter="drop-shadow(0 0 15px #00f0ff)"/>
-                    <rect x="635" y="153" width="200" height="25" fill="rgba(0,240,255,0.15)" rx="4"/>
-                    <text x="645" y="171" fill="#fff" font-family="Inter" font-weight="900" font-size="14" letter-spacing="1">CRITICAL TARGET STATE</text>
+                    <circle cx="850" cy="150" r="10" fill="#00f0ff" filter="drop-shadow(0 0 20px #00f0ff)"/>
+                    <rect x="585" y="153" width="250" height="35" fill="rgba(0,240,255,0.15)" rx="4"/>
+                    <text x="600" y="177" fill="#fff" font-family="Inter" font-weight="900" font-size="18" letter-spacing="1">CRITICAL TARGET STATE</text>
 
                     <!-- Patient Point -->
-                    <circle cx="150" cy="450" r="14" fill="#0A0B10" stroke="#fff" stroke-width="2"/>
-                    <circle cx="150" cy="450" r="4" fill="#fff" filter="drop-shadow(0 0 5px #fff)"/>
-                    <rect x="50" y="475" width="150" height="25" fill="rgba(255,255,255,0.15)" rx="4"/>
-                    <text x="60" y="493" fill="#fff" font-family="Inter" font-size="14" font-weight="800">PATIENT ORIGIN</text>
+                    <circle cx="150" cy="450" r="16" fill="#0A0B10" stroke="#fff" stroke-width="3"/>
+                    <circle cx="150" cy="450" r="5" fill="#fff" filter="drop-shadow(0 0 8px #fff)"/>
+                    <rect x="30" y="475" width="200" height="35" fill="rgba(255,255,255,0.15)" rx="4"/>
+                    <text x="45" y="499" fill="#fff" font-family="Inter" font-size="18" font-weight="800">PATIENT ORIGIN</text>
 
                     <!-- Bad Trajectories -->
                     <path class="anim-path-slow" d="M 160 450 Q 300 500 500 550" fill="none" stroke="#f87171" stroke-width="3" stroke-dasharray="6,6" />
                     <circle cx="500" cy="550" r="6" fill="#f87171" filter="drop-shadow(0 0 8px #f87171)"/>
-                    <rect x="515" y="540" width="190" height="20" fill="rgba(248,113,113,0.2)" rx="4"/>
-                    <text x="525" y="554" fill="#fff" font-family="Courier New" font-weight="700" font-size="12">NO RESPONSE (ORTHOGONAL)</text>
+                    <rect x="515" y="535" width="230" height="30" fill="rgba(248,113,113,0.2)" rx="4"/>
+                    <text x="525" y="556" fill="#fff" font-family="Courier New" font-weight="700" font-size="14">NO RESPONSE (ORTHOGONAL)</text>
 
                     <!-- Good Trajectory (Dominant Path) -->
                     <path class="anim-path" d="M 160 445 Q 500 200 840 155" fill="none" stroke="#00f0ff" stroke-width="6" filter="drop-shadow(0 0 10px rgba(0,240,255,0.8))" />
-                    <rect x="360" y="245" width="260" height="30" fill="rgba(0,240,255,0.2)" rx="5" filter="drop-shadow(0 0 10px rgba(0,240,255,0.2))"/>
-                    <text x="375" y="265" fill="#fff" font-family="Inter" font-weight="800" font-size="14" letter-spacing="1">DOMINANT SUCCESS TRAJECTORY</text>
+                    <rect x="330" y="245" width="330" height="40" fill="rgba(0,240,255,0.2)" rx="5" filter="drop-shadow(0 0 10px rgba(0,240,255,0.2))"/>
+                    <text x="350" y="272" fill="#fff" font-family="Inter" font-weight="800" font-size="18" letter-spacing="1">DOMINANT SUCCESS TRAJECTORY</text>
                 </svg>
             </div>
         </section>
@@ -385,43 +385,54 @@
                     <path d="M 0 225 Q 500 0 1000 225" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="40"/>
                     <path d="M 0 225 Q 500 450 1000 225" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="40"/>
 
+                    <!-- Background Connecting Bridges -->
+                    <path d="M 500 225 L 200 350" stroke="rgba(163, 113, 247, 0.4)" stroke-width="6" stroke-dasharray="10,10"/>
+                    <path d="M 500 225 L 750 100" stroke="rgba(0, 240, 255, 0.4)" stroke-width="6" stroke-dasharray="10,10"/>
+                    <path d="M 500 225 L 850 350" stroke="rgba(248, 113, 113, 0.4)" stroke-width="6" stroke-dasharray="10,10"/>
+                    <path d="M 500 225 L 250 100" stroke="rgba(255, 255, 255, 0.4)" stroke-width="6" stroke-dasharray="10,10"/>
+
                     <!-- Central Core node -->
-                    <circle cx="500" cy="225" r="8" fill="#fff"/>
-                    <text x="515" y="240" fill="#fff" font-family="Courier New" font-size="12">BASE REGULATION</text>
+                    <circle cx="500" cy="225" r="28" fill="#fff" filter="drop-shadow(0 0 25px #fff)"/>
+                    <circle cx="500" cy="225" r="12" fill="#000"/>
+                    <rect x="390" y="265" width="220" height="35" fill="rgba(10,11,16,0.9)" stroke="#fff" rx="4"/>
+                    <text x="405" y="288" fill="#fff" font-family="Inter" font-weight="900" font-size="16">CORE ARCHITECTURE</text>
 
                     <!-- MDD CLUSTER (Bottom Left) -->
-                    <g opacity="0.8">
-                        <circle cx="200" cy="350" r="50" fill="none" stroke="#a371f7" stroke-width="1" stroke-dasharray="2,2"/>
-                        <circle cx="200" cy="350" r="3" fill="#a371f7" filter="drop-shadow(0 0 8px #a371f7)"/>
-                        <text x="140" y="420" fill="#a371f7" font-family="Inter" font-weight="900" font-size="14">MDD / BIPOLAR</text>
-                        <!-- Points -->
-                        <circle cx="180" cy="330" r="2" fill="#a371f7"/><circle cx="220" cy="360" r="1.5" fill="#a371f7"/>
-                        <circle cx="190" cy="370" r="2.5" fill="#a371f7"/><circle cx="210" cy="320" r="2" fill="#a371f7"/>
+                    <g opacity="0.9">
+                        <circle cx="200" cy="350" r="45" fill="rgba(163,113,247,0.1)" stroke="#a371f7" stroke-width="2"/>
+                        <!-- Brain Icon -->
+                        <path d="M190 340 C190 330, 210 330, 210 340 C215 340, 215 360, 210 360 C210 370, 190 370, 190 360 C185 360, 185 340, 190 340 Z" fill="none" stroke="#a371f7" stroke-width="2"/>
+                        <text x="140" y="420" fill="#a371f7" font-family="Inter" font-weight="900" font-size="16">PSYCHIATRY</text>
                     </g>
 
                     <!-- IMMUNE / AUTOIMMUNE (Top Right) -->
-                    <g opacity="0.8">
-                        <circle cx="750" cy="100" r="60" fill="none" stroke="#00f0ff" stroke-width="1" stroke-dasharray="2,2"/>
-                        <circle cx="750" cy="100" r="3" fill="#00f0ff" filter="drop-shadow(0 0 8px #00f0ff)"/>
-                        <text x="690" y="180" fill="#00f0ff" font-family="Inter" font-weight="900" font-size="14">AUTOIMMUNE / SEPSIS</text>
-                        <circle cx="730" cy="80" r="2" fill="#00f0ff"/><circle cx="770" cy="110" r="2" fill="#00f0ff"/>
-                        <circle cx="720" cy="120" r="1.5" fill="#00f0ff"/><circle cx="760" cy="70" r="2.5" fill="#00f0ff"/>
+                    <g opacity="0.9">
+                        <circle cx="750" cy="100" r="45" fill="rgba(0,240,255,0.1)" stroke="#00f0ff" stroke-width="2"/>
+                        <!-- Cell/Shield Icon -->
+                        <path d="M740 90 L760 90 L760 100 C760 110, 750 115, 750 115 C750 115, 740 110, 740 100 Z" fill="none" stroke="#00f0ff" stroke-width="2"/>
+                        <circle cx="750" cy="100" r="2" fill="#00f0ff"/>
+                        <text x="690" y="170" fill="#00f0ff" font-family="Inter" font-weight="900" font-size="16">IMMUNOLOGY</text>
                     </g>
                     
                     <!-- ONCOLOGY (Bottom Right) -->
-                    <g opacity="0.8">
-                        <circle cx="850" cy="350" r="45" fill="none" stroke="#f87171" stroke-width="1" stroke-dasharray="2,2"/>
-                        <circle cx="850" cy="350" r="3" fill="#f87171" filter="drop-shadow(0 0 8px #f87171)"/>
-                        <text x="815" y="420" fill="#f87171" font-family="Inter" font-weight="900" font-size="14">ONCOLOGY</text>
-                        <circle cx="830" cy="340" r="1.5" fill="#f87171"/><circle cx="860" cy="360" r="2" fill="#f87171"/>
+                    <g opacity="0.9">
+                        <circle cx="850" cy="350" r="45" fill="rgba(248,113,113,0.1)" stroke="#f87171" stroke-width="2"/>
+                        <!-- Cell division Icon -->
+                        <circle cx="840" cy="350" r="8" fill="none" stroke="#f87171" stroke-width="2"/>
+                        <circle cx="860" cy="350" r="8" fill="none" stroke="#f87171" stroke-width="2"/>
+                        <text x="805" y="420" fill="#f87171" font-family="Inter" font-weight="900" font-size="16">ONCOLOGY</text>
                     </g>
 
                     <!-- NEURODEGENERATIVE (Top Left) -->
-                    <g opacity="0.8">
-                        <circle cx="250" cy="100" r="55" fill="none" stroke="#ffffff" stroke-width="1" stroke-dasharray="2,2"/>
-                        <circle cx="250" cy="100" r="3" fill="#ffffff" filter="drop-shadow(0 0 8px #ffffff)"/>
-                        <text x="180" y="180" fill="#ffffff" font-family="Inter" font-weight="900" font-size="14">NEURODEGENERATIVE</text>
-                        <circle cx="230" cy="80" r="2" fill="#ffffff"/><circle cx="270" cy="120" r="1.5" fill="#ffffff"/>
+                    <g opacity="0.9">
+                        <circle cx="250" cy="100" r="45" fill="rgba(255,255,255,0.1)" stroke="#ffffff" stroke-width="2"/>
+                        <!-- Network Icon -->
+                        <line x1="240" y1="95" x2="260" y2="105" stroke="#fff" stroke-width="2"/>
+                        <circle cx="240" cy="95" r="3" fill="#fff"/>
+                        <circle cx="260" cy="105" r="3" fill="#fff"/>
+                        <circle cx="255" cy="85" r="3" fill="#fff"/>
+                        <line x1="240" y1="95" x2="255" y2="85" stroke="#fff" stroke-width="2"/>
+                        <text x="180" y="170" fill="#ffffff" font-family="Inter" font-weight="900" font-size="16">NEUROLOGY</text>
                     </g>
                 </svg>
             </div>

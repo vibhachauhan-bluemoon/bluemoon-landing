@@ -7,7 +7,7 @@ import pickle
 import os
 import datetime
 
-st.set_page_config(page_title="BlueMoon OS | Pharma Demo", layout="wide")
+st.set_page_config(page_title="BlueMoon Simulation Engine | Demo", layout="wide")
 
 # ==========================================
 # UI POLISH & ARCHITECTURE
@@ -40,8 +40,9 @@ st.markdown('<div class="demo-banner">[ PUBLIC DEMO ENGINE : RESTRICTED CAPABILI
 
 st.markdown("""
 <div class="hud-header">
-    <h1 style='color: #fff; font-size: 2.2rem; font-weight: 800; letter-spacing: -1px;'>BlueMoon <span style='color: #00f0ff;'>OS</span></h1>
-    <span style='color: #a1a1aa; font-family: monospace; font-size: 1.1rem;'>SYSTEM // ACTIVE SIMULATION ENVIRONMENT</span>
+    <h1 style='color: #fff; font-size: 2.2rem; font-weight: 800; letter-spacing: -1px;'>BlueMoon <span style='color: #00f0ff;'>Simulation Engine</span></h1>
+    <span style='color: #a1a1aa; font-family: monospace; font-size: 1.1rem;'>SYSTEM // ACTIVE SIMULATION ENVIRONMENT</span><br>
+    <span style='color: #fff; font-size: 1.1rem; font-weight: 400; margin-top: 10px; display: inline-block;'>This system simulates how therapies change biological state.</span>
 </div>
 """, unsafe_allow_html=True)
 

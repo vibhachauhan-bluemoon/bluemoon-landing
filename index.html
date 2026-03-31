@@ -22,6 +22,12 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--darker-bg);
+            background-image: 
+                linear-gradient(to bottom, rgba(3,4,7,0.92), rgba(3,4,7,0.98)),
+                url('./background1.png');
+            background-size: cover;
+            background-position: center top;
+            background-attachment: fixed;
             color: var(--text-primary);
             overflow-x: hidden;
             line-height: 1.6;
@@ -189,7 +195,8 @@
         <!-- HERO (TOP) -->
         <section class="hero" style="margin-bottom: 50px;">
             <h1>Every patient is treated as an average. No one actually is.</h1>
-            <p class="tagline">We don’t predict response. <strong>We simulate it.</strong></p>
+            <p class="tagline" style="font-size: 2.2rem; margin-bottom: 20px;">We simulate how treatments change a patient’s biology — <strong>before intervention.</strong></p>
+            <p class="tagline" style="font-size: 1.5rem; color: #fff; margin-bottom: 30px;">This changes how therapies are chosen and how clinical trials are run.</p>
             <div class="line">Powered by BlueMoon, our biological simulation engine.</div>
 
             <div>
@@ -200,53 +207,65 @@
             </div>
 
             <!-- NAVIGATION VISUAL (CORE ENGINE MAP) -->
-            <div id="map" class="engine-visual">
+            <div id="map" class="engine-visual" style="background: url('./tech_bio_manifold.png') center/cover;">
                 <svg width="100%" height="100%" viewBox="0 0 1000 600" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Glassmatic overlay to ensure text legibility -->
+                    <rect width="100%" height="100%" fill="rgba(3,4,7,0.7)"/>
+
                     <defs>
                         <radialGradient id="targetGlow" cx="50%" cy="50%" r="50%">
-                            <stop offset="0%" stop-color="rgba(0, 240, 255, 0.3)" />
+                            <stop offset="0%" stop-color="rgba(0, 240, 255, 0.4)" />
                             <stop offset="100%" stop-color="rgba(0,0,0,0)" />
                         </radialGradient>
                     </defs>
                     
-                    <!-- Clinical Grid Array -->
-                    <g stroke="rgba(255,255,255,0.05)" stroke-width="1">
-                        <line x1="100" y1="0" x2="100" y2="600"/> <line x1="300" y1="0" x2="300" y2="600"/>
-                        <line x1="500" y1="0" x2="500" y2="600"/> <line x1="700" y1="0" x2="700" y2="600"/>
-                        <line x1="900" y1="0" x2="900" y2="600"/>
-                        <line x1="0" y1="100" x2="1000" y2="100"/> <line x1="0" y1="300" x2="1000" y2="300"/>
-                        <line x1="0" y1="500" x2="1000" y2="500"/>
-                    </g>
                     <!-- Coordinate Labels -->
-                    <g fill="rgba(255,255,255,0.2)" font-family="Courier New" font-size="10">
-                        <text x="10" y="95">-1.0 Z</text> <text x="10" y="295"> 0.0 Z</text> <text x="10" y="495"> 1.0 Z</text>
-                        <text x="305" y="585">ΔX (CLINICAL ALIGNMENT)</text>
+                    <g fill="rgba(255,255,255,0.4)" font-family="Courier New" font-size="12" font-weight="bold">
+                        <text x="20" y="580">BIOLOGICAL STARTING STATE</text>
+                        <text x="750" y="40">THERAPEUTIC INTERCEPTION</text>
                     </g>
                     
                     <!-- Topological Field Curves -->
-                    <path d="M-100 450 Q 500 0 1100 350" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="2"/>
-                    <path d="M-100 500 Q 500 100 1100 450" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
-                    <path d="M-100 550 Q 500 200 1100 550" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="2"/>
+                    <path d="M-100 450 Q 500 0 1100 350" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+                    <path d="M-100 500 Q 500 100 1100 450" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+                    <path d="M-100 550 Q 500 200 1100 550" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="2"/>
 
                     <!-- Health Centroid (Target) -->
                     <circle cx="850" cy="150" r="180" fill="url(#targetGlow)" />
-                    <circle cx="850" cy="150" r="8" fill="#00f0ff" filter="drop-shadow(0 0 10px #00f0ff)"/>
-                    <text x="870" y="145" fill="#fff" font-family="Inter" font-weight="900" font-size="16" letter-spacing="1">TARGET CENTROID</text>
+                    <circle cx="850" cy="150" r="8" fill="#00f0ff" filter="drop-shadow(0 0 15px #00f0ff)"/>
+                    <rect x="635" y="153" width="200" height="25" fill="rgba(0,240,255,0.15)" rx="4"/>
+                    <text x="645" y="171" fill="#fff" font-family="Inter" font-weight="900" font-size="14" letter-spacing="1">CRITICAL TARGET STATE</text>
 
                     <!-- Patient Point -->
                     <circle cx="150" cy="450" r="14" fill="#0A0B10" stroke="#fff" stroke-width="2"/>
-                    <circle cx="150" cy="450" r="4" fill="#fff" />
-                    <text x="110" y="485" fill="#fff" font-family="Inter" font-size="14" font-weight="800">PATIENT ORIGIN</text>
+                    <circle cx="150" cy="450" r="4" fill="#fff" filter="drop-shadow(0 0 5px #fff)"/>
+                    <rect x="50" y="475" width="150" height="25" fill="rgba(255,255,255,0.15)" rx="4"/>
+                    <text x="60" y="493" fill="#fff" font-family="Inter" font-size="14" font-weight="800">PATIENT ORIGIN</text>
 
                     <!-- Bad Trajectories -->
-                    <path class="anim-path-slow" d="M 160 450 Q 300 500 500 550" fill="none" stroke="#555" stroke-width="2" stroke-dasharray="4,6" />
-                    <circle cx="500" cy="550" r="4" fill="#555" />
-                    <text x="515" y="555" fill="#555" font-family="Courier New" font-weight="700" font-size="12">VECTOR: UNALIGNED</text>
+                    <path class="anim-path-slow" d="M 160 450 Q 300 500 500 550" fill="none" stroke="#f87171" stroke-width="3" stroke-dasharray="6,6" />
+                    <circle cx="500" cy="550" r="6" fill="#f87171" filter="drop-shadow(0 0 8px #f87171)"/>
+                    <rect x="515" y="540" width="190" height="20" fill="rgba(248,113,113,0.2)" rx="4"/>
+                    <text x="525" y="554" fill="#fff" font-family="Courier New" font-weight="700" font-size="12">NO RESPONSE (ORTHOGONAL)</text>
 
                     <!-- Good Trajectory (Dominant Path) -->
-                    <path class="anim-path" d="M 160 445 Q 500 200 840 155" fill="none" stroke="#00f0ff" stroke-width="4" filter="drop-shadow(0 0 8px rgba(0,240,255,0.6))" />
-                    <text x="450" y="270" fill="#00f0ff" font-family="Inter" font-weight="800" font-size="14" letter-spacing="1" filter="drop-shadow(0 0 5px rgba(0,240,255,0.5))">DOMINANT ALIGNMENT TRAJECTORY</text>
+                    <path class="anim-path" d="M 160 445 Q 500 200 840 155" fill="none" stroke="#00f0ff" stroke-width="6" filter="drop-shadow(0 0 10px rgba(0,240,255,0.8))" />
+                    <rect x="360" y="245" width="260" height="30" fill="rgba(0,240,255,0.2)" rx="5" filter="drop-shadow(0 0 10px rgba(0,240,255,0.2))"/>
+                    <text x="375" y="265" fill="#fff" font-family="Inter" font-weight="800" font-size="14" letter-spacing="1">DOMINANT SUCCESS TRAJECTORY</text>
                 </svg>
+            </div>
+        </section>
+
+        <!-- WHAT THIS ENABLES (NEW) -->
+        <section id="enables" style="text-align: center;">
+            <div class="sec-header">
+                <h2 class="sec-title">What this enables</h2>
+            </div>
+            <div style="font-size: 1.8rem; font-weight: 300; line-height: 2.2; color: #ffffff;">
+                <div>Choose the right therapy before failure occurs</div>
+                <div>Reduce clinical trial size by 30–40%</div>
+                <div>Explain why treatments don’t work</div>
+                <div>Simulate outcomes across drugs and combinations</div>
             </div>
         </section>
 
@@ -264,32 +283,32 @@
                     <!-- Node 1 -->
                     <div class="pillar-node">
                         <h3>Map Biology</h3>
-                        <p>> state space location</p>
+                        <p>> Position patients in biological state space</p>
                     </div>
                     <!-- Node 2 -->
                     <div class="pillar-node">
                         <h3>Stratify Patients</h3>
-                        <p>> biological subtypes</p>
+                        <p>> Reveal mechanistic subtypes beyond diagnosis</p>
                     </div>
                     <!-- Node 3 -->
                     <div class="pillar-node">
                         <h3>Predict & Track</h3>
-                        <p>> mechanistic response</p>
+                        <p>> Forecast and monitor response trajectories</p>
                     </div>
                     <!-- Node 4 -->
                     <div class="pillar-node">
                         <h3>Assign Therapy</h3>
-                        <p>> vector extraction</p>
+                        <p>> Match patients to optimal mechanisms</p>
                     </div>
                     <!-- Node 5 -->
                     <div class="pillar-node">
                         <h3>Explain Failure</h3>
-                        <p>> absolute misalignment</p>
+                        <p>> Identify misalignment between biology and treatment</p>
                     </div>
                     <!-- Node 6 -->
                     <div class="pillar-node">
                         <h3>Simulate Outcomes</h3>
-                        <p>> future trajectories</p>
+                        <p>> Model future biological states under intervention</p>
                     </div>
                 </div>
             </div>
@@ -300,7 +319,8 @@
             <div class="sec-header">
                 <h2 class="sec-title">Drug Projection Map</h2>
                 <p class="sec-lead" style="color:#fff; font-weight: 600;">Drugs are vectors in biological space.</p>
-                <p class="sec-lead" style="margin-top: 15px; font-size: 1.2rem;">Mechanisms from fundamentally different therapeutic areas map into the identical biological geometry.</p>
+                <p class="sec-lead" style="margin-top: 10px; font-size: 1.3rem;">We can place any therapy into this space and predict how it will move a patient.</p>
+                <p class="sec-lead" style="margin-top: 15px; font-size: 1.2rem;">Mechanisms from psychiatry, immunology, and oncology map into the same biological geometry.</p>
             </div>
 
             <div class="drug-map-container">
@@ -328,31 +348,29 @@
                     </g>
 
                     <!-- Ketamine Vector (Strong, aligned, long) -->
-                    <path class="anim-path" d="M 500 250 L 900 100" stroke="var(--neon-blue)" stroke-width="3" fill="none"/>
-                    <circle cx="900" cy="100" r="6" fill="#00f0ff" filter="drop-shadow(0 0 10px #00f0ff)"/>
+                    <path class="anim-path" d="M 500 250 L 900 100" stroke="var(--neon-blue)" stroke-width="5" fill="none" filter="drop-shadow(0 0 8px #00f0ff)"/>
+                    <circle cx="900" cy="100" r="6" fill="#00f0ff" />
                     <text x="750" y="80" fill="#00f0ff" font-family="Inter" font-weight="900" font-size="16">KETAMINE VECTOR</text>
                     <text x="750" y="100" fill="#fff" font-family="Courier New" font-size="12">ALIGNMENT: STRONG</text>
 
                     <!-- Immune / PD-1 Vector -->
-                    <path class="anim-path-slow" d="M 500 250 L 800 450" stroke="#a371f7" stroke-width="3" fill="none"/>
+                    <path class="anim-path-slow" d="M 500 250 L 800 450" stroke="#a371f7" stroke-width="4" fill="none"/>
                     <circle cx="800" cy="450" r="6" fill="#a371f7"/>
                     <text x="650" y="470" fill="#a371f7" font-family="Inter" font-weight="900" font-size="16">IMMUNE / PD-1</text>
                     
                     <!-- TMS Vector -->
-                    <path class="anim-path-slow" style="animation-duration: 5s;" d="M 500 250 L 150 150" stroke="#ffffff" stroke-width="3" fill="none"/>
-                    <circle cx="150" cy="150" r="6" fill="#ffffff"/>
+                    <path class="anim-path-slow" style="animation-duration: 5s;" d="M 500 250 L 150 150" stroke="#fff" stroke-width="4" fill="none" filter="drop-shadow(0 0 5px #fff)"/>
+                    <circle cx="150" cy="150" r="6" fill="#fff"/>
                     <text x="130" y="130" fill="#ffffff" font-family="Inter" font-weight="900" font-size="16">TMS INTERVENTION</text>
                 </svg>
             </div>
-        </section>
-
         </section>
 
         <!-- BEYOND PSYCHIATRY (NEW CROSS-DISEASE EXPANSION) -->
         <section id="beyond-psychiatry">
             <div class="sec-header">
                 <h2 class="sec-title">Beyond Psychiatry</h2>
-                <p class="sec-lead">Shared biological structure across diseases. Disease-specific deviations emerge within the same space.</p>
+                <p class="sec-lead">Psychiatry is just the starting point.<br>The same system applies across immune disease, oncology, and beyond.</p>
             </div>
 
             <!-- CROSS DISEASE SPECTRUM PLOT -->
@@ -417,13 +435,14 @@
         </section>
 
         <!-- CASE STUDY -->
-            <div class="case-header">Single Patient Case Study</div>
+            <div class="case-header" style="margin-bottom: 20px;">Single Patient Case Study</div>
+            <p style="font-size: 1.3rem; color: var(--text-secondary); margin-bottom: 50px;">A patient presents with depression. Standard care assigns an SSRI.</p>
             
-            <div class="case-row case-ssri">
-                <span>SSRI</span> <span>→</span> <span>no movement</span>
+            <div class="case-row case-ssri" style="font-size: 1.4rem;">
+                <span style="font-weight: 900;">SSRI</span> <span>→</span> <span style="font-family: inherit;">no biological movement</span> <span>→</span> <span style="font-family: inherit;">no response</span>
             </div>
-            <div class="case-row case-ketamine">
-                <span>Ketamine</span> <span>→</span> <span>alignment</span>
+            <div class="case-row case-ketamine" style="font-size: 1.4rem;">
+                <span style="font-weight: 900;">Ketamine</span> <span>→</span> <span style="font-family: inherit;">aligned movement</span> <span>→</span> <span style="font-family: inherit;">response</span>
             </div>
 
             <div class="case-punchline">
@@ -445,26 +464,32 @@
             </div>
         </section>
 
+        <div style="text-align: center; margin: 100px 0; font-size: 2rem; color: #fff; font-weight: 300; line-height: 1.4;">
+            Failure is not random. <br>
+            <strong style="color: var(--neon-blue);">It is misalignment between patient biology and treatment mechanism.</strong>
+        </div>
+
         <!-- IMPACT -->
         <section>
             <div class="impact-strip">
                 <div class="impact-item">
-                    <div class="impact-val">+25%</div>
-                    <div class="impact-label">Response Uplift</div>
+                    <div class="impact-val" style="font-size: 4rem;">+25%</div>
+                    <div class="impact-label" style="font-size: 1.2rem;">Response Improvement</div>
                 </div>
                 <div class="impact-item">
-                    <div class="impact-val">30-40%</div>
-                    <div class="impact-label">Smaller Trials</div>
+                    <div class="impact-val" style="font-size: 4rem;">30-40%</div>
+                    <div class="impact-label" style="font-size: 1.2rem;">Smaller Trials</div>
                 </div>
                 <div class="impact-item">
-                    <div class="impact-val">$$$</div>
-                    <div class="impact-label">Capital Saved</div>
+                    <div class="impact-val" style="font-size: 4rem;">Millions</div>
+                    <div class="impact-label" style="font-size: 1.2rem;">Saved Per Study</div>
                 </div>
             </div>
         </section>
 
         <!-- CTA (FOOTER) -->
         <section style="text-align: center; margin-bottom: 0;">
+            <p style="font-size: 1.5rem; color: #fff; font-weight: 600; margin-bottom: 30px;">See how different treatments change outcomes — instantly.</p>
             <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
                 <a href="https://bluemoon-demo.streamlit.app" class="primary-cta" style="padding: 20px 50px; font-size: 1.2rem;">
                     Simulate a Patient

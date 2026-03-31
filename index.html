@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlueMoonBio | A Biological Operating System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #00f0ff;
+            --deep-bg: #030712;
+            --glass-bg: rgba(17, 24, 39, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #010409;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Ambient Background Nodes */
+        .ambient {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+        .a-top { width: 50vw; height: 50vw; background: rgba(0, 240, 255, 0.08); top: -20vh; left: -10vw; }
+        .a-mid { width: 40vw; height: 40vw; background: rgba(163, 113, 247, 0.05); top: 30vh; right: -10vw; }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+            padding: 0 40px;
+        }
+
+        section {
+            padding: 60px 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        section:last-child { border-bottom: none; }
+
+        /* HERO SECTION */
+        .hero {
+            padding: 100px 0 80px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -2px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .hero .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .hero .tagline {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #fff, var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Hero Visual */
+        .hero-visual {
+            width: 100%;
+            height: 350px;
+            margin-bottom: 40px;
+            border-radius: 20px;
+            background: linear-gradient(180deg, rgba(0, 240, 255, 0.05), rgba(0,0,0,0));
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.8), inset 0 0 30px rgba(0,240,255,0.05);
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* $$$ STRIP */
+        .impact {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 50px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--neon-blue);
+        }
+
+        .impact span {
+            background: rgba(0, 240, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+        }
+
+        .cta {
+            background: var(--neon-blue);
+            color: #000;
+            padding: 20px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 1.4rem;
+            display: inline-block;
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
+            transition: transform 0.3s ease;
+            margin-bottom: 15px;
+        }
+        
+        .cta:hover { transform: translateY(-3px); box-shadow: 0 10px 40px rgba(0, 240, 255, 0.6); }
+
+        .subtext {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* CONTENT SECTIONS */
+        h3 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 25px;
+            letter-spacing: -0.5px;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        li::before {
+            content: '→';
+            color: var(--neon-blue);
+            font-weight: 800;
+            margin-right: 15px;
+        }
+
+        .highlight {
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(0, 240, 255, 0.05);
+            border-left: 4px solid var(--neon-blue);
+            font-size: 1.3rem;
+            font-style: italic;
+            color: #fff;
+        }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            padding: 80px 0;
+        }
+
+        .footer h2 {
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .footer p {
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 3rem; }
+            .hero .tagline { font-size: 1.8rem; }
+            .impact { flex-direction: column; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient a-top"></div>
+    <div class="ambient a-mid"></div>
+
+    <div class="container">
+        <!-- SECTION 1 — HERO -->
+        <section class="hero">
+            <h1>BlueMoonBio</h1>
+            <p class="subtitle">A Biological Operating System for Treatment Alignment</p>
+
+            <h2 class="tagline">We don’t predict response. We simulate it.</h2>
+
+            <!-- HERO VISUAL -->
+            <div class="hero-visual">
+                <svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%; opacity:0.8;">
+                    <defs>
+                        <filter id="glow"><feGaussianBlur stdDeviation="5" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+                    </defs>
+                    <g stroke="rgba(255,255,255,0.05)" fill="none" stroke-width="1.5">
+                        <path d="M 0 200 Q 400 50, 800 200" />
+                        <path d="M 0 230 Q 400 100, 800 230" />
+                        <path d="M 0 260 Q 400 150, 800 260" />
+                    </g>
+                    <!-- Trajectory -->
+                    <path d="M 150 240 Q 400 200, 600 120" stroke="var(--neon-blue)" stroke-width="3" stroke-dasharray="8,6" />
+                    <circle cx="150" cy="240" r="8" fill="rgba(255,255,255,0.2)" stroke="#fff" stroke-width="2"/>
+                    <circle cx="600" cy="120" r="10" fill="var(--neon-blue)" filter="url(#glow)" />
+                    <circle cx="600" cy="120" r="4" fill="#fff" />
+                    <text x="620" y="125" fill="#fff" font-weight="800" font-family="Inter" letter-spacing="1">TARGET RESOLUTION</text>
+                </svg>
+            </div>
+
+            <!-- $$$ STRIP -->
+            <div class="impact">
+                <span>+25% Response</span>
+                <span>→ 30–40% Smaller Trials</span>
+                <span>→ $ Saved</span>
+            </div>
+
+            <a href="https://demo.bluemoonbio.ai" class="cta">
+                Simulate a Patient
+            </a>
+
+            <p class="subtext">No setup required. Runs instantly.</p>
+        </section>
+
+        <!-- SECTION 2 — WHAT THIS IS -->
+        <section>
+            <h3>Biology is a coordinate system</h3>
+            <ul>
+                <li>Patients = positions</li>
+                <li>Therapies = directional vectors</li>
+                <li>Outcomes = movement through space</li>
+            </ul>
+        </section>
+
+        <!-- SECTION 3 — WHY IT MATTERS -->
+        <section>
+            <h3>Why this changes everything</h3>
+            <ul>
+                <li>Assign optimal therapy per patient</li>
+                <li>Reduce clinical trial failure</li>
+                <li>Simulate outcomes before intervention</li>
+            </ul>
+        </section>
+
+        <!-- SECTION 4 — PROOF -->
+        <section>
+            <h3>Proven across domains</h3>
+            <ul>
+                <li>Psychiatry, autoimmune, oncology</li>
+                <li>Strict out-of-sample validation</li>
+                <li>Blood → brain alignment</li>
+            </ul>
+            <p class="highlight">
+                Failures are not noise — they are geometric misalignment
+            </p>
+        </section>
+
+        <!-- SECTION 5 — FOOTER -->
+        <section class="footer">
+            <h2>BlueMoonBio</h2>
+            <p>Powered by BlueMoon</p>
+            <p style="margin-top: 20px; font-weight: 600; color: #fff;">Seeking: Seed capital · Technical co-founder · Pharma partners</p>
+        </section>
+    </div>
+
+</body>
+</html>

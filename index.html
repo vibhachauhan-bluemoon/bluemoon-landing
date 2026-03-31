@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BlueMoonBio | Biological Decision Systems</title>
+    <title>BlueMoonBio | Biological Simulation Engine</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -11,10 +11,10 @@
             --neon-purple: #a371f7;
             --dark-surface: #0a0b10;
             --darker-bg: #030407;
-            --glass: rgba(15, 20, 30, 0.6);
+            --glass: rgba(10, 15, 25, 0.4);
             --glass-border: rgba(0, 240, 255, 0.15);
             --text-primary: #ffffff;
-            --text-secondary: #9ca3af;
+            --text-secondary: #a1a1aa;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -29,576 +29,459 @@
         }
 
         /* -------------------------------------
-           GRID BACKGROUND & AMBIENT GLOW
+           CLINICAL GRID BACKGROUND (NO SPACE)
            ------------------------------------- */
-        .bg-grid {
+        .technical-grid {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
             background-image: 
-                linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
-            background-size: 60px 60px;
+                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 80px 80px;
             z-index: -2;
             pointer-events: none;
         }
-
-        .ambient-glow {
-            position: fixed;
-            width: 80vw;
-            height: 80vh;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(0, 240, 255, 0.08) 0%, rgba(0,0,0,0) 70%);
-            top: -20vh;
-            left: 10vw;
-            z-index: -1;
-            pointer-events: none;
+        .technical-grid::after {
+            content: ''; position: absolute; top:0; left:0; width:100%; height:100%;
+            background: radial-gradient(circle at 50% 10%, transparent 0%, var(--darker-bg) 80%);
         }
 
         /* -------------------------------------
            NAVIGATION
            ------------------------------------- */
         nav {
-            position: fixed;
-            top: 0; left: 0; width: 100%;
-            padding: 20px 0;
-            background: rgba(3, 4, 7, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            z-index: 1000;
+            position: fixed; top: 0; left: 0; width: 100%; padding: 20px 0;
+            background: rgba(3, 4, 7, 0.7); backdrop-filter: blur(25px);
+            border-bottom: 1px solid rgba(255,255,255,0.05); z-index: 1000;
         }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 40px;
-        }
-
-        .logo {
-            font-size: 1.4rem;
-            font-weight: 900;
-            letter-spacing: -0.5px;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo-dot {
-            width: 10px; height: 10px;
-            background: var(--neon-blue);
-            border-radius: 50%;
-            box-shadow: 0 0 15px var(--neon-blue);
-            animation: pulse-dot 3s infinite alternate;
-        }
-
-        @keyframes pulse-dot { 0% { opacity: 0.5; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1.1); } }
-
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 40px; }
+        .logo { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.5px; color: #fff; display: flex; align-items: center; gap: 10px; }
+        .logo-dot { width: 10px; height: 10px; background: var(--neon-blue); border-radius: 50%; box-shadow: 0 0 10px var(--neon-blue); }
         .nav-links { display: flex; gap: 40px; }
         .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: color 0.3s; }
         .nav-links a:hover { color: #fff; }
-        
-        .nav-cta {
-            background: transparent;
-            color: var(--neon-blue);
-            border: 1px solid var(--neon-blue);
-            padding: 8px 24px;
-            border-radius: 50px;
-            font-weight: 700;
-            text-decoration: none;
-            transition: all 0.3s;
-            font-size: 0.9rem;
-        }
-
-        .nav-cta:hover {
-            background: var(--neon-blue);
-            color: #000;
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
-        }
+        .nav-cta { background: transparent; color: var(--neon-blue); border: 1px solid var(--neon-blue); padding: 8px 24px; border-radius: 5px; font-weight: 700; text-decoration: none; font-size: 0.9rem; }
+        .nav-cta:hover { background: var(--neon-blue); color: #000; }
 
         /* -------------------------------------
-           LAYOUT CONTAINERS
+           LAYOUT
            ------------------------------------- */
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 120px 40px 60px 40px;
-        }
-
-        section {
-            margin-bottom: 140px;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+        .container { max-width: 1100px; margin: 0 auto; padding: 120px 40px 60px 40px; }
+        section { margin-bottom: 150px; }
 
         /* -------------------------------------
            HERO SECTION
            ------------------------------------- */
-        .hero {
-            min-height: 85vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            position: relative;
-            padding-top: 60px;
-        }
-
-        .hero h1 {
-            font-size: 4.5rem;
-            font-weight: 900;
-            line-height: 1.05;
-            letter-spacing: -2.5px;
-            margin-bottom: 30px;
-            max-width: 850px;
-            color: #fff;
-        }
-
-        .hero .subline {
-            font-size: 1.5rem;
-            color: var(--text-secondary);
-            font-weight: 300;
-            max-width: 700px;
-            margin-bottom: 50px;
-            line-height: 1.5;
-        }
-
-        .hero .tagline {
-            font-size: 2rem;
-            font-weight: 700;
-            letter-spacing: -1px;
-            margin-bottom: 20px;
-            color: #fff;
-        }
-
-        .hero .identity {
-            font-size: 0.95rem;
-            color: var(--neon-blue);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 700;
-            margin-bottom: 60px;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(0, 240, 255, 0.05);
-            padding: 8px 20px;
-            border-radius: 50px;
-            border: 1px solid rgba(0, 240, 255, 0.2);
-        }
+        .hero { min-height: 80vh; display: flex; flex-direction: column; justify-content: center; position: relative; padding-top: 60px; text-align: center; }
+        .hero h1 { font-size: 4.8rem; font-weight: 900; line-height: 1.05; letter-spacing: -2.5px; margin: 0 auto 30px auto; max-width: 950px; color: #fff; }
+        .hero .tagline { font-size: 2rem; font-weight: 300; letter-spacing: -1px; margin-bottom: 30px; color: var(--text-secondary); }
+        .hero .tagline strong { color: #fff; font-weight: 700; }
+        .hero .line { font-size: 1.1rem; color: var(--neon-blue); text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 60px; }
 
         .primary-cta {
-            background: #fff;
-            color: #000;
-            padding: 22px 50px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 800;
-            font-size: 1.2rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 15px;
-            transition: all 0.3s;
-            box-shadow: 0 10px 30px rgba(255,255,255,0.1);
+            background: #fff; color: #000; padding: 20px 50px; border-radius: 5px; text-decoration: none;
+            font-weight: 800; font-size: 1.2rem; display: inline-flex; align-items: center; gap: 15px; transition: all 0.3s;
         }
-
-        .primary-cta:hover {
-            transform: translateY(-3px);
-            background: var(--neon-blue);
-            box-shadow: 0 15px 40px rgba(0, 240, 255, 0.4);
-        }
+        .primary-cta:hover { transform: translateY(-3px); background: var(--neon-blue); box-shadow: 0 15px 40px rgba(0, 240, 255, 0.4); }
 
         /* -------------------------------------
-           TYPOGRAPHY & UTILITIES
+           NAVIGATION VISUAL (CORE ENGINE MAP)
            ------------------------------------- */
-        .sec-title {
-            font-size: 3rem;
-            font-weight: 800;
-            letter-spacing: -1.5px;
-            margin-bottom: 25px;
-            color: #fff;
-            line-height: 1.1;
+        .engine-visual {
+            width: 100%; height: 600px; background: #010203; border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px; margin-top: 100px; position: relative; overflow: hidden;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center;
         }
 
-        .sec-lead {
-            font-size: 1.4rem;
-            color: var(--text-secondary);
-            font-weight: 300;
-            margin-bottom: 40px;
-            max-width: 800px;
-        }
-
-        .highlight { color: var(--neon-blue); }
-        .glass-panel {
-            background: var(--glass);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 20px;
-            padding: 50px;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* -------------------------------------
-           IMAGE BLOCKS (NEW)
-           ------------------------------------- */
-        .split-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
-        }
-
-        .image-card {
-            width: 100%;
-            height: 100%;
-            min-height: 400px;
-            border-radius: 20px;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-            overflow: hidden;
-        }
-
-        .image-card::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, rgba(0,240,255,0.2) 0%, rgba(0,0,0,0.8) 100%);
-            mix-blend-mode: multiply;
-        }
-
-        .parallax-strip {
-            width: 100vw;
-            margin-left: calc(-50vw + 50%);
-            height: 400px;
-            background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1920');
-            background-position: center;
-            background-attachment: fixed;
-            background-size: cover;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 140px;
-        }
-
-        .parallax-strip::before {
-            content: ''; position: absolute; top:0; left:0; width: 100%; height: 100%;
-            background: rgba(3, 4, 7, 0.85); /* Deep dark overlay */
-        }
-
-        .truth-statement {
-            font-size: 2rem;
-            font-weight: 300;
-            color: #fff;
-            margin-top: 60px;
-            border-left: 4px solid var(--neon-blue);
-            padding-left: 30px;
-        }
-
-        /* -------------------------------------
-           THE CORE VISUAL (ANIMATED MANIFOLD)
-           ------------------------------------- */
-        .visual-frame {
-            width: 100%;
-            height: 500px;
-            background: #050608;
-            border: 1px solid rgba(0, 240, 255, 0.2);
-            border-radius: 24px;
-            position: relative;
-            overflow: hidden;
-            margin: 60px 0 30px 0;
-            box-shadow: inset 0 0 100px rgba(0,0,0,0.8), 0 20px 50px rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .anim-path { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: drawPath 4s cubic-bezier(0.25, 0.1, 0.25, 1) forwards infinite; }
-        .anim-path-slow { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: drawPath 5s cubic-bezier(0.25, 0.1, 0.25, 1) forwards infinite; animation-delay: 0.5s; }
+        .anim-path { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: drawPath 3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards infinite; }
+        .anim-path-slow { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: drawPath 4s cubic-bezier(0.25, 0.1, 0.25, 1) forwards infinite; animation-delay: 0.5s; }
         @keyframes drawPath { 0% { stroke-dashoffset: 1000; } 70%, 100% { stroke-dashoffset: 0; } }
         
-        .glow-node { animation: pulseNode 3s infinite; filter: drop-shadow(0 0 10px rgba(0,240,255,0.8)); }
-        @keyframes pulseNode { 0%, 100% { r: 6; opacity: 0.8; } 50% { r: 10; opacity: 1; filter: drop-shadow(0 0 20px rgba(0,240,255,1));} }
+        /* -------------------------------------
+           CAPABILITIES (6 PILLARS)
+           ------------------------------------- */
+        .sec-header { margin-bottom: 50px; text-align: center; }
+        .sec-title { font-size: 3rem; font-weight: 900; letter-spacing: -1.5px; color: #fff; line-height: 1.1; margin-bottom: 20px; }
+        .sec-lead { font-size: 1.4rem; color: var(--text-secondary); font-weight: 300; max-width: 800px; margin: 0 auto; }
+
+        .capabilities-wrapper {
+            position: relative; padding: 60px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); overflow: hidden;
+            background: linear-gradient(135deg, rgba(3,4,7,0.8), rgba(3,4,7,0.95)), url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1920');
+            background-size: cover; background-position: center; background-attachment: fixed;
+        }
+
+        .pillars-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; position: relative; z-index: 2; }
+        .pillar-node { background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 35px; backdrop-filter: blur(15px); transition: all 0.3s; }
+        .pillar-node:hover { border-color: var(--neon-blue); transform: translateY(-5px); background: rgba(0, 240, 255, 0.03); }
+        .pillar-node h3 { font-size: 1.5rem; color: #fff; font-weight: 800; margin-bottom: 10px; }
+        .pillar-node p { font-size: 1.1rem; color: var(--neon-blue); font-family: 'Courier New', monospace; }
 
         /* -------------------------------------
-           MULTI-AUDIENCE GRID
+           DRUG PROJECTION MAP
            ------------------------------------- */
-        .matrix-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
+        .drug-map-container {
+            width: 100%; height: 500px; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+            background: #020305; margin: 40px 0; position: relative; display: flex; align-items: center; justify-content: center;
         }
-        .matrix-grid > div:nth-child(4), .matrix-grid > div:nth-child(5) { grid-column: span 1.5; }
 
-        .matrix-card {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 16px;
-            padding: 40px;
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .matrix-card::before { content: ''; position: absolute; top:0; left:0; width: 2px; height: 100%; background: transparent; transition: all 0.4s; }
-        .matrix-card:hover { transform: translateY(-8px); background: rgba(0, 240, 255, 0.03); box-shadow: 0 20px 40px rgba(0,0,0,0.4); border-color: rgba(0, 240, 255, 0.2); }
-        .matrix-card:hover::before { background: var(--neon-blue); }
+        .scatter-point { fill: rgba(255,255,255,0.3); }
 
         /* -------------------------------------
-           TERMINAL CASE STORY
+           CASE STUDY
            ------------------------------------- */
-        .terminal-block {
-            background: #050608;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 40px;
-            font-family: 'Courier New', Courier, monospace;
-            color: #a3a3a3;
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
-            margin: 40px 0;
-            position: relative;
-        }
-        .term-line { margin-bottom: 20px; font-size: 1.1rem; }
-        .term-fail { color: #f87171; }
-        .term-success { color: var(--neon-blue); text-shadow: 0 0 10px rgba(0,240,255,0.4); }
+        .case-study { display: grid; grid-template-columns: 1fr; gap: 30px; background: rgba(3,4,7,0.7); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 60px; text-align: center; }
+        .case-header { font-size: 2rem; font-weight: 800; color: #fff; margin-bottom: 40px; }
+        .case-row { font-size: 1.6rem; font-weight: 500; font-family: monospace; display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 20px; }
+        .case-ssri { color: #555; }
+        .case-ketamine { color: var(--neon-blue); }
+        .case-punchline { font-size: 2.2rem; font-weight: 300; color: #fff; margin-top: 50px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 40px; }
+        .case-punchline strong { font-weight: 900; }
+
+        /* -------------------------------------
+           PROOF (TINY)
+           ------------------------------------- */
+        .proof-block { border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 40px 0; text-align: center; }
+        .proof-tags { display: flex; justify-content: center; gap: 40px; font-family: 'Courier New', monospace; color: var(--text-secondary); font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 30px; }
+        .proof-tags span { display: flex; align-items: center; gap: 10px; }
+        .proof-tags span::before { content: ''; width: 6px; height: 6px; background: var(--neon-blue); border-radius: 50%; }
+        .proof-line { font-size: 1.6rem; font-weight: 600; color: #fff; }
 
         /* -------------------------------------
            IMPACT STRIP
            ------------------------------------- */
-        .metrics-container { display: flex; justify-content: space-between; gap: 30px; }
-        .metric-box {
-            flex: 1; padding: 40px; border-radius: 20px;
-            background: linear-gradient(145deg, rgba(255,255,255,0.03), transparent);
-            border: 1px solid rgba(255,255,255,0.05);
-            text-align: center;
-        }
-        .m-num { font-size: 4rem; font-weight: 900; color: var(--neon-blue); line-height: 1; margin-bottom: 10px; }
-        .m-label { font-size: 1rem; color: #fff; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;}
+        .impact-strip { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 50px; border-radius: 12px; margin-top: 60px; }
+        .impact-item { text-align: center; flex: 1; border-right: 1px solid rgba(255,255,255,0.05); }
+        .impact-item:last-child { border-right: none; }
+        .impact-val { font-size: 3.5rem; font-weight: 900; color: var(--neon-blue); line-height: 1; margin-bottom: 10px; }
+        .impact-label { font-size: 1.1rem; color: #fff; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
 
         @media (max-width: 900px) {
-            .split-layout { grid-template-columns: 1fr; }
-            .matrix-grid { grid-template-columns: 1fr; }
-            .matrix-grid > div:nth-child(4), .matrix-grid > div:nth-child(5) { grid-column: span 1; }
-            .metrics-container { flex-direction: column; }
+            .pillars-grid { grid-template-columns: 1fr; }
+            .impact-strip { flex-direction: column; gap: 40px; }
+            .impact-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 30px; width: 100%; }
+            .impact-item:last-child { border-bottom: none; padding-bottom: 0; }
+            .proof-tags { flex-direction: column; gap: 15px; align-items: center; }
+            .hero h1 { font-size: 3.5rem; }
         }
+
+        footer { text-align: center; padding: 60px 0; color: var(--text-secondary); font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 80px; }
     </style>
 </head>
 <body>
 
-    <div class="bg-grid"></div>
-    <div class="ambient-glow"></div>
+    <div class="technical-grid"></div>
 
+    <!-- COMMAND NAVIGATION -->
     <nav>
         <div class="nav-container">
             <div class="logo"><div class="logo-dot"></div>BlueMoonBio</div>
             <div class="nav-links">
-                <a href="#platform">The Platform</a>
-                <a href="#ecosystem">Ecosystem</a>
-                <a href="#impact">Impact</a>
+                <a href="#map">Platform</a>
+                <a href="#capabilities">Capabilities</a>
+                <a href="#proof">Validation</a>
             </div>
-            <a href="https://demo.bluemoonbio.ai" class="nav-cta">Launch Engine</a>
+            <a href="https://bluemoon-demo.streamlit.app" class="nav-cta">Simulate Patient</a>
         </div>
     </nav>
 
     <div class="container">
         
-        <!-- HERO -->
-        <section class="hero">
-            <div class="identity">• Biology Simulated</div>
+        <!-- HERO (TOP) -->
+        <section class="hero" style="margin-bottom: 50px;">
             <h1>Every patient is treated as an average. No one actually is.</h1>
-            <p class="subline">BlueMoonBio builds systems that understand individual biology — and simulate how treatments will physically alter each patient before a decision is ever made.</p>
-            
-            <div style="margin: 30px 0 50px 0;">
-                <p class="tagline">We don’t predict response. <span class="highlight">We simulate it.</span></p>
-            </div>
+            <p class="tagline">We don’t predict response. <strong>We simulate it.</strong></p>
+            <div class="line">Powered by BlueMoon, our biological simulation engine.</div>
 
             <div>
-                <a href="https://demo.bluemoonbio.ai" class="primary-cta">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                <a href="https://bluemoon-demo.streamlit.app" class="primary-cta">
                     Simulate a Patient
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </a>
             </div>
-        </section>
 
-        <!-- THE PROBLEM (WITH VISUAL) -->
-        <section id="platform">
-            <div class="split-layout">
-                <div>
-                    <h2 class="sec-title" style="font-size: 2.2rem; margin-bottom: 40px;">Two patients receive the same diagnosis.<br>They are given the same treatment.<br><span class="highlight">One improves. The other does not.</span></h2>
-                    
-                    <div style="color: var(--text-secondary); border-left: 2px solid rgba(255,255,255,0.1); padding-left: 20px;">
-                        <p style="margin-bottom: 15px;"><strong style="color:#fff; display:inline-block; width:120px;">For patients:</strong> Months or years of trial-and-error.</p>
-                        <p style="margin-bottom: 15px;"><strong style="color:#fff; display:inline-block; width:120px;">For clinicians:</strong> No biological way to choose upfront.</p>
-                        <p><strong style="color:#fff; display:inline-block; width:120px;">For pharma:</strong> Variability drives failed trials and lost billions.</p>
-                    </div>
-
-                    <div class="truth-statement">
-                        The problem is not the treatment.<br>
-                        <span style="font-weight: 700; color: #fff;">The problem is that we treat diagnoses — not biology.</span>
-                    </div>
-                </div>
-                <!-- Premium High-Tech Stock Image -->
-                <div class="image-card" style="background-image: url('https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&q=80&w=800');"></div>
-            </div>
-        </section>
-
-        <!-- THE SHIFT & VISUAL -->
-        <section>
-            <h2 class="sec-title">What if we could see what happens before treatment?</h2>
-            <p class="sec-lead">BlueMoon maps each patient into a shared mathematical architecture that captures how their biological system dynamically behaves under pressure.</p>
-            
-            <div style="font-size: 1.4rem; color: #fff; margin-bottom: 30px; color:var(--text-secondary);">
-                Within this space:<br>
-                <span class="highlight" style="font-weight: 700;">Patients</span> are positions.<br>
-                <span class="highlight" style="font-weight: 700;">Therapies</span> are directional forces.<br>
-                <span class="highlight" style="font-weight: 700;">Outcomes</span> are movement.<br>
-            </div>
-
-            <div class="visual-frame">
-                <svg width="100%" height="100%" viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg">
+            <!-- NAVIGATION VISUAL (CORE ENGINE MAP) -->
+            <div id="map" class="engine-visual">
+                <svg width="100%" height="100%" viewBox="0 0 1000 600" xmlns="http://www.w3.org/2000/svg">
                     <defs>
-                        <radialGradient id="glowMap" cx="50%" cy="50%" r="50%">
-                            <stop offset="0%" stop-color="rgba(0, 240, 255, 0.2)" />
+                        <radialGradient id="targetGlow" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="rgba(0, 240, 255, 0.3)" />
                             <stop offset="100%" stop-color="rgba(0,0,0,0)" />
                         </radialGradient>
                     </defs>
-                    <g fill="none" class="bg-contours" stroke-width="1.5">
-                        <path d="M-100 350 Q 400 -50 1100 250" stroke="rgba(255,255,255,0.03)" />
-                        <path d="M-100 400 Q 450 50 1100 350" stroke="rgba(255,255,255,0.04)" />
-                        <path d="M-100 450 Q 500 150 1100 450" stroke="rgba(255,255,255,0.02)" />
+                    
+                    <!-- Clinical Grid Array -->
+                    <g stroke="rgba(255,255,255,0.05)" stroke-width="1">
+                        <line x1="100" y1="0" x2="100" y2="600"/> <line x1="300" y1="0" x2="300" y2="600"/>
+                        <line x1="500" y1="0" x2="500" y2="600"/> <line x1="700" y1="0" x2="700" y2="600"/>
+                        <line x1="900" y1="0" x2="900" y2="600"/>
+                        <line x1="0" y1="100" x2="1000" y2="100"/> <line x1="0" y1="300" x2="1000" y2="300"/>
+                        <line x1="0" y1="500" x2="1000" y2="500"/>
                     </g>
-                    <circle cx="800" cy="200" r="150" fill="url(#glowMap)" />
-                    <circle cx="200" cy="380" r="15" fill="rgba(0,0,0,0.8)" stroke="#fff" stroke-width="2"/>
-                    <circle cx="200" cy="380" r="5" fill="#fff" />
-                    <text x="160" y="420" fill="#fff" font-family="Inter" font-size="14" font-weight="700" letter-spacing="1">PATIENT X</text>
-                    <path class="anim-path-slow" d="M 210 380 Q 300 450 450 480" fill="none" stroke="#f87171" stroke-width="2" stroke-dasharray="4,6" />
-                    <circle cx="450" cy="480" r="5" fill="#f87171" opacity="0.8"/>
-                    <text x="470" y="485" fill="#f87171" font-family="Courier New" font-size="12">[!] THERAPY A: DIVERGENCE</text>
-                    <path class="anim-path-slow" d="M 210 375 Q 400 300 550 250" fill="none" stroke="#a371f7" stroke-width="2" stroke-dasharray="4,6" />
-                    <circle cx="550" cy="250" r="5" fill="#a371f7" opacity="0.8"/>
-                    <text x="570" y="255" fill="#a371f7" font-family="Courier New" font-size="12">[-] THERAPY B: PARTIAL</text>
-                    <path class="anim-path" d="M 210 370 Q 500 150 790 195" fill="none" stroke="#00f0ff" stroke-width="4" filter="drop-shadow(0 0 8px rgba(0,240,255,0.6))" />
-                    <circle class="glow-node" cx="800" cy="200" r="8" fill="#00f0ff" />
-                    <text x="830" y="195" fill="#fff" font-family="Inter" font-weight="900" font-size="16" letter-spacing="1">TARGET RESOLUTION</text>
+                    <!-- Coordinate Labels -->
+                    <g fill="rgba(255,255,255,0.2)" font-family="Courier New" font-size="10">
+                        <text x="10" y="95">-1.0 Z</text> <text x="10" y="295"> 0.0 Z</text> <text x="10" y="495"> 1.0 Z</text>
+                        <text x="305" y="585">ΔX (CLINICAL ALIGNMENT)</text>
+                    </g>
+                    
+                    <!-- Topological Field Curves -->
+                    <path d="M-100 450 Q 500 0 1100 350" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="2"/>
+                    <path d="M-100 500 Q 500 100 1100 450" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+                    <path d="M-100 550 Q 500 200 1100 550" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="2"/>
+
+                    <!-- Health Centroid (Target) -->
+                    <circle cx="850" cy="150" r="180" fill="url(#targetGlow)" />
+                    <circle cx="850" cy="150" r="8" fill="#00f0ff" filter="drop-shadow(0 0 10px #00f0ff)"/>
+                    <text x="870" y="145" fill="#fff" font-family="Inter" font-weight="900" font-size="16" letter-spacing="1">TARGET CENTROID</text>
+
+                    <!-- Patient Point -->
+                    <circle cx="150" cy="450" r="14" fill="#0A0B10" stroke="#fff" stroke-width="2"/>
+                    <circle cx="150" cy="450" r="4" fill="#fff" />
+                    <text x="110" y="485" fill="#fff" font-family="Inter" font-size="14" font-weight="800">PATIENT ORIGIN</text>
+
+                    <!-- Bad Trajectories -->
+                    <path class="anim-path-slow" d="M 160 450 Q 300 500 500 550" fill="none" stroke="#555" stroke-width="2" stroke-dasharray="4,6" />
+                    <circle cx="500" cy="550" r="4" fill="#555" />
+                    <text x="515" y="555" fill="#555" font-family="Courier New" font-weight="700" font-size="12">VECTOR: UNALIGNED</text>
+
+                    <!-- Good Trajectory (Dominant Path) -->
+                    <path class="anim-path" d="M 160 445 Q 500 200 840 155" fill="none" stroke="#00f0ff" stroke-width="4" filter="drop-shadow(0 0 8px rgba(0,240,255,0.6))" />
+                    <text x="450" y="270" fill="#00f0ff" font-family="Inter" font-weight="800" font-size="14" letter-spacing="1" filter="drop-shadow(0 0 5px rgba(0,240,255,0.5))">DOMINANT ALIGNMENT TRAJECTORY</text>
+                </svg>
+            </div>
+        </section>
+
+        <!-- CAPABILITIES (PILLARS) -->
+        <section id="capabilities">
+            <div class="sec-header">
+                <h2 class="sec-title">Capabilities</h2>
+                <p class="sec-lead">The physical mechanics of the simulation engine.</p>
+            </div>
+
+            <div class="capabilities-wrapper">
+                <div style="position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(3,4,7,0.85); z-index: 1;"></div>
+                
+                <div class="pillars-grid">
+                    <!-- Node 1 -->
+                    <div class="pillar-node">
+                        <h3>Map Biology</h3>
+                        <p>> state space location</p>
+                    </div>
+                    <!-- Node 2 -->
+                    <div class="pillar-node">
+                        <h3>Stratify Patients</h3>
+                        <p>> biological subtypes</p>
+                    </div>
+                    <!-- Node 3 -->
+                    <div class="pillar-node">
+                        <h3>Predict & Track</h3>
+                        <p>> mechanistic response</p>
+                    </div>
+                    <!-- Node 4 -->
+                    <div class="pillar-node">
+                        <h3>Assign Therapy</h3>
+                        <p>> vector extraction</p>
+                    </div>
+                    <!-- Node 5 -->
+                    <div class="pillar-node">
+                        <h3>Explain Failure</h3>
+                        <p>> absolute misalignment</p>
+                    </div>
+                    <!-- Node 6 -->
+                    <div class="pillar-node">
+                        <h3>Simulate Outcomes</h3>
+                        <p>> future trajectories</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DRUG PROJECTION MAP -->
+        <section>
+            <div class="sec-header">
+                <h2 class="sec-title">Drug Projection Map</h2>
+                <p class="sec-lead" style="color:#fff; font-weight: 600;">Drugs are vectors in biological space.</p>
+                <p class="sec-lead" style="margin-top: 15px; font-size: 1.2rem;">Mechanisms from fundamentally different therapeutic areas map into the identical biological geometry.</p>
+            </div>
+
+            <div class="drug-map-container">
+                <svg width="100%" height="100%" viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Scatter Background noise representing patients or generic drugs -->
+                    <g opacity="0.4">
+                        <circle cx="300" cy="150" r="2" class="scatter-point"/><circle cx="350" cy="180" r="1.5" class="scatter-point"/>
+                        <circle cx="280" cy="220" r="2.5" class="scatter-point"/><circle cx="400" cy="120" r="1.5" class="scatter-point"/>
+                        <circle cx="420" cy="160" r="2" class="scatter-point"/><circle cx="380" cy="200" r="1.5" class="scatter-point"/>
+                        <circle cx="250" cy="240" r="2" class="scatter-point"/><circle cx="290" cy="280" r="1.5" class="scatter-point"/>
+                    </g>
+                    <!-- Core Origin -->
+                    <circle cx="500" cy="250" r="8" fill="#fff"/>
+                    <text x="520" y="255" fill="#fff" font-family="Courier New" font-size="12">STATE: BASELINE</text>
+
+                    <!-- SSRI CLUSTER (Chaotic, orthogonal, short) -->
+                    <g opacity="0.6">
+                        <circle cx="500" cy="250" r="40" fill="none" stroke="#555" stroke-dasharray="4,4"/>
+                        <text x="440" y="210" fill="#a1a1aa" font-family="Inter" font-weight="700" font-size="14">SSRI CLUSTER (NOISE)</text>
+                        <!-- SSRI mini vectors -->
+                        <line x1="500" y1="250" x2="480" y2="220" stroke="#555" stroke-width="2"/>
+                        <line x1="500" y1="250" x2="530" y2="280" stroke="#555" stroke-width="2"/>
+                        <line x1="500" y1="250" x2="470" y2="270" stroke="#555" stroke-width="2"/>
+                        <line x1="500" y1="250" x2="520" y2="210" stroke="#555" stroke-width="2"/>
+                    </g>
+
+                    <!-- Ketamine Vector (Strong, aligned, long) -->
+                    <path class="anim-path" d="M 500 250 L 900 100" stroke="var(--neon-blue)" stroke-width="3" fill="none"/>
+                    <circle cx="900" cy="100" r="6" fill="#00f0ff" filter="drop-shadow(0 0 10px #00f0ff)"/>
+                    <text x="750" y="80" fill="#00f0ff" font-family="Inter" font-weight="900" font-size="16">KETAMINE VECTOR</text>
+                    <text x="750" y="100" fill="#fff" font-family="Courier New" font-size="12">ALIGNMENT: STRONG</text>
+
+                    <!-- Immune / PD-1 Vector -->
+                    <path class="anim-path-slow" d="M 500 250 L 800 450" stroke="#a371f7" stroke-width="3" fill="none"/>
+                    <circle cx="800" cy="450" r="6" fill="#a371f7"/>
+                    <text x="650" y="470" fill="#a371f7" font-family="Inter" font-weight="900" font-size="16">IMMUNE / PD-1</text>
+                    
+                    <!-- TMS Vector -->
+                    <path class="anim-path-slow" style="animation-duration: 5s;" d="M 500 250 L 150 150" stroke="#ffffff" stroke-width="3" fill="none"/>
+                    <circle cx="150" cy="150" r="6" fill="#ffffff"/>
+                    <text x="130" y="130" fill="#ffffff" font-family="Inter" font-weight="900" font-size="16">TMS INTERVENTION</text>
+                </svg>
+            </div>
+        </section>
+
+        </section>
+
+        <!-- BEYOND PSYCHIATRY (NEW CROSS-DISEASE EXPANSION) -->
+        <section id="beyond-psychiatry">
+            <div class="sec-header">
+                <h2 class="sec-title">Beyond Psychiatry</h2>
+                <p class="sec-lead">Shared biological structure across diseases. Disease-specific deviations emerge within the same space.</p>
+            </div>
+
+            <!-- CROSS DISEASE SPECTRUM PLOT -->
+            <div class="engine-visual" style="height: 450px; margin-top: 40px; background: #010203;">
+                <svg width="100%" height="100%" viewBox="0 0 1000 450" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Faded Cartesian Grid -->
+                    <g stroke="rgba(255,255,255,0.05)" stroke-width="1">
+                        <line x1="500" y1="0" x2="500" y2="450"/>
+                        <line x1="0" y1="225" x2="1000" y2="225"/>
+                    </g>
+                    <!-- Background Field lines -->
+                    <path d="M 0 225 Q 500 0 1000 225" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="40"/>
+                    <path d="M 0 225 Q 500 450 1000 225" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="40"/>
+
+                    <!-- Central Core node -->
+                    <circle cx="500" cy="225" r="8" fill="#fff"/>
+                    <text x="515" y="240" fill="#fff" font-family="Courier New" font-size="12">BASE REGULATION</text>
+
+                    <!-- MDD CLUSTER (Bottom Left) -->
+                    <g opacity="0.8">
+                        <circle cx="200" cy="350" r="50" fill="none" stroke="#a371f7" stroke-width="1" stroke-dasharray="2,2"/>
+                        <circle cx="200" cy="350" r="3" fill="#a371f7" filter="drop-shadow(0 0 8px #a371f7)"/>
+                        <text x="140" y="420" fill="#a371f7" font-family="Inter" font-weight="900" font-size="14">MDD / BIPOLAR</text>
+                        <!-- Points -->
+                        <circle cx="180" cy="330" r="2" fill="#a371f7"/><circle cx="220" cy="360" r="1.5" fill="#a371f7"/>
+                        <circle cx="190" cy="370" r="2.5" fill="#a371f7"/><circle cx="210" cy="320" r="2" fill="#a371f7"/>
+                    </g>
+
+                    <!-- IMMUNE / AUTOIMMUNE (Top Right) -->
+                    <g opacity="0.8">
+                        <circle cx="750" cy="100" r="60" fill="none" stroke="#00f0ff" stroke-width="1" stroke-dasharray="2,2"/>
+                        <circle cx="750" cy="100" r="3" fill="#00f0ff" filter="drop-shadow(0 0 8px #00f0ff)"/>
+                        <text x="690" y="180" fill="#00f0ff" font-family="Inter" font-weight="900" font-size="14">AUTOIMMUNE / SEPSIS</text>
+                        <circle cx="730" cy="80" r="2" fill="#00f0ff"/><circle cx="770" cy="110" r="2" fill="#00f0ff"/>
+                        <circle cx="720" cy="120" r="1.5" fill="#00f0ff"/><circle cx="760" cy="70" r="2.5" fill="#00f0ff"/>
+                    </g>
+                    
+                    <!-- ONCOLOGY (Bottom Right) -->
+                    <g opacity="0.8">
+                        <circle cx="850" cy="350" r="45" fill="none" stroke="#f87171" stroke-width="1" stroke-dasharray="2,2"/>
+                        <circle cx="850" cy="350" r="3" fill="#f87171" filter="drop-shadow(0 0 8px #f87171)"/>
+                        <text x="815" y="420" fill="#f87171" font-family="Inter" font-weight="900" font-size="14">ONCOLOGY</text>
+                        <circle cx="830" cy="340" r="1.5" fill="#f87171"/><circle cx="860" cy="360" r="2" fill="#f87171"/>
+                    </g>
+
+                    <!-- NEURODEGENERATIVE (Top Left) -->
+                    <g opacity="0.8">
+                        <circle cx="250" cy="100" r="55" fill="none" stroke="#ffffff" stroke-width="1" stroke-dasharray="2,2"/>
+                        <circle cx="250" cy="100" r="3" fill="#ffffff" filter="drop-shadow(0 0 8px #ffffff)"/>
+                        <text x="180" y="180" fill="#ffffff" font-family="Inter" font-weight="900" font-size="14">NEURODEGENERATIVE</text>
+                        <circle cx="230" cy="80" r="2" fill="#ffffff"/><circle cx="270" cy="120" r="1.5" fill="#ffffff"/>
+                    </g>
                 </svg>
             </div>
             
-            <div style="margin-top: 50px;">
-                <p class="sec-lead">Powered by <strong>BlueMoon</strong>, a biological simulation engine.</p>
-                <h3 style="font-size: 2rem; color: #fff; font-weight: 400;">Not after failure — <span class="highlight" style="font-weight: 700;">before the decision is made.</span></h3>
+            <div style="margin-top: 50px; text-align: center;">
+                <h3 style="font-size: 2.2rem; font-weight: 300; color: #fff; line-height: 1.3;">
+                    Different diseases occupy different regions — <br>
+                    <span style="font-weight: 800; color: var(--neon-blue);">but the same system governs all.</span>
+                </h3>
             </div>
         </section>
 
-        <!-- ECOSYSTEM (MULTI-AUDIENCE) -->
-        <section id="ecosystem">
-            <h2 class="sec-title">Built for the entire ecosystem</h2>
-            <div class="matrix-grid">
-                <div class="matrix-card"><h4>For Patients</h4><p>Fewer ineffective treatments. Faster access to what actually works, eliminating years of painful trial-and-error.</p></div>
-                <div class="matrix-card"><h4>For Pharma</h4><p>Trials enriched for true responders. Reduced failure risk, smaller patient pools, and radically faster clinical studies.</p></div>
-                <div class="matrix-card"><h4>For Investors</h4><p>A scalable, deterministic platform for treatment selection, trial design, and absolute drug simulation capability.</p></div>
-                <div class="matrix-card"><h4>For Biologists</h4><p>A continuous mathematical representation of biological state across completely disparate diseases and mechanisms.</p></div>
-                <div class="matrix-card"><h4>For AI / ML</h4><p>Not a conventional classifier — a true geometric foundation where interventions act as explicit vectors in latent state space.</p></div>
-            </div>
-        </section>
-
-        <!-- RIGOR & PROOF (WITH VISUAL) -->
-        <section>
-            <div class="split-layout" style="grid-template-columns: 1.2fr 0.8fr;">
-                <div class="glass-panel" style="background: rgba(0,0,0,0.6); border-color: rgba(163, 113, 247, 0.2); z-index: 2;">
-                    <h2 class="sec-title" style="margin-bottom: 20px;">Grounded in rigorous science</h2>
-                    <ul style="list-style: none; font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 40px;">
-                        <li style="margin-bottom: 12px;"><span style="color:var(--neon-purple);">•</span> Validated across psychiatry, immune, and oncology domains</li>
-                        <li style="margin-bottom: 12px;"><span style="color:var(--neon-purple);">•</span> Strict out-of-sample evaluation (zero data leakage)</li>
-                        <li><span style="color:var(--neon-purple);">•</span> Topographic algorithmic consistency (blood-to-brain tracking)</li>
-                    </ul>
-                    <h3 style="font-size: 2.2rem; font-weight: 300; color: #fff; line-height: 1.2;">
-                        Failures are not noise.<br>
-                        <span style="font-weight: 800; color: var(--neon-purple);">They are geometric misalignment.</span>
-                    </h3>
-                </div>
-                <!-- Science Abstract Image -->
-                <div class="image-card" style="background-image: url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800'); height: 120%; transform: translateX(-40px); z-index: 1;"></div>
-            </div>
-        </section>
-
-    </div><!-- Close container for edge-to-edge parallax -->
-
-    <!-- PARALLAX IMAGE STRIP -->
-    <div class="parallax-strip">
-        <div style="z-index: 2; text-align: center; max-width: 800px; padding: 0 40px;">
-            <h2 style="font-size: 3.5rem; font-weight: 900; color: #fff; margin-bottom: 20px;">The impact is immediate.</h2>
-            <p style="font-size: 1.5rem; color: var(--neon-blue); font-weight: 300;">Higher response rates. Fewer failed treatments. More efficient clinical trials.</p>
-        </div>
-    </div>
-
-    <div class="container" style="padding-top: 0;">
-        
-        <!-- IMPACT METRICS -->
-        <section id="impact">
-            <div class="metrics-container">
-                <div class="metric-box">
-                    <div class="m-num">~25<span style="font-size: 2rem;">%</span></div>
-                    <div class="m-label">Response Uplift</div>
-                </div>
-                <div class="metric-box">
-                    <div class="m-num">40<span style="font-size: 2rem;">%</span></div>
-                    <div class="m-label">Smaller Trials</div>
-                </div>
-                <div class="metric-box">
-                    <div class="m-num" style="font-family: 'Times New Roman', serif;">$$$</div>
-                    <div class="m-label">Capital Saved</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- TERMINAL STORY -->
-        <section>
-            <h2 class="sec-title">One patient. Three outcomes.</h2>
-            <p class="sec-lead">A patient who does not respond to an SSRI is often abandoned as "treatment resistant." But what happens when we view them through BlueMoon?</p>
-
-            <div class="terminal-block">
-                <div class="term-line">> INJECT_VECTOR // [SSRI]</div>
-                <div class="term-line term-fail">  ERROR: Minimal state movement. Vector orthogonal to target.</div>
-                <div class="term-line" style="color: #666;">  RESULT: No clinical response.</div>
-                <br>
-                <div class="term-line">> INJECT_VECTOR // [Ketamine]</div>
-                <div class="term-line term-success">  CALCULATING: Trajectory aligns directly with normative axis.</div>
-                <div class="term-line" style="color: #fff; font-weight: bold;">  RESULT: Rapid clinical improvement.</div>
-            </div>
+        <!-- CASE STUDY -->
+            <div class="case-header">Single Patient Case Study</div>
             
-            <h3 style="font-size: 2.4rem; color: #fff; font-weight: 300; text-align: center; margin-top: 60px;">
-                The patient didn’t fail the drug.<br>
-                <span style="font-weight: 800; color: var(--neon-blue);">The drug failed the biology.</span>
-            </h3>
+            <div class="case-row case-ssri">
+                <span>SSRI</span> <span>→</span> <span>no movement</span>
+            </div>
+            <div class="case-row case-ketamine">
+                <span>Ketamine</span> <span>→</span> <span>alignment</span>
+            </div>
+
+            <div class="case-punchline">
+                The patient didn't fail the drug.<br>
+                <strong>The drug failed the biology.</strong>
+            </div>
         </section>
 
-        <!-- FINAL CTA -->
-        <section style="text-align: center; padding-top: 50px;">
-            <div style="font-size: 1.8rem; color: #fff; font-weight: 600; margin-bottom: 30px;">This is not an abstract prediction model.</div>
-            <p class="sec-lead" style="margin: 0 auto 50px auto; max-width: 600px;">BlueMoonBio builds dynamic systems for actively navigating biology — not guessing it.</p>
-            
-            <a href="https://demo.bluemoonbio.ai" class="primary-cta" style="font-size: 1.4rem; padding: 25px 60px;">
-                Simulate a Patient
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-            <p style="color: var(--text-secondary); margin-top: 20px;">See how different treatments physically change outcomes instantly.</p>
+        <!-- PROOF (TINY) -->
+        <section id="proof">
+            <div class="proof-block">
+                <div class="proof-tags" style="font-size: 1rem;">
+                    <span style="color: #fff;">Psychiatry <span style="color:var(--neon-blue); font-weight:bold;">→ works</span></span>
+                    <span style="color: #fff;">Infliximab (Immune) <span style="color:var(--neon-blue); font-weight:bold;">→ works</span></span>
+                    <span style="color: #fff;">PD-1 (Oncology) <span style="color:var(--text-secondary);">→ projects</span></span>
+                    <span style="color: #fff;">Sepsis <span style="color:var(--text-secondary);">→ separates</span></span>
+                </div>
+                <div class="proof-line" style="color: var(--text-secondary); font-weight: 400; font-size: 1.2rem; letter-spacing: 0.5px;">The system holds identically across fundamentally different biological domains.</div>
+            </div>
+        </section>
+
+        <!-- IMPACT -->
+        <section>
+            <div class="impact-strip">
+                <div class="impact-item">
+                    <div class="impact-val">+25%</div>
+                    <div class="impact-label">Response Uplift</div>
+                </div>
+                <div class="impact-item">
+                    <div class="impact-val">30-40%</div>
+                    <div class="impact-label">Smaller Trials</div>
+                </div>
+                <div class="impact-item">
+                    <div class="impact-val">$$$</div>
+                    <div class="impact-label">Capital Saved</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA (FOOTER) -->
+        <section style="text-align: center; margin-bottom: 0;">
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
+                <a href="https://bluemoon-demo.streamlit.app" class="primary-cta" style="padding: 20px 50px; font-size: 1.2rem;">
+                    Simulate a Patient
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+                <a href="mailto:contact@bluemoonbio.ai?subject=BlueMoon%20Platform%20-%20Full%20Deck%20Request" class="primary-cta" style="padding: 20px 50px; font-size: 1.2rem; background: rgba(0, 240, 255, 0.05); border: 1px solid var(--neon-blue); color: var(--neon-blue);">
+                    Request Full Deck
+                </a>
+            </div>
+            <p style="color: var(--text-secondary); margin-top: 20px; font-family: monospace; font-size: 1.1rem; letter-spacing: 0.5px;">Full technical materials available upon request.</p>
         </section>
 
     </div>
 
     <footer>
-        <div style="font-weight: 700; margin-bottom: 10px; color: #fff;">BlueMoonBio</div>
-        <div>Computational Biology & Clinical Systems</div>
-        <div style="margin-top: 30px; opacity: 0.5;">&copy; 2026 BlueMoonBio. All rights reserved.</div>
+        <div style="font-weight: 800; color: #fff; font-size: 1.2rem;">BlueMoonBio</div>
+        <div style="margin-top: 15px; opacity: 0.5;">&copy; 2026 BlueMoonBio. Computational Systems.</div>
     </footer>
 
 </body>

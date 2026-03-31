@@ -32,7 +32,7 @@ st.markdown(f"""
 <style>
 .stApp {{ {bg_css} font-family: 'Inter', sans-serif; }}
 .css-1d391kg {{ padding-top: 2rem; }}
-.demo-banner {
+.demo-banner {{
     background: rgba(248, 113, 113, 0.1);
     border: 1px solid rgba(248, 113, 113, 0.4);
     color: #f87171;
@@ -43,12 +43,12 @@ st.markdown(f"""
     text-align: center;
     letter-spacing: 2px;
     margin-bottom: 30px;
-}
-.hud-header {
+}}
+.hud-header {{
     border-bottom: 1px solid rgba(0, 240, 255, 0.2);
     padding-bottom: 20px;
     margin-bottom: 30px;
-}
+}}
 </style>
 """, unsafe_allow_html=True)
 

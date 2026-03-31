@@ -12,10 +12,26 @@ st.set_page_config(page_title="BlueMoon Simulation Engine | Demo", layout="wide"
 # ==========================================
 # UI POLISH & ARCHITECTURE
 # ==========================================
-st.markdown("""
+import base64
+def get_base64_of_bin_file(bin_file):
+    try:
+        with open(bin_file, 'rb') as f:
+            return base64.b64encode(f.read()).decode()
+    except Exception:
+        return ""
+
+bg_b64 = get_base64_of_bin_file('assets/background1.png')
+bg_css = f'''
+    background-image: linear-gradient(to bottom, rgba(3,4,7,0.2), rgba(3,4,7,0.5)), url("data:image/png;base64,{bg_b64}");
+    background-size: cover;
+    background-position: center top;
+    background-attachment: fixed;
+''' if bg_b64 else 'background-color: #030407;'
+
+st.markdown(f"""
 <style>
-.stApp { background-color: #030407; font-family: 'Inter', sans-serif; }
-.css-1d391kg { padding-top: 2rem; }
+.stApp {{ {bg_css} font-family: 'Inter', sans-serif; }}
+.css-1d391kg {{ padding-top: 2rem; }}
 .demo-banner {
     background: rgba(248, 113, 113, 0.1);
     border: 1px solid rgba(248, 113, 113, 0.4);
@@ -277,7 +293,7 @@ Phase III Execution Impact:
 Estimated Trial Reduction: 30-40%
 Statistical Integrity: Maintained (Valid)
 """
-st.download_button("Download Report (.txt)", data=report, file_name="BlueMoon_Simulation.txt")
+        st.download_button("Download Report (.txt)", data=report, file_name="BlueMoon_Simulation.txt")
 
 # ==========================================
 # LEAD GENERATION CTA (BOTTOM)

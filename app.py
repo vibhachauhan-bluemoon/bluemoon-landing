@@ -10,34 +10,41 @@ import datetime
 st.set_page_config(page_title="BlueMoon OS | Pharma Demo", layout="wide")
 
 # ==========================================
-# UI POLISH
+# UI POLISH & ARCHITECTURE
 # ==========================================
 st.markdown("""
 <style>
-.stApp { background-color: #030407; }
+.stApp { background-color: #030407; font-family: 'Inter', sans-serif; }
 .css-1d391kg { padding-top: 2rem; }
+.demo-banner {
+    background: rgba(248, 113, 113, 0.1);
+    border: 1px solid rgba(248, 113, 113, 0.4);
+    color: #f87171;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-weight: bold;
+    text-align: center;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+}
+.hud-header {
+    border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
 </style>
 """, unsafe_allow_html=True)
 
-st.title("☀️ BlueMoon Simulation Engine (Demo)")
-st.caption("We simulate counterfactual treatment outcomes before intervention.")
-st.caption("No setup required. Runs instantly.")
+st.markdown('<div class="demo-banner">[ PUBLIC DEMO ENGINE : RESTRICTED CAPABILITY ]</div>', unsafe_allow_html=True)
 
 st.markdown("""
-<div style="
-    background: rgba(0,229,255,0.08);
-    border: 1px solid rgba(0,229,255,0.2);
-    padding: 16px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-">
-<b>BlueMoon Simulation Engine (Demo)</b><br>
-This demo shows how biological state determines treatment outcome.<br>
-Full platform access is available for partners and collaborators.
+<div class="hud-header">
+    <h1 style='color: #fff; font-size: 2.2rem; font-weight: 800; letter-spacing: -1px;'>BlueMoon <span style='color: #00f0ff;'>OS</span></h1>
+    <span style='color: #a1a1aa; font-family: monospace; font-size: 1.1rem;'>SYSTEM // ACTIVE SIMULATION ENVIRONMENT</span>
 </div>
 """, unsafe_allow_html=True)
 
-st.divider()
 
 # ==========================================
 # BACKEND MODULARITY
@@ -288,7 +295,7 @@ We work with partners to:
 col1, col2 = st.columns(2)
 
 with col1:
-    st.link_button("Request Access", "mailto:partners@bluemoonbio.ai")
+    st.link_button("Request Access", "mailto:contact@bluemoonbio.ai")
 
 with col2:
     st.link_button("Schedule a Demo", "https://calendly.com/")

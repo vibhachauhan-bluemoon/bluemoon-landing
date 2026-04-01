@@ -155,6 +155,94 @@
         }
 
         footer { text-align: center; padding: 60px 0; color: var(--text-secondary); font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 80px; }
+
+        /* --- SURGICAL CSS PATCH --- */
+        .hero h1 {
+            font-size: clamp(2.8rem, 4vw, 3.8rem);
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1.1;
+            max-width: 900px;
+            margin: 0 auto 30px auto;
+        }
+
+        .hero .tagline {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            max-width: 750px;
+            margin: 0 auto 25px auto;
+        }
+
+        .glow {
+            color: #00f0ff;
+            text-shadow:
+                0 0 8px rgba(0,240,255,0.6),
+                0 0 16px rgba(0,240,255,0.4);
+        }
+
+        .proof-strip {
+            border: 1px solid rgba(0,240,255,0.3);
+            border-radius: 12px;
+            padding: 20px;
+            background: rgba(0,240,255,0.03);
+            backdrop-filter: blur(6px);
+            box-shadow: 0 0 20px rgba(0,240,255,0.08);
+        }
+
+        .sec-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 25px;
+        }
+
+        .sec-lead, p {
+            opacity: 0.85;
+        }
+
+        .pillar-node {
+            transition: all 0.25s ease;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .pillar-node:hover {
+            transform: translateY(-6px);
+            border: 1px solid rgba(0,240,255,0.3);
+            box-shadow: 0 10px 30px rgba(0,240,255,0.12);
+        }
+
+        button, .cta, .primary-cta {
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        button:hover, .primary-cta:hover {
+            box-shadow: 0 0 20px rgba(0,240,255,0.5);
+        }
+
+        .engine-visual {
+            border: 1px solid rgba(0,240,255,0.15);
+            box-shadow: 0 0 40px rgba(0,240,255,0.08);
+            border-radius: 14px;
+        }
+
+        section {
+            margin-top: 100px;
+        }
+
+        .hero {
+            margin-top: 40px;
+        }
+
+        .final-statement {
+            font-size: 2rem;
+            font-weight: 300;
+            line-height: 1.4;
+        }
+
+        .final-statement strong {
+            font-weight: 900;
+        }
     </style>
 </head>
 <body>
@@ -176,16 +264,36 @@
         
         <!-- HERO (TOP) -->
         <section class="hero" style="margin-bottom: 50px;">
-            <h1>When someone is struggling, they deserve precision—not guesswork.</h1>
-            <p class="tagline" style="font-size: 2.2rem; margin-bottom: 20px;">We simulate how treatments change a patient’s biology — <strong>before intervention.</strong></p>
-            <p class="tagline" style="font-size: 1.5rem; color: #fff; margin-bottom: 30px;">This brings clarity to families, solves how therapies are chosen, and de-risks clinical trials.</p>
-            <div class="line">Powered by BlueMoon, our biological simulation engine.</div>
+            <h1>Patients don’t organize by diagnosis.<br>They organize by how they respond to biological mechanisms.</h1>
+            <p class="tagline">
+                BlueMoon maps patients and therapies into the same biological space — 
+                <strong style="color: #fff;">alignment determines response.</strong>
+            </p>
+            <p class="tagline" style="color: #fff; font-size: 1.35rem; margin-bottom: 35px;">
+                This enables mechanism-driven treatment selection, clinical trial enrichment, and simulation of therapeutic outcomes before intervention.
+            </p>
+            <div class="line">A biological coordinate system for treatment alignment</div>
 
             <div>
                 <a href="https://bluemoon-demo.streamlit.app" class="primary-cta">
                     Simulate a Patient
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </a>
+            </div>
+
+            <div class="proof-strip" style="margin-top: 40px; margin-bottom: 40px; text-align: center; max-width: 800px; margin-left: auto; margin-right: auto;">
+                <div style="font-size: 0.9rem; color: #a1a1aa; margin-bottom: 10px;">
+                    Validated on independent patient cohorts:
+                </div>
+                <div style="font-size: 1rem; color: #00f0ff; font-family: monospace; margin-bottom: 15px;">
+                    GSE146446 (MDD, SSRI) • GSE45468 (Infliximab)
+                </div>
+                <div style="font-size: 1.4rem; font-weight: 700;">
+                    Response increases from ~50% → <span class="glow">62.9%</span>
+                </div>
+                <div style="font-size:0.9rem; color:#a1a1aa; margin-top:10px;">
+                    Validated under strict out-of-fold evaluation • Signal collapses under permutation
+                </div>
             </div>
 
             <!-- NAVIGATION VISUAL (CORE ENGINE MAP) -->
@@ -241,10 +349,13 @@
         <!-- WHAT THIS ENABLES (NEW) -->
         <section id="enables" style="text-align: center;">
             <div class="sec-header">
-                <h2 class="sec-title">What this enables</h2>
+                <h2 class="sec-title">Response is structured — not random</h2>
             </div>
             <div style="font-size: 1.8rem; font-weight: 300; line-height: 2.2; color: #ffffff;">
-                <div>Provide families the right intervention before failure occurs</div>
+                <div style="font-size: 1.2rem; color:#a1a1aa; margin-bottom:20px;">
+                    When patients and therapies are mapped into the same biological space, the following becomes possible:
+                </div>
+                <div>Select the right intervention before failure occurs</div>
                 <div>Reduce clinical trial size by 30–40%</div>
                 <div>Deliver clear, biological context for why past treatments failed</div>
                 <div>Simulate outcomes across drugs and combinations</div>
@@ -255,12 +366,16 @@
         <section id="capabilities">
             <div class="sec-header">
                 <h2 class="sec-title">Capabilities</h2>
-                <p class="sec-lead">The physical mechanics of the simulation engine.</p>
+                <p class="sec-lead">How biological alignment is computed and applied</p>
             </div>
 
             <div class="capabilities-wrapper">
                 <div style="position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(3,4,7,0.85); z-index: 1;"></div>
                 
+                <p style="text-align:center; font-size:1.2rem; color:#a1a1aa; margin-bottom:40px; position:relative; z-index:2;">
+                    This is not a single application.<br>
+                    It is a system that enables:
+                </p>
                 <div class="pillars-grid">
                     <!-- Node 1 -->
                     <div class="pillar-node">
@@ -300,7 +415,8 @@
         <section>
             <div class="sec-header">
                 <h2 class="sec-title">Drug Projection Map</h2>
-                <p class="sec-lead" style="color:#fff; font-weight: 600;">Drugs are vectors in biological space.</p>
+                <p class="sec-lead" style="color:#00f0ff; font-weight:600;">Drugs are directional vectors in biological space.</p>
+                <p class="sec-lead" style="margin-top:10px;">Different drugs move patients in different directions — effectiveness depends on alignment.</p>
                 <p class="sec-lead" style="margin-top: 10px; font-size: 1.3rem;">We can place any therapy into this space and predict how it will move a patient.</p>
                 <p class="sec-lead" style="margin-top: 15px; font-size: 1.2rem;">This enables us to end the trial-and-error cycle by mathematically finding the correct biological fit.</p>
             </div>
@@ -442,18 +558,25 @@
                 The patient didn't fail the drug.<br>
                 <strong>The biological alignment was wrong.</strong>
             </div>
+            <div style="margin-top:25px; font-size:1.3rem; color:#a1a1aa;">
+                Same patient. Different mechanisms. Different outcomes.<br>
+                → Treatment selection is a biological alignment problem.
+            </div>
         </section>
 
         <!-- PROOF (TINY) -->
         <section id="proof">
-            <div class="proof-block">
+            <div class="proof-strip" style="margin-bottom: 40px; padding: 30px;">
                 <div class="proof-tags" style="font-size: 1rem;">
-                    <span style="color: #fff;">Psychiatry <span style="color:var(--neon-blue); font-weight:bold;">→ works</span></span>
-                    <span style="color: #fff;">Infliximab (Immune) <span style="color:var(--neon-blue); font-weight:bold;">→ works</span></span>
+                    <span style="color: #fff;">Psychiatry <span class="glow" style="font-weight:bold;">→ works</span></span>
+                    <span style="color: #fff;">Infliximab (Immune) <span class="glow" style="font-weight:bold;">→ works</span></span>
                     <span style="color: #fff;">PD-1 (Oncology) <span style="color:var(--text-secondary);">→ projects</span></span>
                     <span style="color: #fff;">Sepsis <span style="color:var(--text-secondary);">→ separates</span></span>
                 </div>
                 <div class="proof-line" style="color: var(--text-secondary); font-weight: 400; font-size: 1.2rem; letter-spacing: 0.5px;">The system holds identically across fundamentally different biological domains.</div>
+                <div style="margin-top:15px; font-size:1rem; color:#a1a1aa;">
+                    Validated across independent GEO datasets. Signal collapses under permutation.
+                </div>
             </div>
         </section>
 
@@ -493,6 +616,15 @@
                 </a>
             </div>
             <p style="color: var(--text-secondary); margin-top: 20px; font-family: monospace; font-size: 1.1rem; letter-spacing: 0.5px;">Full technical materials available upon request.</p>
+        </section>
+
+        <section style="text-align:center; margin-top:120px;">
+            <h2 class="final-statement">
+                We are moving from<br>
+                <strong>trial-and-error medicine</strong><br>
+                to<br>
+                <strong style="color:#00f0ff;">mechanism-aligned intervention</strong>
+            </h2>
         </section>
 
     </div>

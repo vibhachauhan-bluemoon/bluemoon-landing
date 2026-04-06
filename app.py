@@ -73,11 +73,11 @@ np.random.seed(42)
 # Geometric mapping vectors for the 7 active targets:
 # [RC1 (Serotonin), RC2 (Glutamate), RC3 (TNF), PC1 (Systemic), PC2a (Stress), PC2b (Immune), PC2c (HPA)]
 drug_map = {
-    "SSRI":       [ 0.8, -0.1,  0.0, -0.2,  0.1, -0.1,  0.0],
-    "Ketamine":   [-0.1,  0.9, -0.1,  0.4,  0.6, -0.1,  0.3],
-    "Infliximab": [ 0.0,  0.0,  0.9, -0.3, -0.1,  0.7, -0.2],
-    "PD-1 Check": [ 0.1,  0.0,  0.4,  0.8, -0.2,  0.8,  0.1],
-    "TMS":        [ 0.4,  0.5, -0.1,  0.0,  0.2,  0.0,  0.2]
+    "RC1 Targeting (Serotonergic)":     [ 0.8, -0.1,  0.0, -0.2,  0.1, -0.1,  0.0],
+    "RC2 Targeting (Glutamatergic)":    [-0.1,  0.9, -0.1,  0.4,  0.6, -0.1,  0.3],
+    "RC3 Targeting (TNF/Immune)":       [ 0.0,  0.0,  0.9, -0.3, -0.1,  0.7, -0.2],
+    "PC1 Targeting (Global Systemic)":  [ 0.1,  0.0,  0.4,  0.8, -0.2,  0.8,  0.1],
+    "Multi-Axis Neuromodulation":       [ 0.4,  0.5, -0.1,  0.0,  0.2,  0.0,  0.2]
 }
 
 axis_labels = [

@@ -46,6 +46,11 @@ st.markdown(f'''
     padding-bottom: 20px;
     margin-bottom: 30px;
 }}
+/* Hide default Streamlit top-right menu and icons */
+header {{ visibility: hidden !important; }}
+#MainMenu {{ visibility: hidden !important; }}
+footer {{ visibility: hidden !important; }}
+[data-testid="stToolbar"] {{ visibility: hidden !important; }}
 </style>
 ''', unsafe_allow_html=True)
 

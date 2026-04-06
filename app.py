@@ -110,7 +110,7 @@ with col_up:
         
         # Generate dummy CSV for download
         dummy_cols = ["Sample_ID", "HTR2A", "GRIN1", "TNF", "IL6", "BDNF", "SLC6A4"] + [f"GENE_{i}" for i in range(1, 94)]
-        dummy_data = np.random.uniform(0, 100, (5, 100))
+        dummy_data = np.random.uniform(0, 100, (5, len(dummy_cols) - 1))
         dummy_df = pd.DataFrame(dummy_data, columns=dummy_cols[1:])
         dummy_df.insert(0, "Sample_ID", [f"Patient_{i:03d}" for i in range(1, 6)])
         csv_buffer = dummy_df.to_csv(index=False)

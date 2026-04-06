@@ -98,7 +98,30 @@ def predict_response(z_pos):
 col_up, col_mode = st.columns([2,1])
 
 with col_up:
-    uploaded = st.file_uploader("Ingest Expression Profile / Matrix (CSV)", type=["csv"])
+    uploaded = st.file_uploader("Ingest Expression Profile / Matrix (CSV)", type=["csv"], help="Upload bulk RNA-seq or PBMC count matrices")
+    with st.expander("View CSV Formatting Requirements", expanded=False):
+        st.markdown("""
+        **Required Data Format:**
+        - **Data Type:** Bulk RNA-seq (e.g., TPM/FPKM) or PBMC expression counts.
+        - **Orientation:** Rows = Patients/Samples, Columns = Genes.
+        - **Headers:** The first row must contain standard gene identifiers (HGNC symbols or Ensembl IDs). 
+        - **Sample IDs:** The first column must explicitly contain the sample identifiers (e.g., `Sample_ID`).
+        """)
+        
+        # Generate dummy CSV for download
+        dummy_cols = ["Sample_ID", "HTR2A", "GRIN1", "TNF", "IL6", "BDNF", "SLC6A4"] + [f"GENE_{i}" for i in range(1, 94)]
+        dummy_data = np.random.uniform(0, 100, (5, 100))
+        dummy_df = pd.DataFrame(dummy_data, columns=dummy_cols[1:])
+        dummy_df.insert(0, "Sample_ID", [f"Patient_{i:03d}" for i in range(1, 6)])
+        csv_buffer = dummy_df.to_csv(index=False)
+        
+        st.download_button(
+            label="Download Example Dataset (.csv)",
+            data=csv_buffer,
+            file_name="BlueMoon_Example_Cohort.csv",
+            mime="text/csv",
+            help="Download this sample matrix to test the simulation engine instantly."
+        )
 
 with col_mode:
     mode = st.selectbox("Operation Mode", ["Single Patient (Targeted View)", "Cohort Mode (Pharma View)"])

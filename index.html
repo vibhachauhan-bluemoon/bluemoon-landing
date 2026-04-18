@@ -2,405 +2,290 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>BlueMoon Bio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BlueMoonBio | Biological Coordinate System</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
 <style>
 body {
-  margin: 0;
-  font-family: 'Inter', sans-serif;
-  background-color: #050505;
-  color: #dde3ea;
-  overflow-x: hidden;
+    margin:0;
+    font-family:'Inter', sans-serif;
+    background:#010204;
+    color:#fff;
 }
 
-/* Background */
-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: -1;
+nav {
+    position:fixed;
+    width:100%;
+    top:0;
+    padding:20px 40px;
+    display:flex;
+    justify-content:space-between;
+    background:rgba(1,2,4,0.8);
+    backdrop-filter:blur(20px);
 }
 
-/* Layout */
-.section {
-  padding: 100px 20px;
-}
+.logo { font-weight:800; }
+.nav-links { display:flex; gap:30px; }
+.nav-links a { color:#aaa; text-decoration:none; }
+
 .container {
-  max-width: 1100px;
-  margin: 0 auto;
+    max-width:1100px;
+    margin:auto;
+    padding:150px 40px;
 }
 
-/* Reveal */
-.reveal {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: all 1s ease;
-}
-.reveal.active {
-  opacity: 1;
-  transform: translateY(0);
+/* HERO */
+.hero {
+    text-align:center;
 }
 
-/* Images */
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 8px;
-  border: 1px solid #30363d;
+.hero h1 {
+    font-size:4rem;
+    font-weight:800;
+    line-height:1.1;
 }
 
-/* Typography */
-h1 {
-  font-size: 56px;
-  line-height: 1.1;
-  color: #fff;
-  margin-bottom: 20px;
-}
-h2 {
-  font-size: 36px;
-  color: #fff;
-}
-p {
-  font-size: 18px;
-  color: #aaa;
-  line-height: 1.6;
+.hero p {
+    margin-top:20px;
+    color:#aaa;
+    font-size:1.2rem;
 }
 
-/* Grid */
-.grid-2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: center;
-}
-@media (max-width: 800px) {
-  .grid-2 { grid-template-columns: 1fr; }
-}
-
-/* Button */
-.button {
-  display: inline-block;
-  margin-top: 30px;
-  padding: 14px 28px;
-  background: rgba(0, 191, 255, 0.1);
-  border: 1px solid rgba(0,191,255,0.4);
-  color: #00BFFF;
-  border-radius: 6px;
-  text-decoration: none;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  transition: all 0.3s ease;
-  box-shadow: 0 0 15px rgba(0, 191, 255, 0.1);
-}
-.button:hover {
-  background: rgba(0, 191, 255, 0.2);
-  box-shadow: 0 0 25px rgba(0, 191, 255, 0.3);
-  transform: translateY(-2px);
+.cta {
+    margin-top:40px;
+    display:inline-block;
+    padding:16px 40px;
+    background:#fff;
+    color:#000;
+    text-decoration:none;
+    font-weight:700;
 }
 
-/* Cards */
+/* SECTION */
+.section {
+    margin-top:120px;
+}
+
+.section h2 {
+    font-size:2rem;
+    margin-bottom:20px;
+}
+
+/* GRID */
+.grid {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:30px;
+}
+
 .card {
-  background: rgba(13, 17, 23, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(48, 54, 61, 0.5);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  border-radius: 12px;
-  padding: 30px;
-  transition: all 0.3s ease;
-}
-.card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(0, 191, 255, 0.4);
-  box-shadow: 0 12px 40px rgba(0, 191, 255, 0.15);
+    border:1px solid rgba(255,255,255,0.05);
+    padding:30px;
+    background:rgba(255,255,255,0.02);
 }
 
-/* Chart bars */
-.bar-group {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 30px;
+/* TABLE */
+table {
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
 }
-.bar {
-  width: 22%;
-  text-align: center;
+td, th {
+    padding:12px;
+    border-bottom:1px solid rgba(255,255,255,0.05);
 }
-.bar-inner {
-  display: flex;
-  gap: 6px;
-  justify-content: center;
-  align-items: flex-end;
-  height: 140px;
-}
-.bar-rect {
-  width: 20px;
-  border-radius: 4px 4px 0 0;
-  transition: all 0.3s ease;
-}
-.bar-rect:hover {
-  filter: brightness(1.2);
-}
-.base { 
-  background: #555; 
-}
-.final { 
-  background: #00BFFF; 
-  box-shadow: 0 0 12px rgba(0, 191, 255, 0.6);
-}
+th { color:#aaa; }
 
-/* Footer text */
-.small {
-  font-size: 14px;
-  color: #666;
+/* FOOTER */
+.footer {
+    margin-top:120px;
+    text-align:center;
+    color:#666;
 }
 </style>
 </head>
 
 <body>
 
-<canvas id="bg"></canvas>
+<nav>
+    <div class="logo">BlueMoonBio</div>
+    <div class="nav-links">
+        <a href="#platform">Platform</a>
+        <a href="#validation">Validation</a>
+        <a href="#applications">Applications</a>
+    </div>
+</nav>
+
+<div class="container">
 
 <!-- HERO -->
-<div class="section reveal" style="padding-top:140px;">
-  <div class="container">
-
-    <div style="margin-bottom: 70px;">
-      <div style="margin-bottom:0;">
-        <div style="font-size:22px; color:#ffffff; font-weight:500;">
-          BlueMoon <span style="color:#00BFFF;">Bio</span>
-        </div>
-        <div style="font-size:15px; color:#888; margin-top:4px;">
-          Biological alignment engine for treatment response
-        </div>
-      </div>
-    </div>
-
-    <h1 style="color:rgba(255,255,255,0.95); font-size:64px; line-height:1.05; margin-bottom:20px; max-width:850px; font-weight:700; letter-spacing:-1px;">
-      Treatment outcomes can be improved through biological alignment
-    </h1>
-
-    <p style="max-width:700px;">
-      Consistent improvements observed across multiple diseases and therapies.
+<section class="hero">
+    <h1>Match biology to mechanism.<br>Move beyond trial-and-error medicine.</h1>
+    <p>
+        A biological coordinate system that reveals structure in patient populations
+        and therapeutic mechanisms.
     </p>
 
-    <div class="grid-2">
+    <a href="#validation" class="cta">See Validation</a>
+</section>
 
-      <div>
+<!-- WHAT WE DISCOVERED -->
+<section class="section">
+    <h2>What We’re Seeing in the Data</h2>
+
+    <div class="grid">
         <div class="card">
-          <p style="color:#FFAA00;">From baseline → improved outcomes</p>
+            <h3>Biology is Structured</h3>
+            <p>
+                Patient populations organize into distinct biological patterns rather than random variation.
+            </p>
         </div>
 
-        <a href="#demo" class="button">Access Demo</a>
-      </div>
-
-      <!-- HERO CHART -->
-      <div class="card">
-
-        <div class="bar-group">
-
-          <div class="bar">
-            <div class="bar-inner">
-              <div class="bar-rect base" style="height:40px;"></div>
-              <div class="bar-rect final" style="height:100px;"></div>
-            </div>
-            <p class="small" style="line-height:1.4; font-size:12px; margin-top:12px;">
-              <span style="color:#fff; font-weight:500; font-size:13px; display:block; margin-bottom:4px;">Melanoma</span>
-              <span style="color:#888;">Base 22%</span><br>
-              <span style="color:#00BFFF; font-weight:bold;">+34 pts</span><br>
-              <span style="color:#cfd6dd;">Final 56%</span>
+        <div class="card">
+            <h3>Multiple Mechanisms Coexist</h3>
+            <p>
+                Patients express mixtures of underlying biological programs rather than a single dominant pathway.
             </p>
-          </div>
-
-          <div class="bar">
-            <div class="bar-inner">
-              <div class="bar-rect base" style="height:70px;"></div>
-              <div class="bar-rect final" style="height:110px;"></div>
-            </div>
-            <p class="small" style="line-height:1.4; font-size:12px; margin-top:12px;">
-              <span style="color:#fff; font-weight:500; font-size:13px; display:block; margin-bottom:4px;">Crohn’s</span>
-              <span style="color:#888;">Base 41%</span><br>
-              <span style="color:#00BFFF; font-weight:bold;">+21 pts</span><br>
-              <span style="color:#cfd6dd;">Final 62%</span>
-            </p>
-          </div>
-
-          <div class="bar">
-            <div class="bar-inner">
-              <div class="bar-rect base" style="height:90px;"></div>
-              <div class="bar-rect final" style="height:115px;"></div>
-            </div>
-            <p class="small" style="line-height:1.4; font-size:12px; margin-top:12px;">
-              <span style="color:#fff; font-weight:500; font-size:13px; display:block; margin-bottom:4px;">RA</span>
-              <span style="color:#888;">Base 52%</span><br>
-              <span style="color:#00BFFF; font-weight:bold;">+12 pts</span><br>
-              <span style="color:#cfd6dd;">Final 64%</span>
-            </p>
-          </div>
-
-          <div class="bar">
-            <div class="bar-inner">
-              <div class="bar-rect base" style="height:100px;"></div>
-              <div class="bar-rect final" style="height:130px;"></div>
-            </div>
-            <p class="small" style="line-height:1.4; font-size:12px; margin-top:12px;">
-              <span style="color:#fff; font-weight:500; font-size:13px; display:block; margin-bottom:4px;">Depression</span>
-              <span style="color:#888;">Base 59%</span><br>
-              <span style="color:#00BFFF; font-weight:bold;">+18 pts</span><br>
-              <span style="color:#cfd6dd;">Final 77%</span>
-            </p>
-          </div>
         </div>
 
-      </div>
-
+        <div class="card">
+            <h3>Response is Many-to-One</h3>
+            <p>
+                Different biological states can respond to the same treatment, reflecting broad and overlapping mechanisms.
+            </p>
+        </div>
     </div>
+</section>
 
-  </div>
-</div>
+<!-- VISUAL PROOF -->
+<section class="section">
+    <h2>Biological Structure in Real Patients</h2>
 
-<!-- STORY FLOW -->
-
-<div class="section reveal">
-  <div class="container grid-2">
-    <div>
-      <h2>Response can be improved within existing therapies</h2>
-      <p>Patients with stronger biological alignment show improved response without changing treatment.</p>
-    </div>
-    <img src="fig_vis_1.png">
-  </div>
-</div>
-
-<div class="section reveal">
-  <div class="container grid-2">
-    <div>
-      <h2>Many patients still do not respond</h2>
-      <p>Across diseases, a large subset of patients shows limited benefit.</p>
-    </div>
-    <img src="fig_vis_2.png">
-  </div>
-</div>
-
-<div class="section reveal">
-  <div class="container grid-2">
-    <div>
-      <h2>Non-response is not random</h2>
-      <p>Patients organize into structured biological patterns beyond diagnosis.</p>
-    </div>
-    <img src="fig_vis_3.png">
-  </div>
-</div>
-
-<div class="section reveal">
-  <div class="container grid-2">
-    <div>
-      <h2>A subset of non-responders can be recovered</h2>
-      <p>Some patients show potential responsiveness under alternative conditions.</p>
-    </div>
-    <img src="fig_vis_4.png">
-  </div>
-</div>
-
-<div class="section reveal">
-  <div class="container grid-2">
-    <div style="display: flex; flex-direction: column; justify-content: center;">
-      <h2>Alternative therapeutic pathways can be explored</h2>
-      <p>Patients misaligned with one therapy may respond to another.</p>
-      <div style="margin-top: 40px; padding-left: 20px; border-left: 3px solid #00e676;">
-        <h3 style="font-size: 24px; color: #fff; margin-bottom: 0;">Patients don't fail treatment &mdash;</h3>
-        <p style="color: #00e676; font-size: 18px; font-weight: 500; margin-top: 8px;">Treatments fail alignment.</p>
-      </div>
-    </div>
-    <div>
-      <img src="cg_harmonious_text.png" style="width:100%; border: none !important; border-radius: 0 !important; outline: none !important; box-shadow: none !important;">
-    </div>
-  </div>
-</div>
-
-<!-- BIOLOGY LAYER -->
-<div class="section reveal" style="text-align: center;">
-  <div class="container" style="display: flex; flex-direction: column; align-items: center; max-width: 1000px;">
-    <h2>Biology follows consistent patterns across systems</h2>
-    <p style="text-align: center; color: #888; font-size: 20px; font-weight: 500; font-style: italic; margin-bottom: 40px; line-height: 1.6; letter-spacing: 0.5px;">
-      Biological states are structured &mdash; not random.
+    <p style="color:#aaa; max-width:800px;">
+        Independent patient cohorts project into a shared biological space with consistent structure.
+        Each point represents a patient. Structure emerges without using treatment outcomes.
     </p>
 
-    <img src="fig_unified_structural.png" style="width:100%; border-radius:12px; box-shadow:0 0 50px rgba(0, 191, 255, 0.04); border: none !important;">
-  </div>
-</div>
-
-<!-- PBMC / REAL WORLD -->
-<div class="section reveal" style="text-align: center;">
-  <div class="container" style="display: flex; flex-direction: column; align-items: center; max-width: 800px;">
-    
-    <div style="width: 80px; height: 80px; border-radius: 50%; background: rgba(255, 63, 63, 0.1); border: 1px solid rgba(255, 63, 63, 0.3); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; box-shadow: 0 0 30px rgba(255, 63, 63, 0.15);">
-      <svg width="34" height="42" viewBox="0 0 24 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 0C12 0 3 12.5 3 19.5C3 24.7467 7.02944 29 12 29C16.9706 29 21 24.7467 21 19.5C21 12.5 12 0 12 0Z" fill="#ff4a4a" opacity="0.9"/>
-        <path d="M9 20C9 18 10 16 12 16" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"/>
-      </svg>
+    <div style="margin-top:40px; text-align:center;">
+        <img src="assets/latent_space.png" 
+             style="width:100%; max-width:900px; border-radius:10px; border:1px solid rgba(255,255,255,0.05);">
     </div>
 
-    <h2 style="margin-bottom: 16px;">Works with accessible biological data</h2>
-    <p style="text-align: center; color: #888; font-size: 18px; line-height: 1.6;">
-      The system operates directly on peripheral blood data, allowing scalable, non-invasive deployment with consistent signals observed across both immune and psychiatric conditions.
+    <p style="margin-top:20px; color:#666; font-size:0.9rem; text-align:center;">
+        PC1 vs PC2 projection across independent psychiatric cohorts
     </p>
-  </div>
+</section>
+
+<!-- PLATFORM -->
+<section class="section" id="platform">
+    <h2>The Platform</h2>
+
+    <p style="color:#aaa; max-width:800px;">
+        BlueMoon maps patient biology into a shared coordinate system
+        where therapeutic mechanisms become geometric directions.
+        This enables direct comparison between patients and treatments,
+        independent of diagnosis labels.
+    </p>
+
+    <div class="grid" style="margin-top:40px;">
+        <div class="card">
+            <h3>Biological Coordinates</h3>
+            <p>Patients are represented as positions in a continuous biological space.</p>
+        </div>
+
+        <div class="card">
+            <h3>Mechanism Axes</h3>
+            <p>Treatments define directions within the same space.</p>
+        </div>
+
+        <div class="card">
+            <h3>Alignment</h3>
+            <p>Response depends on how well patient biology aligns with mechanism.</p>
+        </div>
+    </div>
+</section>
+
+<!-- VALIDATION -->
+<section class="section" id="validation">
+    <h2>Cross-Cohort Biological Structure</h2>
+
+    <p style="color:#aaa;">
+        Observed across independent psychiatric treatment cohorts.
+    </p>
+
+    <table>
+        <tr>
+            <th>Dataset</th>
+            <th>Treatment Context</th>
+            <th>Canonical Biology</th>
+            <th>Strong Glutamatergic</th>
+            <th>Strong Inflammatory</th>
+            <th>Strong Serotonergic</th>
+        </tr>
+
+        <tr>
+            <td>GSE146446</td>
+            <td>SSRI MDD</td>
+            <td>74.9%</td>
+            <td>16.7%</td>
+            <td>8.4%</td>
+            <td>-</td>
+        </tr>
+
+        <tr>
+            <td>GSE185855</td>
+            <td>Ketamine MDD</td>
+            <td>74.5%</td>
+            <td>-</td>
+            <td>14.9%</td>
+            <td>10.6%</td>
+        </tr>
+    </table>
+</section>
+
+<!-- APPLICATIONS -->
+<section class="section" id="applications">
+    <h2>Applications</h2>
+
+    <div class="grid">
+        <div class="card">
+            <h3>Psychiatry (Primary)</h3>
+            <p>
+                Identify mechanism mismatch and guide treatment selection
+                across antidepressants and rapid-acting therapies.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>Immunology</h3>
+            <p>
+                Early signals suggest similar structure in immune-driven
+                treatment response.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>Oncology (Pipeline)</h3>
+            <p>
+                Expanding into checkpoint therapy response and
+                tumor-immune dynamics.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- FINAL -->
+<section class="section" style="text-align:center;">
+    <h2>Patient biology is not uniform.<br>Treatment response reflects multiple underlying mechanisms.</h2>
+</section>
+
+<div class="footer">
+    © BlueMoonBio
 </div>
 
-<!-- CTA -->
-<div class="section reveal" id="demo">
-  <div class="container" style="text-align:center;">
-    <h2>See it on your data</h2>
-    <p style="margin-bottom:30px;">Access available for collaborators and partners.</p>
-    <a href="#" class="button">Request Access</a>
-    <a href="#" class="button" style="margin-left:15px; background:rgba(255,255,255,0.05); border-color:rgba(255,255,255,0.2); color:#dde3ea; box-shadow:none;">Contact</a>
-  </div>
 </div>
-
-<!-- PARTICLES -->
-<script>
-const canvas = document.getElementById("bg");
-const ctx = canvas.getContext("2d");
-
-function resize() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-window.addEventListener("resize", resize);
-resize();
-
-let particles = Array.from({length:80}, () => ({
-  x: Math.random()*canvas.width,
-  y: Math.random()*canvas.height,
-  dx: (Math.random()-0.5)*0.2,
-  dy: (Math.random()-0.5)*0.2
-}));
-
-function draw() {
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  particles.forEach(p=>{
-    p.x+=p.dx; p.y+=p.dy;
-    if(p.x<0||p.x>canvas.width)p.dx*=-1;
-    if(p.y<0||p.y>canvas.height)p.dy*=-1;
-    ctx.fillStyle="rgba(0,191,255,0.3)";
-    ctx.fillRect(p.x,p.y,2,2);
-  });
-  requestAnimationFrame(draw);
-}
-draw();
-</script>
-
-<script>
-document.addEventListener("scroll",()=>{
-  document.querySelectorAll(".reveal").forEach(el=>{
-    if(el.getBoundingClientRect().top < window.innerHeight-100){
-      el.classList.add("active");
-    }
-  });
-});
-</script>
 
 </body>
 </html>

@@ -1,206 +1,406 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BlueMoonBio | The Biological Standard Layer</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --neon-blue: #00BFFF;
-            --accent-gold: rgba(255, 215, 0, 0.85);
-            --dark-surface: #010204;
-            --darker-bg: #010204;
-            --text-primary: #ffffff;
-            --text-secondary: #a1a1aa;
-        }
+<meta charset="UTF-8">
+<title>BlueMoon Bio</title>
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--darker-bg);
-            color: var(--text-primary);
-            overflow-x: hidden;
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-        }
+<style>
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: #050505;
+  color: #dde3ea;
+  overflow-x: hidden;
+}
 
-        /* -------------------------------------
-           NAVIGATION
-           ------------------------------------- */
-        nav {
-            position: fixed; top: 0; left: 0; width: 100%; padding: 20px 0;
-            background: rgba(1, 2, 4, 0.8); backdrop-filter: blur(25px);
-            border-bottom: 1px solid rgba(255,255,255,0.05); z-index: 1000;
-        }
-        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 40px; }
-        .logo { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.5px; color: #fff; display: flex; align-items: center; gap: 10px; }
-        .logo-dot { width: 10px; height: 10px; background: var(--neon-blue); border-radius: 50%; box-shadow: 0 0 10px var(--neon-blue); }
-        .nav-links { display: flex; gap: 40px; }
-        .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: color 0.3s; }
-        .nav-links a:hover { color: #fff; }
-        .nav-cta { background: transparent; color: var(--neon-blue); border: 1px solid var(--neon-blue); padding: 8px 24px; border-radius: 5px; font-weight: 700; text-decoration: none; font-size: 0.9rem; transition: background 0.2s, color 0.2s;}
-        .nav-cta:hover { background: var(--neon-blue); color: #000; }
+/* Background */
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
 
-        /* -------------------------------------
-           LAYOUT
-           ------------------------------------- */
-        .container { max-width: 1100px; margin: 0 auto; padding: 150px 40px 100px 40px; }
+/* Layout */
+.section {
+  padding: 100px 20px;
+}
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
 
-        /* -------------------------------------
-           HERO SECTION
-           ------------------------------------- */
-        .hero { min-height: 70vh; display: flex; flex-direction: column; justify-content: center; position: relative; padding-top: 20px; text-align: center; }
-        .hero h1 { font-size: 5rem; font-weight: 900; line-height: 1.05; letter-spacing: -2px; margin: 0 auto 30px auto; max-width: 950px; color: #fff; }
-        .hero .tagline { font-size: 1.6rem; font-weight: 300; letter-spacing: -0.5px; margin: 0 auto 40px auto; max-width: 750px; color: var(--text-secondary); }
-        .hero .line { font-size: 1.1rem; color: var(--neon-blue); text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 40px; }
+/* Reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 1s ease;
+}
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
 
-        .primary-cta {
-            background: #fff; color: #000; padding: 20px 50px; border-radius: 5px; text-decoration: none;
-            font-weight: 800; font-size: 1.2rem; display: inline-flex; align-items: center; justify-content: center; transition: all 0.3s; margin: 0 auto;
-        }
-        .primary-cta:hover { background: var(--neon-blue); box-shadow: 0 15px 40px rgba(0, 191, 255, 0.4); transform: translateY(-2px); }
+/* Images */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+  border: 1px solid #30363d;
+}
 
-        /* -------------------------------------
-           DATA VALIDATION TABLE 
-           ------------------------------------- */
-        .validation-section { margin: 80px 0; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 50px; }
-        .val-header {text-align: center; margin-bottom: 40px;}
-        .val-header h2 { font-size: 2rem; color: #fff; font-weight: 800; letter-spacing: -0.5px;}
-        .val-header p { font-size: 1rem; color: var(--text-secondary); margin-top: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px;}
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 1.2rem; }
-        th, td { padding: 20px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        th { font-weight: 700; color: var(--text-secondary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
-        td { font-weight: 600; color: #fff; }
-        .td-highlight { color: var(--neon-blue); font-weight: 900; }
-        
-        /* -------------------------------------
-           IMPACT STRIP
-           ------------------------------------- */
-        .impact-strip { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 50px; border-radius: 12px; margin-top: 60px; }
-        .impact-item { text-align: center; flex: 1; border-right: 1px solid rgba(255,255,255,0.05); }
-        .impact-item:last-child { border-right: none; }
-        .impact-val { font-size: 3.5rem; font-weight: 900; color: var(--neon-blue); line-height: 1; margin-bottom: 15px; }
-        .impact-label { font-size: 1.1rem; color: #fff; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+/* Typography */
+h1 {
+  font-size: 56px;
+  line-height: 1.1;
+  color: #fff;
+  margin-bottom: 20px;
+}
+h2 {
+  font-size: 36px;
+  color: #fff;
+}
+p {
+  font-size: 18px;
+  color: #aaa;
+  line-height: 1.6;
+}
 
-        .narrative-block { text-align: center; margin: 100px 0; }
-        .narrative-block h3 { font-size: 2.5rem; font-weight: 300; line-height: 1.4; color: #fff; letter-spacing: -0.5px; }
-        .narrative-block h3 span { font-weight: 800; color: var(--neon-blue); }
+/* Grid */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+@media (max-width: 800px) {
+  .grid-2 { grid-template-columns: 1fr; }
+}
 
-        @media (max-width: 900px) {
-            .impact-strip { flex-direction: column; gap: 40px; }
-            .impact-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 30px; }
-            .impact-item:last-child { border-bottom: none; }
-            table { font-size: 1rem; }
-        }
-    </style>
+/* Button */
+.button {
+  display: inline-block;
+  margin-top: 30px;
+  padding: 14px 28px;
+  background: rgba(0, 191, 255, 0.1);
+  border: 1px solid rgba(0,191,255,0.4);
+  color: #00BFFF;
+  border-radius: 6px;
+  text-decoration: none;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(0, 191, 255, 0.1);
+}
+.button:hover {
+  background: rgba(0, 191, 255, 0.2);
+  box-shadow: 0 0 25px rgba(0, 191, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Cards */
+.card {
+  background: rgba(13, 17, 23, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(48, 54, 61, 0.5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  border-radius: 12px;
+  padding: 30px;
+  transition: all 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(0, 191, 255, 0.4);
+  box-shadow: 0 12px 40px rgba(0, 191, 255, 0.15);
+}
+
+/* Chart bars */
+.bar-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+.bar {
+  width: 22%;
+  text-align: center;
+}
+.bar-inner {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: flex-end;
+  height: 140px;
+}
+.bar-rect {
+  width: 20px;
+  border-radius: 4px 4px 0 0;
+  transition: all 0.3s ease;
+}
+.bar-rect:hover {
+  filter: brightness(1.2);
+}
+.base { 
+  background: #555; 
+}
+.final { 
+  background: #00BFFF; 
+  box-shadow: 0 0 12px rgba(0, 191, 255, 0.6);
+}
+
+/* Footer text */
+.small {
+  font-size: 14px;
+  color: #666;
+}
+</style>
 </head>
+
 <body>
 
-    <!-- NAVIGATION -->
-    <nav>
-        <div class="nav-container">
-            <div class="logo">
-                <div class="logo-dot"></div>
-                BlueMoonBio
-            </div>
-            <div class="nav-links">
-                <a href="#platform">Platform</a>
-                <a href="#validation">Validation</a>
-            </div>
-            <a href="https://bluemoon-demo.streamlit.app/" class="nav-cta" target="_blank">Access Sandbox</a>
+<canvas id="bg"></canvas>
+
+<!-- HERO -->
+<div class="section reveal" style="padding-top:140px;">
+  <div class="container">
+
+    <div style="margin-bottom: 70px;">
+      <div style="margin-bottom:0;">
+        <div style="font-size:22px; color:#ffffff; font-weight:500;">
+          BlueMoon <span style="color:#00BFFF;">Bio</span>
         </div>
-    </nav>
+        <div style="font-size:15px; color:#888; margin-top:4px;">
+          Biological alignment engine for treatment response
+        </div>
+      </div>
+    </div>
 
-    <div class="container">
-        <!-- HERO -->
-        <section class="hero" id="platform">
-            <div class="line">The Biological Standard Layer</div>
-            <h1>A geometric operating system for clinical drug development.</h1>
-            <p class="tagline">Mathematically aligning treatment mechanisms with complex human biology to end the trial-and-error cycle.</p>
-            <a href="https://bluemoon-demo.streamlit.app/" class="primary-cta" target="_blank">View Live Demo OS</a>
-        </section>
+    <h1 style="color:rgba(255,255,255,0.95); font-size:64px; line-height:1.05; margin-bottom:20px; max-width:850px; font-weight:700; letter-spacing:-1px;">
+      Treatment outcomes can be improved through biological alignment
+    </h1>
 
-        <!-- DATA VALIDATION TABLE -->
-        <section class="validation-section" id="validation">
-            <div class="val-header">
-                <h2>Cross-Domain Structural Validation</h2>
-                <p>Strict Out-of-Fold Cohort Simulation</p>
-            </div>
-            
-            <div style="margin-top: 40px; display: flex; flex-direction: column; gap: 30px;">
-                
-                <!-- PSYCHIATRY BAR -->
-                <div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-weight: 700; font-size: 1.1rem; letter-spacing: 1px;">
-                        <span>PSYCHIATRY</span>
-                        <span style="color: var(--neon-blue);">Up to +25.0% LIFT</span>
-                    </div>
-                    <div style="width: 100%; background: rgba(255,255,255,0.05); height: 18px; border-radius: 4px; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.1);">
-                        <div style="position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.3); z-index: 2;"></div>
-                        <div style="width: 75%; background: linear-gradient(90deg, #010204 50%, var(--neon-blue) 100%); height: 100%;"></div>
-                    </div>
-                </div>
+    <p style="max-width:700px;">
+      Consistent improvements observed across multiple diseases and therapies.
+    </p>
 
-                <!-- IMMUNOLOGY BAR -->
-                <div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-weight: 700; font-size: 1.1rem; letter-spacing: 1px;">
-                        <span>IMMUNOLOGY</span>
-                        <span style="color: var(--neon-blue);">+16.7% LIFT</span>
-                    </div>
-                    <div style="width: 100%; background: rgba(255,255,255,0.05); height: 18px; border-radius: 4px; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.1);">
-                        <div style="position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.3); z-index: 2;"></div>
-                        <div style="width: 66.7%; background: linear-gradient(90deg, #010204 50%, #00f0ff 100%); height: 100%;"></div>
-                    </div>
-                </div>
+    <div class="grid-2">
 
-                <!-- ONCOLOGY BAR -->
-                <div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-weight: 700; font-size: 1.1rem; letter-spacing: 1px;">
-                        <span>ONCOLOGY</span>
-                        <span style="color: var(--neon-blue);">+11.2% LIFT</span>
-                    </div>
-                    <div style="width: 100%; background: rgba(255,255,255,0.05); height: 18px; border-radius: 4px; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.1);">
-                        <div style="position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.3); z-index: 2;"></div>
-                        <div style="width: 61.2%; background: linear-gradient(90deg, #010204 50%, var(--accent-gold) 100%); height: 100%;"></div>
-                    </div>
-                </div>
-
-            </div>
-            
-            <div style="margin-top: 30px; font-size: 0.9rem; color: var(--text-secondary); text-align: center; letter-spacing: 1px;">
-                [ Vertical threshold marks approximate 50.0% standard-of-care baseline limits ]
-            </div>
-
-        </section>
-
-        <!-- NARRATIVE ANCHOR -->
-        <div class="narrative-block">
-            <h3>Failure is not random. <br><span>It is a biological misalignment.</span></h3>
-            <p style="margin-top:20px; font-size:1.2rem; color:var(--text-secondary);">Match the mechanism mechanically, resolve the indication clinically.</p>
+      <div>
+        <div class="card">
+          <p style="color:#FFAA00;">From baseline → improved outcomes</p>
         </div>
 
-        <!-- IMPACT -->
-        <section>
-            <div class="impact-strip">
-                <div class="impact-item">
-                    <div class="impact-val">Up to +25.0%</div>
-                    <div class="impact-label">Trial Enrichment</div>
-                </div>
-                <div class="impact-item">
-                    <div class="impact-val">30-40%</div>
-                    <div class="impact-label">Smaller Trials</div>
-                </div>
-                <div class="impact-item">
-                    <div class="impact-val">Millions</div>
-                    <div class="impact-label">Saved Per Study</div>
-                </div>
+        <a href="#demo" class="button">Access Demo</a>
+      </div>
+
+      <!-- HERO CHART -->
+      <div class="card">
+
+        <div class="bar-group">
+
+          <div class="bar">
+            <div class="bar-inner">
+              <div class="bar-rect base" style="height:40px;"></div>
+              <div class="bar-rect final" style="height:100px;"></div>
             </div>
-        </section>
+            <p class="small" style="line-height:1.4; font-size:12px; margin-top:12px;">
+              <span style="color:#fff; font-weight:500; font-size:13px; display:block; margin-bottom:4px;">Melanoma</span>
+              <span style="color:#888;">Base 22%</span><br>
+              <span style="color:#00BFFF; font-weight:bold;">+34 pts</span><br>
+              <span style="color:#cfd6dd;">Final 56%</span>
+            </p>
+          </div>
+
+          <div class="bar">
+            <div class="bar-inner">
+              <div class="bar-rect base" style="height:70px;"></div>
+              <div class="bar-rect final" style="height:110px;"></div>
+            </div>
+            <p class="small" style="line-height:1.4; font-size:12px; margin-top:12px;">
+              <span style="color:#fff; font-weight:500; font-size:13px; display:block; margin-bottom:4px;">Crohn’s</span>
+              <span style="color:#888;">Base 41%</span><br>
+              <span style="color:#00BFFF; font-weight:bold;">+21 pts</span><br>
+              <span style="color:#cfd6dd;">Final 62%</span>
+            </p>
+          </div>
+
+          <div class="bar">
+            <div class="bar-inner">
+              <div class="bar-rect base" style="height:90px;"></div>
+              <div class="bar-rect final" style="height:115px;"></div>
+            </div>
+            <p class="small" style="line-height:1.4; font-size:12px; margin-top:12px;">
+              <span style="color:#fff; font-weight:500; font-size:13px; display:block; margin-bottom:4px;">RA</span>
+              <span style="color:#888;">Base 52%</span><br>
+              <span style="color:#00BFFF; font-weight:bold;">+12 pts</span><br>
+              <span style="color:#cfd6dd;">Final 64%</span>
+            </p>
+          </div>
+
+          <div class="bar">
+            <div class="bar-inner">
+              <div class="bar-rect base" style="height:100px;"></div>
+              <div class="bar-rect final" style="height:130px;"></div>
+            </div>
+            <p class="small" style="line-height:1.4; font-size:12px; margin-top:12px;">
+              <span style="color:#fff; font-weight:500; font-size:13px; display:block; margin-bottom:4px;">Depression</span>
+              <span style="color:#888;">Base 59%</span><br>
+              <span style="color:#00BFFF; font-weight:bold;">+18 pts</span><br>
+              <span style="color:#cfd6dd;">Final 77%</span>
+            </p>
+          </div>
+        </div>
+
+      </div>
 
     </div>
+
+  </div>
+</div>
+
+<!-- STORY FLOW -->
+
+<div class="section reveal">
+  <div class="container grid-2">
+    <div>
+      <h2>Response can be improved within existing therapies</h2>
+      <p>Patients with stronger biological alignment show improved response without changing treatment.</p>
+    </div>
+    <img src="fig_vis_1.png">
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="container grid-2">
+    <div>
+      <h2>Many patients still do not respond</h2>
+      <p>Across diseases, a large subset of patients shows limited benefit.</p>
+    </div>
+    <img src="fig_vis_2.png">
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="container grid-2">
+    <div>
+      <h2>Non-response is not random</h2>
+      <p>Patients organize into structured biological patterns beyond diagnosis.</p>
+    </div>
+    <img src="fig_vis_3.png">
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="container grid-2">
+    <div>
+      <h2>A subset of non-responders can be recovered</h2>
+      <p>Some patients show potential responsiveness under alternative conditions.</p>
+    </div>
+    <img src="fig_vis_4.png">
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="container grid-2">
+    <div style="display: flex; flex-direction: column; justify-content: center;">
+      <h2>Alternative therapeutic pathways can be explored</h2>
+      <p>Patients misaligned with one therapy may respond to another.</p>
+      <div style="margin-top: 40px; padding-left: 20px; border-left: 3px solid #00e676;">
+        <h3 style="font-size: 24px; color: #fff; margin-bottom: 0;">Patients don't fail treatment &mdash;</h3>
+        <p style="color: #00e676; font-size: 18px; font-weight: 500; margin-top: 8px;">Treatments fail alignment.</p>
+      </div>
+    </div>
+    <div>
+      <img src="cg_harmonious_text.png" style="width:100%; border: none !important; border-radius: 0 !important; outline: none !important; box-shadow: none !important;">
+    </div>
+  </div>
+</div>
+
+<!-- BIOLOGY LAYER -->
+<div class="section reveal" style="text-align: center;">
+  <div class="container" style="display: flex; flex-direction: column; align-items: center; max-width: 1000px;">
+    <h2>Biology follows consistent patterns across systems</h2>
+    <p style="text-align: center; color: #888; font-size: 20px; font-weight: 500; font-style: italic; margin-bottom: 40px; line-height: 1.6; letter-spacing: 0.5px;">
+      Biological states are structured &mdash; not random.
+    </p>
+
+    <img src="fig_unified_structural.png" style="width:100%; border-radius:12px; box-shadow:0 0 50px rgba(0, 191, 255, 0.04); border: none !important;">
+  </div>
+</div>
+
+<!-- PBMC / REAL WORLD -->
+<div class="section reveal" style="text-align: center;">
+  <div class="container" style="display: flex; flex-direction: column; align-items: center; max-width: 800px;">
+    
+    <div style="width: 80px; height: 80px; border-radius: 50%; background: rgba(255, 63, 63, 0.1); border: 1px solid rgba(255, 63, 63, 0.3); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; box-shadow: 0 0 30px rgba(255, 63, 63, 0.15);">
+      <svg width="34" height="42" viewBox="0 0 24 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 0C12 0 3 12.5 3 19.5C3 24.7467 7.02944 29 12 29C16.9706 29 21 24.7467 21 19.5C21 12.5 12 0 12 0Z" fill="#ff4a4a" opacity="0.9"/>
+        <path d="M9 20C9 18 10 16 12 16" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <h2 style="margin-bottom: 16px;">Works with accessible biological data</h2>
+    <p style="text-align: center; color: #888; font-size: 18px; line-height: 1.6;">
+      The system operates directly on peripheral blood data, allowing scalable, non-invasive deployment with consistent signals observed across both immune and psychiatric conditions.
+    </p>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="section reveal" id="demo">
+  <div class="container" style="text-align:center;">
+    <h2>See it on your data</h2>
+    <p style="margin-bottom:30px;">Access available for collaborators and partners.</p>
+    <a href="#" class="button">Request Access</a>
+    <a href="#" class="button" style="margin-left:15px; background:rgba(255,255,255,0.05); border-color:rgba(255,255,255,0.2); color:#dde3ea; box-shadow:none;">Contact</a>
+  </div>
+</div>
+
+<!-- PARTICLES -->
+<script>
+const canvas = document.getElementById("bg");
+const ctx = canvas.getContext("2d");
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resize);
+resize();
+
+let particles = Array.from({length:80}, () => ({
+  x: Math.random()*canvas.width,
+  y: Math.random()*canvas.height,
+  dx: (Math.random()-0.5)*0.2,
+  dy: (Math.random()-0.5)*0.2
+}));
+
+function draw() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    p.x+=p.dx; p.y+=p.dy;
+    if(p.x<0||p.x>canvas.width)p.dx*=-1;
+    if(p.y<0||p.y>canvas.height)p.dy*=-1;
+    ctx.fillStyle="rgba(0,191,255,0.3)";
+    ctx.fillRect(p.x,p.y,2,2);
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+
+<script>
+document.addEventListener("scroll",()=>{
+  document.querySelectorAll(".reveal").forEach(el=>{
+    if(el.getBoundingClientRect().top < window.innerHeight-100){
+      el.classList.add("active");
+    }
+  });
+});
+</script>
 
 </body>
 </html>

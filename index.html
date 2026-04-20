@@ -576,7 +576,7 @@ Improvement comes from selecting biologically aligned patients and rerouting non
     <div class="pipe-arr">→</div>
     <div class="pipe-box">Biological Mapping</div>
     <div class="pipe-arr">→</div>
-    <div class="pipe-box" style="border-color:var(--accent); color:var(--accent); background:rgba(0,191,255,0.05);">Response Prediction + Ranking</div>
+    <div class="pipe-box" style="border-color:var(--accent); color:var(--accent);">Response Prediction + Ranking</div>
   </div>
 </section>
 
@@ -621,8 +621,13 @@ function draw() {
     p.x+=p.dx; p.y+=p.dy;
     if(p.x<0||p.x>canvas.width)p.dx*=-1;
     if(p.y<0||p.y>canvas.height)p.dy*=-1;
+    // Crank the optical blue bloom heavily so it punches alongside the bright orange
+    ctx.shadowBlur = p.color.includes("191,255") ? 25 : 12;
+    ctx.shadowColor = p.color;
     ctx.fillStyle=p.color;
-    ctx.fillRect(p.x,p.y,3,3);
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
+    ctx.fill();
   });
   requestAnimationFrame(draw);
 }

@@ -21,30 +21,7 @@ if investor_mode:
 
 import streamlit as st
 
-if not st.session_state.get("authenticated") and not investor_mode:
-    st.markdown('''
-<div style="text-align: center; margin-top: 50px;">
-    <h1 style="font-size: 48px; font-weight: 700;">BlueMoon Simulation Engine</h1>
-    <p style="font-size: 20px; color: #9BA3AF; margin-bottom: 40px;">Explore how patient selection changes treatment outcomes.</p>
-</div>
-''', unsafe_allow_html=True)
-    
-    col1, col2, col3 = st.columns([1,2,1])
-    
-    if not st.session_state.get("show_pwd"):
-        with col2:
-            if st.button("Enter Demo", use_container_width=True, type="primary"):
-                st.session_state["show_pwd"] = True
-                st.rerun()
-    
-    if st.session_state.get("show_pwd"):
-        pwd = col2.text_input("Enter Access Code", type="password")
-        if pwd == "1llumination@":
-            st.session_state["authenticated"] = True
-            st.rerun()
-        elif pwd:
-            col2.error("Incorrect password")
-    st.stop()
+
 
 
 st.sidebar.markdown("""

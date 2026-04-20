@@ -8,17 +8,42 @@ import os
 
 st.set_page_config(layout="wide")
 
+query_params = st.query_params
+investor_mode = query_params.get("demo") == "authorized"
+
+if investor_mode:
+    st.session_state["authenticated"] = True
+    st.markdown('''
+    <div style="text-align:center; color:#00BFFF; font-size:12px; letter-spacing: 2px; text-transform: uppercase;">
+    System // Authorized User Access
+    </div>
+    ''', unsafe_allow_html=True)
+
 import streamlit as st
 
-if not st.session_state.get("authenticated"):
-    st.markdown("<br><br><h1 style='text-align:center;'>Access Restricted</h1>", unsafe_allow_html=True)
+if not st.session_state.get("authenticated") and not investor_mode:
+    st.markdown('''
+<div style="text-align: center; margin-top: 50px;">
+    <h1 style="font-size: 48px; font-weight: 700;">BlueMoon Simulation Engine</h1>
+    <p style="font-size: 20px; color: #9BA3AF; margin-bottom: 40px;">Explore how patient selection changes treatment outcomes.</p>
+</div>
+''', unsafe_allow_html=True)
+    
     col1, col2, col3 = st.columns([1,2,1])
-    pwd = col2.text_input("Enter Demo Password", type="password")
-    if pwd == "1llumination@":
-        st.session_state["authenticated"] = True
-        st.rerun()
-    elif pwd:
-        col2.error("Incorrect password")
+    
+    if not st.session_state.get("show_pwd"):
+        with col2:
+            if st.button("Enter Demo", use_container_width=True, type="primary"):
+                st.session_state["show_pwd"] = True
+                st.rerun()
+    
+    if st.session_state.get("show_pwd"):
+        pwd = col2.text_input("Enter Access Code", type="password")
+        if pwd == "1llumination@":
+            st.session_state["authenticated"] = True
+            st.rerun()
+        elif pwd:
+            col2.error("Incorrect password")
     st.stop()
 
 
@@ -29,7 +54,7 @@ This system provides decision support based on biological data and is not intend
 """, unsafe_allow_html=True)
 
 st.markdown("""
-<h1 style="margin-bottom:0px; font-weight: 600; letter-spacing: -1px; font-size: 56px;">BlueMoon <span style="color:#00BFFF;">Simulation Engine</span></h1>
+<h1 style="margin-bottom:0px; font-weight: 600; letter-spacing: -1px; font-size: 56px;">BlueMoon <span style="color:#00BFFF;">Trial Optimization System</span></h1>
 <div style="color:#aaaaaa; font-family: 'Inter', monospace; letter-spacing: 1px; margin-bottom: 30px; font-size:14px; text-transform: uppercase;">SYSTEM // ACTIVE SIMULATION ENVIRONMENT</div>
 """, unsafe_allow_html=True)
 
@@ -195,10 +220,189 @@ def generate_insights(df, dataset_name, W, DATASET_META):
     return insights
 
 # ----------------------------
+
+# ----------------------------
+# INVESTOR DEMO MODE
+# ----------------------------
+if investor_mode:
+    mode = "Guided Demo"
+    st.markdown('''<style>[data-testid="stSidebar"] {display: none;}</style>''', unsafe_allow_html=True)
+else:
+    mode = st.sidebar.radio(
+        "Mode",
+        ["Guided Demo", "Explore"],
+        index=0
+    )
+
+if mode == "Guided Demo":
+    
+    import time
+
+    if investor_mode:
+        auto_mode = True
+        current_demo = "GSE185855" # Optimal lift dataset (Ketamine)
+    else:
+        auto_mode = st.sidebar.checkbox("Auto Demo Mode", value=True)
+        demo_datasets = ["GSE146446", "GSE185855", "GSE16879"]
+        current_demo = st.selectbox(
+            "Example Dataset",
+            demo_datasets,
+            index=0
+        )
+
+    df_demo = pd.read_csv(f"outputs/{current_demo}/scores.csv", index_col=0)
+    
+    if "is_R" not in df_demo.columns:
+        path_raw = f"data/staging/{current_demo}_labels.csv"
+        if os.path.exists(path_raw):
+             metac = pd.read_csv(path_raw, index_col=0)
+             if "response" in metac.columns:
+                 common = list(set(df_demo.index if df_demo.index.name != None else df_demo.iloc[:,0]).intersection(metac.index))
+                 df_demo.index = df_demo.iloc[:,0] if 'Unnamed' in df_demo.columns[0] else df_demo.index
+                 df_demo = df_demo.loc[common].copy()
+                 labels = metac.loc[common, "response"].astype(str).str.strip().str.lower()
+                 df_demo["is_R"] = (labels == "r") | (labels == "1") | (labels == "true") | (labels == "responder")
+                 df_demo["is_R"] = df_demo["is_R"].astype(int)
+    
+    baseline = df_demo["is_R"].mean() if "is_R" in df_demo.columns else 0.5
+    if "score_refined" in df_demo.columns:
+        lift_val_used = compute_lift(df_demo["score_refined"], df_demo["is_R"]) if "is_R" in df_demo.columns else 1.3
+    else:
+        lift_val_used = compute_lift(df_demo["score_proj"], df_demo["is_R"]) if "is_R" in df_demo.columns else 1.3
+
+    N_demo = len(df_demo)
+
+    st.markdown('''
+    ## Live Demonstration
+    
+    See how patient selection changes treatment outcomes.
+    ''')
+    
+    if "step" not in st.session_state:
+        st.session_state.step = 0
+
+    step = st.session_state.step
+
+    def advance():
+        st.session_state.step += 1
+        st.rerun()
+
+    # STEP 1
+    if step == 0:
+        st.markdown("### Step 1: Unselected Cohort")
+        st.metric("Baseline Response", f"{baseline:.2f}")
+
+        if auto_mode:
+            time.sleep(2)
+            advance()
+        else:
+            if st.button("Next →"):
+                advance()
+
+    # STEP 2
+    elif step == 1:
+        top30 = baseline * lift_val_used
+
+        st.markdown("### Step 2: Patient Selection")
+        st.metric("Selected Cohort Response", f"{top30:.2f}")
+        st.markdown(f'''
+        <div class="card" style="border-color: #FFAA00;">
+        <b style="color: #FFAA00;">Key Insight</b><br>
+        Top patients show <span style="font-size: 20px; font-weight: bold;">{lift_val_used:.2f}×</span> higher response
+        </div>
+        ''', unsafe_allow_html=True)
+
+        if auto_mode:
+            time.sleep(2.5)
+            advance()
+        else:
+            if st.button("Next →"):
+                advance()
+
+    # STEP 3
+    elif step == 2:
+        st.markdown("### Step 3: Biological Structure")
+
+        if "z1" in df_demo.columns:
+            fig = px.scatter(df_demo, x="z1", y="z2", color="is_R", color_continuous_scale="Viridis" if df_demo["is_R"].nunique() > 2 else None)
+            fig = apply_chart_style(fig)
+            st.plotly_chart(fig, use_container_width=True)
+
+        st.markdown('''
+        <p style="font-size: 18px;">Patients align along biological structure — not randomly.</p>
+        ''', unsafe_allow_html=True)
+
+        if auto_mode:
+            time.sleep(3.5)
+            advance()
+        else:
+            if st.button("Next →"):
+                advance()
+
+    # STEP 4
+    elif step == 3:
+        st.markdown("### Step 4: Outcome")
+
+        top30 = baseline * lift_val_used
+        fig = go.Figure()
+        fig.add_bar(x=["Baseline", "Selected"], y=[baseline, top30], marker_color=["#444", "#00BFFF"])
+        fig = apply_chart_style(fig, is_bar=True)
+        st.plotly_chart(fig, use_container_width=True)
+
+        st.markdown('''
+        <p style="font-size: 18px;">Selecting the right patients directly changes outcomes.</p>
+        ''', unsafe_allow_html=True)
+
+        # DEAL ROOM EXPORT
+        report = f"""BlueMoon Trial Optimization Summary
+
+Dataset: {current_demo}
+Patients: {N_demo}
+
+Baseline Response: {baseline:.2f}
+Selected Cohort: {top30:.2f}
+
+Lift: {lift_val_used:.2f}x
+
+Key Insight:
+Selecting the right patients improves treatment outcomes.
+
+Mechanism:
+{DATASET_META.get(current_demo, {{}}).get("mechanism", "N/A")}
+"""
+        st.download_button(
+            label="Download Summary Report",
+            data=report,
+            file_name="bluemoon_summary.txt",
+            type="primary"
+        )
+        
+        st.markdown('''
+        ---
+        
+        ## Try Your Own Data
+        
+        Disable **Auto Demo Mode** or switch the Sidebar to **Explore** mode to upload your dataset or run cross-disease validations.
+        ''', unsafe_allow_html=True)
+
+        col1, col2 = st.columns(2)
+        if auto_mode:
+            time.sleep(4)
+            st.session_state.step = 0
+            st.rerun()
+        else:
+            if st.button("Restart"):
+                st.session_state.step = 0
+                st.rerun()
+
+    st.stop()
+
+
+
 # SCENARIO-DRIVEN SELECTION (WEBSITE VERSION)
 # ----------------------------
 
-st.sidebar.markdown("<h2 style='margin-bottom:0px;'>BlueMoon</h2><p style='color:#00BFFF; font-weight:600;'>Simulation Engine</p>", unsafe_allow_html=True)
+st.sidebar.markdown("<h2 style='margin-bottom:0px;'>BlueMoon</h2><p style='color:#00BFFF; font-weight:600;'>Trial Optimization System</p>", unsafe_allow_html=True)
 
 st.sidebar.markdown("## Explore Biological Scenarios")
 

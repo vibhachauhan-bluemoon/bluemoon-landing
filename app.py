@@ -110,6 +110,43 @@ button[role="tab"] {
     font-weight: 500;
     font-size: 15px;
 }
+
+/* Streamlit Core Overrides to match Website Exact branding */
+[data-testid="stAppViewContainer"] {
+    background-color: #05070c;
+}
+[data-testid="stSidebar"] {
+    background-color: #0d1117;
+    border-right: 1px solid #30363d;
+}
+[data-testid="stHeader"] {
+    background-color: transparent;
+}
+h1, h2, h3, p, span, div, label {
+    color: #E6EDF3 !important;
+}
+.stMetric {
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    padding: 15px;
+    border-radius: 8px;
+}
+.stButton>button {
+    background-color: rgba(0,191,255,0.1);
+    border: 1px solid #00BFFF;
+    color: #00BFFF !important;
+    transition: all 0.3s;
+}
+.stButton>button:hover {
+    background-color: #00BFFF;
+    color: #05070c !important;
+}
+/* Ensure the radio button and select box text is readable */
+div[data-baseweb="select"] > div {
+    background-color: #0d1117;
+    border-color: #30363d;
+}
+/* End Streamlit Overrides */
 </style>
 """, unsafe_allow_html=True)
 
@@ -226,7 +263,44 @@ def generate_insights(df, dataset_name, W, DATASET_META):
 # ----------------------------
 if investor_mode:
     mode = "Guided Demo"
-    st.markdown('''<style>[data-testid="stSidebar"] {display: none;}</style>''', unsafe_allow_html=True)
+    st.markdown('''<style>[data-testid="stSidebar"] {display: none;}
+/* Streamlit Core Overrides to match Website Exact branding */
+[data-testid="stAppViewContainer"] {
+    background-color: #05070c;
+}
+[data-testid="stSidebar"] {
+    background-color: #0d1117;
+    border-right: 1px solid #30363d;
+}
+[data-testid="stHeader"] {
+    background-color: transparent;
+}
+h1, h2, h3, p, span, div, label {
+    color: #E6EDF3 !important;
+}
+.stMetric {
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    padding: 15px;
+    border-radius: 8px;
+}
+.stButton>button {
+    background-color: rgba(0,191,255,0.1);
+    border: 1px solid #00BFFF;
+    color: #00BFFF !important;
+    transition: all 0.3s;
+}
+.stButton>button:hover {
+    background-color: #00BFFF;
+    color: #05070c !important;
+}
+/* Ensure the radio button and select box text is readable */
+div[data-baseweb="select"] > div {
+    background-color: #0d1117;
+    border-color: #30363d;
+}
+/* End Streamlit Overrides */
+</style>''', unsafe_allow_html=True)
 else:
     mode = st.sidebar.radio(
         "Mode",
@@ -368,7 +442,7 @@ Key Insight:
 Selecting the right patients improves treatment outcomes.
 
 Mechanism:
-{DATASET_META.get(current_demo, {{}}).get("mechanism", "N/A")}
+{DATASET_META.get(current_demo, {}).get("mechanism", "N/A")}
 """
         st.download_button(
             label="Download Summary Report",

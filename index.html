@@ -606,27 +606,67 @@ function resize() {
 window.addEventListener("resize", resize);
 resize();
 
-// Using both blue and orange nodes, as standard for the project
-let particles = Array.from({length:100}, () => ({
+let mouseX = -1000;
+let mouseY = -1000;
+window.addEventListener("mousemove", (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+});
+window.addEventListener("mouseout", () => {
+  mouseX = -1000;
+  mouseY = -1000;
+});
+
+let particles = Array.from({length: 80}, () => ({
   x: Math.random()*canvas.width,
   y: Math.random()*canvas.height,
-  dx: (Math.random()-0.5)*0.2,
-  dy: (Math.random()-0.5)*0.2,
-  color: Math.random() > 0.3 ? "rgba(0,191,255,0.6)" : "rgba(255,140,0,0.6)"
+  baseX: Math.random()*canvas.width,
+  baseY: Math.random()*canvas.height,
+  dx: (Math.random()-0.5)*0.5,
+  dy: (Math.random()-0.5)*0.5,
+  color: Math.random() > 0.3 ? "rgba(0,191,255,0.7)" : "rgba(255,140,0,0.7)"  
 }));
 
 function draw() {
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  particles.forEach(p=>{
-    p.x+=p.dx; p.y+=p.dy;
-    if(p.x<0||p.x>canvas.width)p.dx*=-1;
-    if(p.y<0||p.y>canvas.height)p.dy*=-1;
-    // Crank the optical blue bloom heavily so it punches alongside the bright orange
-    ctx.shadowBlur = p.color.includes("191,255") ? 25 : 12;
+  
+  // Draw lines
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      let dx = particles[i].x - particles[j].x;
+      let dy = particles[i].y - particles[j].y;
+      let dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 120) {
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(0,191,255,${0.2 * (1 - dist/120)})`;
+        ctx.lineWidth = 1;
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+
+  // Draw dots and handle mouse interaction
+  particles.forEach(p => {
+    p.x += p.dx; p.y += p.dy;
+    if(p.x < 0 || p.x > canvas.width) p.dx *= -1;
+    if(p.y < 0 || p.y > canvas.height) p.dy *= -1;
+    
+    // Mouse repel
+    let distX = mouseX - p.x;
+    let distY = mouseY - p.y;
+    let distToMouse = Math.sqrt(distX*distX + distY*distY);
+    if(distToMouse < 150) {
+       p.x -= (distX/distToMouse) * 2;
+       p.y -= (distY/distToMouse) * 2;
+    }
+    
+    ctx.shadowBlur = p.color.includes("191,255") ? 15 : 10;
     ctx.shadowColor = p.color;
-    ctx.fillStyle=p.color;
+    ctx.fillStyle = p.color;
     ctx.beginPath();
-    ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
+    ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
     ctx.fill();
   });
   requestAnimationFrame(draw);

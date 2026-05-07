@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>BlueMoonBio — One Pager</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&amp;display=swap" rel="stylesheet"/>
+<style>
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: #050505;
+    color: #E6EDF3;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 60px 30px;
+}
+
+/* Header */
+.header {
+    margin-bottom: 50px;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.moondot {
+    width: 16px; 
+    height: 16px; 
+    background: #00BFFF; 
+    border-radius: 50%; 
+    margin-right: 12px; 
+    box-shadow: 0 0 12px #00BFFF;
+}
+
+.logo {
+    font-weight: 700; 
+    font-size: 20px; 
+    letter-spacing: -0.5px; 
+    color: #fff; 
+    line-height: 1;
+    text-transform: none;
+}
+
+h1 {
+    font-size: 48px;
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: -1px;
+    line-height: 1.1;
+}
+
+.subhead {
+    margin-top: 20px;
+    color: #9BA3AF;
+    font-size: 20px;
+    max-width: 800px;
+    line-height: 1.5;
+}
+
+/* Proof Strip */
+.proof-strip {
+    margin-top: 35px;
+    padding: 12px 20px;
+    background: rgba(0, 191, 255, 0.05);
+    border-left: 4px solid #00BFFF;
+    color: #00BFFF;
+    font-weight: 600;
+    font-size: 16px;
+    display: inline-block;
+    border-radius: 0 4px 4px 0;
+}
+
+/* Hero Visual */
+.hero-visual {
+    margin-top: 50px;
+    width: 100%;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 12px;
+    overflow: hidden;
+    
+    text-align: center;
+}
+
+.hero-visual img {
+    width: 100%;
+    display: block;
+}
+
+/* Grid */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 50px;
+}
+
+/* Cards */
+.card {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 10px;
+    padding: 30px;
+    transition: 0.2s ease;
+}
+
+.card:hover {
+    border-color: rgba(0, 191, 255, 0.4);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.card h2 {
+    font-size: 22px;
+    margin-bottom: 15px;
+    margin-top: 0;
+    color: #00BFFF;
+}
+
+.card p {
+    font-size: 15px;
+    color: #C9D1D9;
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.metric {
+    font-size: 28px;
+    font-weight: 600;
+    color: #00BFFF;
+    margin-top: 15px;
+}
+
+/* Footer */
+.footer {
+    margin-top: 80px;
+    padding-top: 30px;
+    border-top: 1px solid #30363d;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.footer-left {
+    font-size: 14px;
+    color: #9BA3AF;
+}
+
+.footer-right {
+    font-size: 14px;
+}
+
+.footer-right a {
+    color: #00BFFF;
+    text-decoration: none;
+    font-weight: 600;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<!-- Header -->
+<div class="header">
+<div class="logo-container">
+<div class="moondot"></div>
+<div class="logo">BlueMoon<span style="color: #00BFFF;">Bio</span></div>
+</div>
+<h1>Predicting Treatment Response From Blood — Before Treatment</h1>
+<div class="subhead">
+            A biological operating system for precision medicine — improving trials, guiding treatment, and rescuing non-responders across diseases.
+        </div>
+<div style="margin-top:15px; font-size:18px; color:#00BFFF; font-weight:600;">
+            Mapping patients to therapies based on biology — not diagnosis
+        </div>
+<div class="proof-strip">
+            Validated across independent cohorts spanning psychiatry, immunology, and oncology
+        </div>
+<div style="margin-top:10px; font-size:14px; color:#9BA3AF;">
+            Pre-treatment prediction from blood samples. No treatment exposure required.
+        </div>
+</div>
+<!-- Hero Visual -->
+<div class="hero-visual">
+<div style="background: #0d1117; border: 1px solid #30363d; border-radius: 12px; padding: 30px; margin-bottom: 15px; text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+<h3 style="margin: 0 0 5px 0; font-size: 24px; color: #fff; font-weight: 700; letter-spacing: -0.5px;">Cross-Domain Validation Array</h3>
+<div style="font-size: 11px; font-weight: 700; color: #8b949e; letter-spacing: 1px; margin-bottom: 35px; text-transform: uppercase;">
+                Validated under strict out-of-fold evaluation (baseline ~50%)
+            </div>
+<div style="font-size:12px; color:#8b949e; margin-bottom:20px;">
+                White marker = baseline response rate • Colored bar = aligned response rate
+            </div>
+<!-- Row 1: Psychiatry -->
+<div style="margin-bottom: 25px;">
+<div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+<div style="font-weight: 700; font-size: 14px; letter-spacing: 1px; color: #fff; text-transform: uppercase;">Psychiatry</div>
+<div style="font-weight: 700; font-size: 15px; color: #00BFFF;">+19–28% response improvement</div>
+</div>
+<div style="width: 100%; height: 12px; background: #1c2128; border-radius: 6px; position: relative; overflow: hidden; border: 1px solid #30363d;">
+<!-- Baseline Marker -->
+<div style="position: absolute; left: 58.6%; top: 0; bottom: 0; width: 2px; background: #fff; z-index: 10;"></div>
+<!-- Fill -->
+<div style="height: 100%; width: 62%; background: linear-gradient(90deg, #0d1117 0%, #00BFFF 100%); border-radius: 6px 0 0 6px;"></div>
+</div>
+</div>
+<!-- Row 2: Immunology -->
+<div style="margin-bottom: 25px;">
+<div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+<div style="font-weight: 700; font-size: 14px; letter-spacing: 1px; color: #fff; text-transform: uppercase;">Immunology</div>
+<div style="font-weight: 700; font-size: 15px; color: #00e676;">+15% response improvement</div>
+</div>
+<div style="width: 100%; height: 12px; background: #1c2128; border-radius: 6px; position: relative; overflow: hidden; border: 1px solid #30363d;">
+<!-- Baseline Marker -->
+<div style="position: absolute; left: 41.4%; top: 0; bottom: 0; width: 2px; background: #fff; z-index: 10;"></div>
+<!-- Fill -->
+<div style="height: 100%; width: 70%; background: linear-gradient(90deg, #0d1117 0%, #00e676 100%); border-radius: 6px 0 0 6px;"></div>
+</div>
+</div>
+<!-- Row 3: Oncology -->
+<div>
+<div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+<div style="font-weight: 700; font-size: 14px; letter-spacing: 1px; color: #fff; text-transform: uppercase;">Oncology</div>
+<div style="font-weight: 700; font-size: 15px; color: #FFAA00;">Up to +25% response improvement</div>
+</div>
+<div style="width: 100%; height: 12px; background: #1c2128; border-radius: 6px; position: relative; overflow: hidden; border: 1px solid #30363d;">
+<!-- Baseline Marker -->
+<div style="position: absolute; left: 21.9%; top: 0; bottom: 0; width: 2px; background: #fff; z-index: 10;"></div>
+<!-- Fill -->
+<div style="height: 100%; width: 75%; background: linear-gradient(90deg, #0d1117 0%, #FFAA00 100%); border-radius: 6px 0 0 6px;"></div>
+</div>
+</div>
+</div>
+<div style="margin-top:12px; color:#9BA3AF; font-size:14px; max-width:800px; padding: 0 10px; margin-left:auto; margin-right:auto; text-align:center;">
+            Baseline → Selection → Alignment  
+            Improvement comes from both selecting aligned patients and rerouting non-responders.
+        </div>
+</div>
+<!-- Grid -->
+<hr style="margin-top:50px; border:0; height:1px; background:#30363d;"/>
+<div class="grid">
+<!-- Pharma -->
+<div class="card">
+<h2>Trial Enrichment</h2>
+<p>Increase trial success without changing the drug</p>
+<div class="metric">+10–50% lift</div>
+</div>
+<!-- Clinicians -->
+<div class="card">
+<h2>Clinical Decision Engine</h2>
+<p>Simulate and rank treatment options per patient</p>
+</div>
+<!-- Patients -->
+<div class="card">
+<h2>Failure Rescue</h2>
+<p>Recover non-responders through biological rerouting.</p>
+<p>Identify misaligned patients and redirect to alternative therapies.</p>
+<div class="metric" style="font-size:24px;">70–80% total response achievable</div>
+<div style="color:#9BA3AF; font-size:14px; margin-top:5px;">Includes both optimized selection and rerouted non-responders</div>
+</div>
+<!-- Platform -->
+<div class="card">
+<h2>Cross-Disease Platform</h2>
+<p>One biological space across diseases — not diagnosis-bound</p>
+</div>
+</div>
+<!-- Footer -->
+<div class="footer">
+<div class="footer-left">
+            © BlueMoonBio — Biological Operating System for Precision Medicine
+        </div>
+<div class="footer-right">
+            Contact: <a href="mailto:vibha@bluemoonbio.ai">vibha@bluemoonbio.ai</a>
+</div>
+</div>
+</div>
+</body>
+</html>

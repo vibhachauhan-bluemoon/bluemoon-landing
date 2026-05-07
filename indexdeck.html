@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BlueMoon Bio</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: #050505;
+  color: #dde3ea;
+  overflow-x: hidden;
+}
+
+/* Background */
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+/* Layout */
+.section {
+  padding: 100px 20px;
+}
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Reveal */
+.reveal {
+  opacity: 1;
+  transform: none;
+}
+.section {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.section:hover {
+  transform: translateY(-2px);
+}
+
+
+/* Images */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+  border: 1px solid #30363d;
+}
+
+/* Typography */
+h1 {
+  font-size: 56px;
+  line-height: 1.1;
+  color: #fff;
+  margin-bottom: 20px;
+}
+h2 {
+  font-size: 36px;
+  color: #fff;
+}
+p {
+  font-size: 18px;
+  color: #aaa;
+  line-height: 1.6;
+}
+
+/* Grid */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+@media (max-width: 800px) {
+  .grid-2 { grid-template-columns: 1fr; }
+}
+
+/* Button */
+.button {
+  display: inline-block;
+  margin-top: 30px;
+  padding: 14px 28px;
+  background: rgba(0, 191, 255, 0.1);
+  border: 1px solid rgba(0,191,255,0.4);
+  color: #00BFFF;
+  border-radius: 6px;
+  text-decoration: none;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(0, 191, 255, 0.1);
+}
+.button:hover {
+  background: rgba(0, 191, 255, 0.2);
+  box-shadow: 0 0 25px rgba(0, 191, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Cards */
+.card {
+  background: rgba(13, 17, 23, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(48, 54, 61, 0.5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  border-radius: 12px;
+  padding: 30px;
+  transition: all 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(0, 191, 255, 0.4);
+  box-shadow: 0 12px 40px rgba(0, 191, 255, 0.15);
+}
+
+/* Chart bars */
+.bar-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+.bar {
+  width: 22%;
+  text-align: center;
+}
+.bar-inner {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: flex-end;
+  height: 140px;
+}
+.bar-rect {
+  width: 20px;
+  border-radius: 4px 4px 0 0;
+  transition: all 0.3s ease;
+}
+.bar-rect:hover {
+  filter: brightness(1.2);
+}
+.base { background: #4a4d53; }
+.nips { background: #00BFFF; box-shadow: 0 0 12px rgba(0, 191, 255, 0.3); }
+.nr { background: #8a2be2; box-shadow: 0 0 12px rgba(138, 43, 226, 0.3); }
+
+
+/* Footer text */
+.small {
+  font-size: 14px;
+  color: #666;
+}
+
+.dimmed { opacity: 0.25; filter: grayscale(50%); transition: all 0.4s ease; }
+.highlight { opacity: 1; transform: scale(1.02); transition: all 0.4s ease; background: rgba(0, 191, 255, 0.03); border-radius: 8px; padding: 10px; box-shadow: 0 0 20px rgba(0, 191, 255, 0.1); border: 1px solid rgba(0, 191, 255, 0.2); }
+
+.system-mock:hover {
+    border-color: #00BFFF;
+    box-shadow: 0 0 20px rgba(0,191,255,0.15);
+    transform: translateY(-2px);
+}
+.grid-2 img {
+    transition: all 0.4s ease;
+}
+.grid-2 img:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,191,255,0.08) !important;
+}
+</style>
+
+</head>
+
+<body>
+
+<canvas id="bg"></canvas>
+
+<!-- HERO -->
+<!-- TOP NAVBAR -->
+<nav style="display: flex; justify-content: space-between; align-items: center; padding: 30px 40px; position: absolute; top: 0; left: 0; right: 0; z-index: 10;">
+  <div style="display: flex; align-items: center;">
+    <div style="width: 20px; height: 20px; background: #00BFFF; border-radius: 50%; margin-right: 12px; box-shadow: 0 0 12px #00BFFF;"></div>
+        <span style="font-weight: 700; font-size: 24px; letter-spacing: -0.5px; color: #fff; line-height: 1;">BlueMoon<span style="color: #00BFFF;">Bio</span></span>
+  </div>
+  
+
+</nav>
+
+<!-- HERO -->
+<div class="section reveal" style="padding-top:180px; text-align: center; display: flex; flex-direction: column; align-items: center;">
+  <div class="container" style="display: flex; flex-direction: column; align-items: center;">
+    
+    <div style="color: #00BFFF; font-size: 14px; font-weight: 700; letter-spacing: 2px; margin-bottom: 24px; text-transform: uppercase;">
+      Biological alignment engine for treatment response
+    </div>
+    
+    <h1 style="color: #fff; font-size: 84px; line-height: 1.05; margin-bottom: 24px; max-width: 1000px; font-weight: 800; letter-spacing: -2.5px; font-family: 'Inter', sans-serif;">
+      Treatment outcomes can be improved<br>through biological alignment.
+    </h1>
+
+    <p style="font-size: 24px; color: #888; max-width: 800px; line-height: 1.5; margin-bottom: 50px; font-weight: 400;">
+      Consistent improvements observed across multiple diseases and therapies.
+    </p>
+
+    <a href="mailto:vibha@bluemoonbio.ai" style="background: #fff; color: #000; padding: 18px 40px; font-size: 18px; font-weight: 700; border-radius: 6px; text-decoration: none; display: inline-block; box-shadow: 0 4px 15px rgba(255,255,255,0.1); margin-bottom: 80px; font-family: 'Inter', sans-serif;">
+      See it on your data - Request Access
+    </a>
+
+    <!-- HERO CHART MOVED BELOW, CENTERED -->
+    <div class="card" style="width: 100%; max-width: 850px; margin: 0 auto; text-align: left;">
+      <div class="bar-group" style="position:relative; width: 100%; max-width: 700px; margin: 50px auto 0 auto; display: flex; flex-direction: column;">
+
+      
+      <!-- TOP LEGEND -->
+      <div style="display:flex; justify-content:center; gap:40px; margin-bottom:40px; font-size:12px; font-weight:600; letter-spacing:1px; color:#aaa; font-family:'Inter', sans-serif;">
+          <div style="display:flex; align-items:center;">
+             <div style="width:12px; height:12px; background:#00BFFF; margin-right:10px; border-radius:2px; box-shadow:0 0 10px rgba(0,191,255,0.5);"></div>
+             RESPONDERS (R)
+          </div>
+          <div style="display:flex; align-items:center;">
+             <div style="width:12px; height:12px; background:#4a4d53; margin-right:10px; border-radius:2px;"></div>
+             NON-RESPONDERS (NR)
+          </div>
+      </div>
+
+      <!-- ROW 1: Melanoma -->
+      <div style="display:flex; align-items:center; margin-bottom: 25px; width: 100%; dimmed">
+         <div style="width: 140px; color:#ccc; font-size:15px; font-weight:700; letter-spacing:1px; font-family:\'Inter\', sans-serif;">Melanoma</div>
+         <div style="display:flex; flex:1; align-items:center; justify-content:space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom:10px;">
+             <!-- Stage 1 -->
+             <div style="display:flex; align-items:flex-end; gap:6px; width:80px; height:90px; justify-content:center;">
+                 <div style="width:20px; height:52%; background:#00BFFF; position:relative; border-radius:3px 3px 0 0;">
+                    <span style="position:absolute; top:-20px; left:-2px; font-size:11px; color:#00BFFF; font-family:'Inter', sans-serif; font-weight:600;">52%</span>
+                 </div>
+                 <div style="width:20px; height:48%; background:#4a4d53; position:relative; border-radius:3px 3px 0 0;">
+                    <span style="position:absolute; top:-20px; left:-2px; font-size:11px; color:#9ba3af; font-family:'Inter', sans-serif; font-weight:600;">48%</span>
+                 </div>
+             </div>
+             <div style="color:#00BFFF; font-weight:bold; opacity:0.4;">→</div>
+             <!-- Stage 2 -->
+             <div style="display:flex; align-items:flex-end; gap:6px; width:80px; height:90px; justify-content:center;">
+                 <div style="width:20px; height:72%; background:#00BFFF; position:relative; border-radius:3px 3px 0 0;">
+                    <span style="position:absolute; top:-20px; left:-2px; font-size:11px; color:#00BFFF; font-family:'Inter', sans-serif; font-weight:600;">72%</span>
+                 </div>
+                 <div style="width:20px; height:28%; background:#4a4d53; position:relative; border-radius:3px 3px 0 0;">
+                    <span style="position:absolute; top:-20px; left:-2px; font-size:11px; color:#9ba3af; font-family:'Inter', sans-serif; font-weight:600;">28%</span>
+                 </div>
+             </div>
+             <div style="color:#00BFFF; font-weight:bold; opacity:0.4;">→</div>
+             <!-- Stage 3 -->
+             <div style="display:flex; align-items:flex-end; gap:6px; width:80px; height:90px; justify-content:center;">
+                 <div style="width:24px; height:81%; background:#00BFFF; box-shadow:0 0 15px #00BFFF; position:relative; border-radius:3px 3px 0 0;">
+                    <span style="position:absolute; top:-40px; left:-14px; font-size:12px; color:#00BFFF; font-family:'Inter', sans-serif; font-weight:700; white-space:nowrap; letter-spacing:0.5px;">+29 pts</span>
+                    <span style="position:absolute; top:-20px; left:-2px; font-size:12px; color:#fff; font-family:'Inter', sans-serif; font-weight:700;">81%</span>
+                 </div>
+                 <div style="width:20px; height:19%; background:#2a2d33; position:relative; border-radius:3px 3px 0 0;">
+                    <span style="position:absolute; top:-20px; left:-2px; font-size:11px; color:#5a5d63; font-family:'Inter', sans-serif; font-weight:600;">19%</span>
+                 </div>
+             </div>
+         </div>
+      </div>
+
+      <!-- ROW 2: Crohn's -->
+      <div style="display:flex; align-items:center; margin-bottom: 25px; width: 100%;">
+         <div style="width: 140px; color:#ccc; font-size:15px; font-weight:700; letter-spacing:1px; font-family:\'Inter\', sans-serif;">Crohn's</div>
+         <div style="display:flex; flex:1; align-items:center; justify-content:space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom:10px;">
+             <!-- Stage 1 -->
+             <div style="display:flex; align-items:flex-end; gap:6px; width:80px; height:90px; justify-content:center;">
+                 <div style="width:20px; height:41%; background:#00BFFF; position:relative; border-radius:3px 3px 0 0;">
+                    <span style="position:absolute; top:-20px; left:-2px; font-size:11px; color:#00BFFF; font-family:'Inter', sans-serif; font-weight:600;">41%</span>
+                 </div>
+                 <div style="width:20px; height:59%; background:#4a4d53; position:relative; border-radius:3px 3px 0 0;">
+                    <span style="position:absolute; top:-20px; left:-2px; font-size:11px; color:#9ba3af; font-family:'Inter', sans-serif; font-weight:600;">59%</span>
+                 </div>
+             </div>
+             <div style="color:#00BFFF; font-weight:bold; opacity:0.4;">→</div>
+             <!-- Stage 2 -->
+             <div style="display:flex; align-items:flex-end; gap:6px; width:80px; height:90px; justify-content:center;">
+                 <div style="width:20px; height:53%; background:#00BFFF; position:relative; border-radius:3px 3px 0 0;">
+                    <span style="position:absolute; top:-20px; left:-2px; font-size:11px; color:#00BFFF; font-family:'Inter', sans-serif; font-weight:600;">53%</span>
+                 </div>
+                 <div style="width:20px; height:47%; background:#4a4d53; position:relative; border-radius:3px 3px 0 0;">
+                    <span style="position:absolute; top:-20px; left:-2px; font-size:11px; color:#9ba3af; font-family:'Inter', sans-serif; font-weight:600;">47%</span>
+                 </div>
+             </div>
+             <div style="color:#00BFFF; font-weight:bold; opacity:0.4;">→</div>
+             <!-- Stage 3 -->
+             <div style="display:flex; align-items:flex-end; gap:6px; width:80px; height:90px; justify-content:center;">
+                 <div style="width:24px; height:62%; background:#00BFFF; box-shadow:0 0 15px #00BFFF; position:relative; border-radius:3px 3px 0 0;">
+                    <span style="position:absolute; top:-40px; left:-14px; font-size:12px; color:#00BFFF; font-family:'Inter', sans-serif; font-weight:700; white-space:nowrap; letter-spacing:0.5px;">+21 pts</span>
+                    <span style="position:absolute; top:-20px; left:-2px; font-size:12px; color:#fff; font-family:'Inter', sans-serif; font-weight:700;">62%</span>
+                 </div>
+                 <div style="width:20px; height:38%; background:#2a2d33; position:relative; border-radius:3px 3px 0 0;">
+                    <span style="position:absolute; top:-20px; left:-2px; font-size:11px; color:#5a5d63; font-family:'Inter', sans-serif; font-weight:600;">38%</span>
+                 </div>
+             </div>
+         </div>
+      </div>
+
+      <!-- ROW 3: RA -->
+      <div style="display:flex; align-items:center; margin-bottom: 25px; width: 100%;">
+         <div style="width: 140px; color:#ccc; font-size:15px; font-weight:700; letter-spacing:1px; font-family:\'Inter\', sans-serif;">RA</div>
+         <div style="display:flex; flex:1; align-items:center; justify-content:space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom:10px;">
+             <!-- Stage 1 -->
+             <div style="display:flex; align-items:flex-end; gap:6px; width:80px; height:90px; justify-content:center;">
+                 <div style="width:20px; height:52%; background:#00BFFF; position:relative; border-radius:3px 3px 0 0;">
+                    <span style="position:absolute; top:-20px; left:-2px; font-size:11px; color:#00BFFF; font-family:'Inter', sans-serif; font-weight:600;">52%</span>
+                 </div>
+                 <div style="width:20px; height:48%; background:#4a4d53; position:relative; border-radius:3px 3px 0 0;">
+                    <span style="position:absolute; top:-20px; left:-2px; font-size:11px; color:#9ba3af; font-family:'Inter', sans-serif; font-weight:600;">48%</span>
+                 </div>
+             </div>
+             <div style="color:#00BFFF; font-weight:bold; opacity:0.4;">→</div>
+             <!-- Stage 2 -->
+             <div style="display:flex; align-items:flex-end; gap:6px; width:80px; height:90px; justify-content:center;">
+                 <div style="width:20px; height:56%; background:#00BFFF; position:relative; border-radius:3px 3px 0 0;">
+                    <span style="position:absolute; top:-20px; left:-2px; font-size:11px; color:#00BFFF; font-family:'Inter', sans-serif; font-weight:600;">56%</span>
+                 </div>
+                 <div style="width:20px; height:44%; background:#4a4d53; position:relative; border-radius:3px 3px 0 0;">
+                    <span style="position:absolute; top:-20px; left:-2px; font-size:11px; color:#9ba3af; font-family:'Inter', sans-serif; font-weight:600;">44%</span>
+                 </div>
+             </div>
+             <div style="color:#00BFFF; font-weight:bold; opacity:0.4;">→</div>
+             <!-- Stage 3 -->
+             <div style="display:flex; align-items:flex-end; gap:6px; width:80px; height:90px; justify-content:center;">
+                 <div style="width:24px; height:64%; background:#00BFFF; box-shadow:0 0 15px #00BFFF; position:relative; border-radius:3px 3px 0 0;">
+                    <span style="position:absolute; top:-40px; left:-14px; font-size:12px; color:#00BFFF; font-family:'Inter', sans-serif; font-weight:700; white-space:nowrap; letter-spacing:0.5px;">+12 pts</span>
+                    <span style="position:absolute; top:-20px; left:-2px; font-size:12px; color:#fff; font-family:'Inter', sans-serif; font-weight:700;">64%</span>
+                 </div>
+                 <div style="width:20px; height:36%; background:#2a2d33; position:relative; border-radius:3px 3px 0 0;">
+                    <span style="position:absolute; top:-20px; left:-2px; font-size:11px; color:#5a5d63; font-family:'Inter', sans-serif; font-weight:600;">36%</span>
+                 </div>
+             </div>
+         </div>
+      </div>
+
+      <!-- ROW 4: Depression -->
+      <div style="display:flex; align-items:center; width: 100%;">
+         <div style="width: 140px; color:#ccc; font-size:15px; font-weight:700; letter-spacing:1px; font-family:\'Inter\', sans-serif;">Depression</div>
+         <div style="display:flex; flex:1; align-items:center; justify-content:space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom:10px;">
+             <!-- Stage 1 -->
+             <div style="display:flex; align-items:flex-end; gap:6px; width:80px; height:90px; justify-content:center;">
+                 <div style="width:20px; height:59%; background:#00BFFF; position:relative; border-radius:3px 3px 0 0;">
+                    <span style="position:absolute; top:-20px; left:-2px; font-size:11px; color:#00BFFF; font-family:'Inter', sans-serif; font-weight:600;">59%</span>
+                 </div>
+                 <div style="width:20px; height:41%; background:#4a4d53; position:relative; border-radius:3px 3px 0 0;">
+                    <span style="position:absolute; top:-20px; left:-2px; font-size:11px; color:#9ba3af; font-family:'Inter', sans-serif; font-weight:600;">41%</span>
+                 </div>
+             </div>
+             <div style="color:#00BFFF; font-weight:bold; opacity:0.4;">→</div>
+             <!-- Stage 2 -->
+             <div style="display:flex; align-items:flex-end; gap:6px; width:80px; height:90px; justify-content:center;">
+                 <div style="width:20px; height:66%; background:#00BFFF; position:relative; border-radius:3px 3px 0 0;">
+                    <span style="position:absolute; top:-20px; left:-2px; font-size:11px; color:#00BFFF; font-family:'Inter', sans-serif; font-weight:600;">66%</span>
+                 </div>
+                 <div style="width:20px; height:34%; background:#4a4d53; position:relative; border-radius:3px 3px 0 0;">
+                    <span style="position:absolute; top:-20px; left:-2px; font-size:11px; color:#9ba3af; font-family:'Inter', sans-serif; font-weight:600;">34%</span>
+                 </div>
+             </div>
+             <div style="color:#00BFFF; font-weight:bold; opacity:0.4;">→</div>
+             <!-- Stage 3 -->
+             <div style="display:flex; align-items:flex-end; gap:6px; width:80px; height:90px; justify-content:center;">
+                 <div style="width:24px; height:77%; background:#00BFFF; box-shadow:0 0 15px #00BFFF; position:relative; border-radius:3px 3px 0 0;">
+                    <span style="position:absolute; top:-40px; left:-14px; font-size:12px; color:#00BFFF; font-family:'Inter', sans-serif; font-weight:700; white-space:nowrap; letter-spacing:0.5px;">+18 pts</span>
+                    <span style="position:absolute; top:-20px; left:-2px; font-size:12px; color:#fff; font-family:'Inter', sans-serif; font-weight:700;">77%</span>
+                 </div>
+                 <div style="width:20px; height:23%; background:#2a2d33; position:relative; border-radius:3px 3px 0 0;">
+                    <span style="position:absolute; top:-20px; left:-2px; font-size:11px; color:#5a5d63; font-family:'Inter', sans-serif; font-weight:600;">23%</span>
+                 </div>
+             </div>
+         </div>
+      </div>
+
+      <!-- X-AXIS LABELS -->
+      <div style="display:flex; margin-left:140px; padding-top:20px; flex:1; justify-content:space-between; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; text-align:center; font-family:'Inter', sans-serif;">
+         <div style="width:100px; color:#aaa; margin-left:-10px;">Baseline</div>
+         <div style="width:140px; color:#00BFFF; margin-left:-30px;">Stratified Cohort</div>
+         <div style="width:180px; color:#FFAA00; margin-right:-50px;">Mechanism-Aligned Treatment</div>
+      </div>
+
+    </div>
+</div>
+
+
+<!-- DEMARCATION LINE -->
+<div style="display: flex; align-items: center; justify-content: center; margin: 120px auto 80px auto; max-width: 800px; opacity: 0.6;">
+    <div style="flex: 1; height: 1px; background: linear-gradient(90deg, rgba(0,191,255,0) 0%, rgba(0,191,255,0.5) 100%);"></div>
+    <div style="width: 6px; height: 6px; border-radius: 50%; background: #00BFFF; box-shadow: 0 0 12px #00BFFF; margin: 0 20px;"></div>
+    <div style="flex: 1; height: 1px; background: linear-gradient(-90deg, rgba(0,191,255,0) 0%, rgba(0,191,255,0.5) 100%);"></div>
+</div>
+
+
+
+
+<!-- STORY FLOW -->
+
+<div class="section reveal">
+  <div class="container grid-2">
+    <div>
+      <h2>Improve treatment outcomes</h2>
+      <p>Patients with stronger biological alignment show improved response without changing treatment.</p>
+    </div>
+    <img src="assets/fig_vis_1.png">
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="container grid-2">
+    <div>
+      <h2>Identify non-responders early</h2>
+      <p>Across diseases, a large subset of patients shows limited benefit.</p>
+    </div>
+    <img src="assets/fig_vis_2.png">
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="container grid-2">
+    <div>
+      <h2>Map patient biology</h2>
+      <p>Patients organize into structured biological patterns beyond diagnosis.</p>
+    </div>
+    <img src="assets/fig_vis_3.png">
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="container grid-2">
+    <div>
+      <h2>Recover non-responders</h2>
+      <p>Some patients show potential responsiveness under alternative conditions.</p>
+    </div>
+    <img src="assets/fig_vis_4.png">
+  </div>
+</div>
+
+<div class="section reveal">
+  <div class="container grid-2">
+    <div style="display: flex; flex-direction: column; justify-content: center;">
+      <h2>Align treatment selection</h2>
+      <p>Patients misaligned with one therapy may respond to another.</p>
+      <div style="margin-top: 40px; padding-left: 20px; border-left: 3px solid #00BFFF;">
+        <h3 style="font-size: 24px; color: #fff; margin-bottom: 0;">Patients don't fail treatment &mdash;</h3>
+        <p style="color: #00BFFF; font-size: 18px; font-weight: 500; margin-top: 8px;">Treatments fail alignment.</p>
+      </div>
+    </div>
+    <div>
+      <img src="assets/cg_harmonious_text.png" style="width:100%; border: none !important; border-radius: 0 !important; outline: none !important; box-shadow: none !important;">
+    </div>
+  </div>
+</div>
+
+<!-- BIOLOGY LAYER -->
+<div class="section reveal" style="text-align: center;">
+  <div class="container" style="display: flex; flex-direction: column; align-items: center; max-width: 1000px;">
+    <h2>Unify cross-disease deployment</h2>
+    <p style="text-align: center; color: #888; font-size: 20px; font-weight: 500; font-style: italic; margin-bottom: 40px; line-height: 1.6; letter-spacing: 0.5px;">
+      Biological states are structured &mdash; not random.
+    </p>
+
+    <img src="assets/fig_unified_structural.png" style="width:100%; border-radius:12px; box-shadow:0 0 50px rgba(0, 191, 255, 0.04); border: none !important;">
+  </div>
+</div>
+
+<!-- PBMC / REAL WORLD -->
+<div class="section reveal" style="text-align: center;">
+  <div class="container" style="display: flex; flex-direction: column; align-items: center; max-width: 800px;">
+    
+    <div style="width: 80px; height: 80px; border-radius: 50%; background: rgba(255, 63, 63, 0.1); border: 1px solid rgba(255, 63, 63, 0.3); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; box-shadow: 0 0 30px rgba(255, 63, 63, 0.15);">
+      <svg width="34" height="42" viewBox="0 0 24 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 0C12 0 3 12.5 3 19.5C3 24.7467 7.02944 29 12 29C16.9706 29 21 24.7467 21 19.5C21 12.5 12 0 12 0Z" fill="#ff4a4a" opacity="0.9"/>
+        <path d="M9 20C9 18 10 16 12 16" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <h2 style="margin-bottom: 16px;">Deploy directly from blood data</h2>
+    <p style="text-align: center; color: #888; font-size: 18px; line-height: 1.6;">
+      The system operates directly on peripheral blood data, allowing scalable, non-invasive deployment with consistent signals observed across both immune and psychiatric conditions.
+    </p>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="section reveal" id="demo">
+  <div class="container" style="text-align:center;">
+    <h2>Simulate your dataset</h2>
+    <p style="margin-bottom:30px;">Access available for collaborators and partners.</p>
+            <a href="mailto:vibha@bluemoonbio.ai" class="button" style="background: #ffffff; color: #000000; border: none; font-weight: 700; box-shadow: 0 0 20px rgba(255,255,255,0.2);">Request Access</a>
+<a href="mailto:vibha@bluemoonbio.ai" class="button" style="margin-left:15px; border-color: #00BFFF; color: #00BFFF; box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);">Contact</a>
+  </div>
+</div>
+
+<!-- PARTICLES -->
+<script>
+const canvas = document.getElementById("bg");
+const ctx = canvas.getContext("2d");
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resize);
+resize();
+
+let particles = Array.from({length:80}, () => ({
+  x: Math.random()*canvas.width,
+  y: Math.random()*canvas.height,
+  dx: (Math.random()-0.5)*0.2,
+  dy: (Math.random()-0.5)*0.2
+}));
+
+function draw() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    p.x+=p.dx; p.y+=p.dy;
+    if(p.x<0||p.x>canvas.width)p.dx*=-1;
+    if(p.y<0||p.y>canvas.height)p.dy*=-1;
+    ctx.fillStyle="rgba(0,191,255,0.3)";
+    ctx.fillRect(p.x,p.y,2,2);
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+
+
+
+</body>
+</html>

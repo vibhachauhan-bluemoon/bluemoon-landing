@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlueMoonBio Proof of Reality</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --navy: #0A192F;
+            --cobalt: #2563EB;
+            --slate: #64748B;
+            --light-slate: #94A3B8;
+            --light-gray: #F8FAFC;
+            --border: #E2E8F0;
+            --bg: #FFFFFF;
+            
+            /* Regime Colors */
+            --oncology: #60A5FA;
+            --immunology: #94A3B8;
+            --psychiatry: #818CF8;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #canvas-container {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            background-color: var(--bg);
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        /* Narrative Overlays */
+        .overlay-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            opacity: 0;
+            z-index: 100;
+        }
+
+        .overlay-text .main-text {
+            font-weight: 600;
+            color: var(--navy);
+            letter-spacing: -1px;
+        }
+
+        /* Ingestion Stream (Left) */
+        .stream-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 650px;
+            height: 100%;
+            padding: 80px;
+            box-sizing: border-box;
+            mask-image: linear-gradient(to bottom, transparent 5%, black 20%, black 80%, transparent 95%);
+            -webkit-mask-image: linear-gradient(to bottom, transparent 5%, black 20%, black 80%, transparent 95%);
+            opacity: 0;
+            z-index: 10;
+        }
+
+        .stream-wrapper {
+            position: absolute;
+            top: 600px;
+            width: 490px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .cohort-card {
+            border-top: 1px solid var(--border);
+            padding-top: 16px;
+            position: relative;
+        }
+
+        .cohort-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cohort-meta {
+            font-size: 15px;
+            color: var(--slate);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .cohort-meta span {
+            display: inline-block;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: var(--light-slate);
+        }
+
+        /* Telemetry Counter */
+        #telemetry-counter {
+            position: absolute;
+            bottom: 40px;
+            right: 40px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            color: var(--slate);
+            z-index: 100;
+            opacity: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--cobalt);
+            box-shadow: 0 0 10px var(--cobalt);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.4; }
+            50% { opacity: 1; }
+            100% { opacity: 0.4; }
+        }
+
+        #counter-val {
+            color: var(--navy);
+            font-weight: 600;
+            width: 28px;
+            display: inline-block;
+            text-align: right;
+        }
+
+        /* Points and Particles */
+        #particles-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            opacity: 0;
+            will-change: transform, opacity, background-color;
+            mix-blend-mode: multiply;
+        }
+        
+        .particle.oncology { background-color: var(--oncology); }
+        .particle.immunology { background-color: var(--immunology); }
+        .particle.psychiatry { background-color: var(--psychiatry); }
+
+        /* Scene 6: Enrichment Bars */
+        .enrichment-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 1400px;
+            opacity: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .enrichment-title {
+            font-size: 52px;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 70px;
+            letter-spacing: -1px;
+            text-align: center;
+        }
+
+        .enrichment-chart {
+            display: flex;
+            gap: 80px;
+            height: 350px;
+            align-items: flex-end;
+            width: 100%;
+            justify-content: center;
+            position: relative;
+        }
+
+        .y-axis {
+            position: relative;
+            height: 100%;
+            width: 60px;
+            border-right: 1px solid var(--border);
+            margin-right: -40px;
+        }
+        
+        .y-tick {
+            position: absolute;
+            right: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--slate);
+            transform: translateY(50%);
+        }
+
+        .y-tick::after {
+            content: '';
+            position: absolute;
+            right: -13px;
+            top: 50%;
+            width: 4px;
+            height: 1px;
+            background-color: var(--border);
+        }
+
+        .bar-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+        }
+
+        .bar-group-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--slate);
+            margin-top: 24px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            order: 2;
+        }
+
+        .bars {
+            display: flex;
+            gap: 20px;
+            height: 100%;
+            align-items: flex-end;
+            order: 1;
+            z-index: 1;
+        }
+
+        .bar-pair {
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            position: relative;
+        }
+
+        .bar-baseline {
+            width: 14px;
+            background-color: #CBD5E1;
+            height: 0%;
+            border-radius: 2px 2px 0 0;
+        }
+
+        .bar-enriched {
+            width: 14px;
+            background-color: var(--cobalt);
+            height: 0%;
+            border-radius: 2px 2px 0 0;
+        }
+
+        .pair-label {
+            position: absolute;
+            bottom: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--slate);
+            opacity: 0;
+            white-space: nowrap;
+        }
+
+        .enrichment-legend {
+            display: flex;
+            gap: 32px;
+            justify-content: center;
+            margin-top: 50px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--slate);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 2px;
+        }
+
+        /* Radial Operational Flow Scene */
+        .flow-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 1400px;
+            height: 700px;
+            z-index: 50;
+            pointer-events: none;
+        }
+
+        .flow-stage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Stage 1: Blood Drop */
+        .flow-blood svg {
+            width: 50px;
+            height: 70px;
+            fill: #E11D48;
+        }
+
+        /* Stage 2: Gene Expression */
+        .flow-genes {
+            display: flex;
+            gap: 6px;
+        }
+        .gene-line {
+            width: 3px;
+            height: 60px;
+            background-color: var(--slate);
+            border-radius: 2px;
+            opacity: 0.8;
+        }
+
+        /* Stage 3: BlueMoon Structure */
+        .flow-structure {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(37,99,235,0.15) 10%, rgba(37,99,235,0.02) 60%, transparent 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .structure-node {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: var(--cobalt);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--cobalt);
+            opacity: 0.8;
+        }
+
+        /* Stage 4: Radial Apps */
+        .flow-app {
+            position: absolute;
+            opacity: 0;
+            background: rgba(255,255,255,0.95);
+            padding: 16px 32px;
+            border-left: 2px solid var(--cobalt);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 18px;
+            color: var(--navy);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .cap-visual {
+            width: 60px;
+            height: 40px;
+            position: relative;
+        }
+        .mv-dot { width: 6px; height: 6px; border-radius: 50%; background-color: var(--slate); position: absolute; }
+        .mv-circle { width: 24px; height: 24px; border-radius: 50%; position: absolute; top: 8px; mix-blend-mode: multiply; }
+
+        /* Final Punchline */
+        .punchline {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            font-weight: 500;
+            color: var(--navy);
+            text-align: center;
+            letter-spacing: -0.5px;
+            opacity: 0;
+            z-index: 100;
+            width: 1200px;
+        }
+
+        /* Flow Additions */
+        #flow-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--light-gray);
+            opacity: 0;
+            z-index: 45;
+            pointer-events: none;
+        }
+        
+        .flow-stage-label {
+            position: absolute;
+            bottom: -40px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 15px;
+            color: var(--slate);
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+        }
+
+        .flow-main-title {
+            position: absolute;
+            top: 8%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 38px;
+            font-weight: 500;
+            color: var(--navy);
+            letter-spacing: -0.5px;
+            opacity: 0;
+            text-align: center;
+            width: 1000px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="canvas-container">
+        
+        <!-- Text Overlays -->
+        <div class="overlay-text" id="text-1" style="width: 1200px;">
+            <div class="main-text" style="font-size: 56px;">400+ public patient cohorts screened.</div>
+        </div>
+
+        <div class="overlay-text" id="text-2" style="width: 1000px; left: 1260px;">
+            <div class="main-text" style="font-size: 56px; margin-bottom: 24px;">36+ independent retrospective cohorts.</div>
+            <div style="font-size: 28px; color: var(--slate); font-weight: 400; line-height: 1.4;">Thousands of patient samples across oncology, immunology, and psychiatry.</div>
+        </div>
+
+        <div class="overlay-text" id="text-2b" style="width: 1200px; z-index: 110;">
+            <div class="main-text" style="font-size: 56px;">Real patient response data.</div>
+        </div>
+
+        <div class="overlay-text" id="text-3" style="width: 800px; left: 480px; text-align: left;">
+            <div class="main-text" style="font-size: 48px;">Consistent biological response structure emerged across independent cohorts.</div>
+        </div>
+
+        <!-- Telemetry Counter -->
+        <div id="telemetry-counter">
+            <div class="pulse-dot"></div>
+            Cohorts projected: <span id="counter-val">1</span> / 36+
+        </div>
+
+        <!-- Ingestion Stream -->
+        <div class="stream-container" id="stream-container">
+            <div class="stream-wrapper" id="stream">
+                <!-- Dynamically populated by JS -->
+            </div>
+        </div>
+
+        <svg id="trails-svg" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:15;"></svg>
+        <div id="particles-layer"></div>
+
+        <!-- Scene 6: Enrichment Bars -->
+        <div class="enrichment-container" id="enrichment-container">
+            <div class="enrichment-title">Aligned patient subsets repeatedly showed enriched response rates.</div>
+            
+            <div class="enrichment-chart">
+                <div class="y-axis">
+                    <div class="y-tick" style="bottom: 60%;">60%</div>
+                    <div class="y-tick" style="bottom: 40%;">40%</div>
+                    <div class="y-tick" style="bottom: 20%;">20%</div>
+                </div>
+                
+                <div class="bar-group" id="group-oncology-bars">
+                    <div class="bar-group-label">Oncology</div>
+                    <div class="bars">
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 34%;"></div><div class="bar-enriched" style="--target-height: 52%;"></div><div class="pair-label">34→52</div></div>
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 28%;"></div><div class="bar-enriched" style="--target-height: 45%;"></div></div>
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 41%;"></div><div class="bar-enriched" style="--target-height: 56%;"></div></div>
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 30%;"></div><div class="bar-enriched" style="--target-height: 51%;"></div></div>
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 45%;"></div><div class="bar-enriched" style="--target-height: 55%;"></div></div>
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 22%;"></div><div class="bar-enriched" style="--target-height: 40%;"></div></div>
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 38%;"></div><div class="bar-enriched" style="--target-height: 58%;"></div></div>
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 51%;"></div><div class="bar-enriched" style="--target-height: 60%;"></div><div class="pair-label">51→60</div></div>
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 27%;"></div><div class="bar-enriched" style="--target-height: 48%;"></div></div>
+                    </div>
+                </div>
+
+                <div class="bar-group" id="group-immunology-bars">
+                    <div class="bar-group-label">Immunology</div>
+                    <div class="bars">
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 31%;"></div><div class="bar-enriched" style="--target-height: 54%;"></div></div>
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 44%;"></div><div class="bar-enriched" style="--target-height: 56%;"></div></div>
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 29%;"></div><div class="bar-enriched" style="--target-height: 47%;"></div></div>
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 35%;"></div><div class="bar-enriched" style="--target-height: 62%;"></div><div class="pair-label">35→62</div></div>
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 40%;"></div><div class="bar-enriched" style="--target-height: 58%;"></div></div>
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 25%;"></div><div class="bar-enriched" style="--target-height: 42%;"></div></div>
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 48%;"></div><div class="bar-enriched" style="--target-height: 60%;"></div></div>
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 33%;"></div><div class="bar-enriched" style="--target-height: 49%;"></div></div>
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 28%;"></div><div class="bar-enriched" style="--target-height: 51%;"></div></div>
+                    </div>
+                </div>
+
+                <div class="bar-group" id="group-psychiatry-bars">
+                    <div class="bar-group-label">Psychiatry</div>
+                    <div class="bars">
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 36%;"></div><div class="bar-enriched" style="--target-height: 54%;"></div></div>
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 42%;"></div><div class="bar-enriched" style="--target-height: 58%;"></div></div>
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 24%;"></div><div class="bar-enriched" style="--target-height: 41%;"></div><div class="pair-label">24→41</div></div>
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 31%;"></div><div class="bar-enriched" style="--target-height: 44%;"></div></div>
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 47%;"></div><div class="bar-enriched" style="--target-height: 62%;"></div></div>
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 26%;"></div><div class="bar-enriched" style="--target-height: 39%;"></div></div>
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 39%;"></div><div class="bar-enriched" style="--target-height: 61%;"></div></div>
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 52%;"></div><div class="bar-enriched" style="--target-height: 59%;"></div></div>
+                        <div class="bar-pair"><div class="bar-baseline" style="--target-height: 29%;"></div><div class="bar-enriched" style="--target-height: 48%;"></div></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="enrichment-legend">
+                <div class="legend-item"><div class="legend-color" style="background-color: #CBD5E1;"></div> Baseline</div>
+                <div class="legend-item"><div class="legend-color" style="background-color: var(--cobalt);"></div> Aligned Subset</div>
+            </div>
+
+        </div>
+
+        <div id="flow-bg"></div>
+
+        <!-- Radial Operational Flow -->
+        <div class="flow-container" id="flow-layer">
+            
+            <div class="flow-main-title" id="flow-title">Patient molecular profiles can be organized into measurable biological structure.</div>
+
+            <!-- Stage 1: Blood Drop -->
+            <div class="flow-stage flow-blood" id="flow-blood">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12,2.6c-0.6,1.4-6.8,11.3-6.8,15c0,3.5,3.1,6.4,6.8,6.4s6.8-2.9,6.8-6.4C18.8,13.9,12.6,4,12,2.6z"/>
+                </svg>
+                <div class="flow-stage-label">Blood / tumor RNA</div>
+            </div>
+
+            <!-- Stage 2: Gene Expression -->
+            <div class="flow-stage flow-genes" id="flow-genes">
+                <div class="gene-line" style="height: 40px; transform: translateY(10px);"></div>
+                <div class="gene-line" style="height: 60px;"></div>
+                <div class="gene-line" style="height: 30px; transform: translateY(15px);"></div>
+                <div class="gene-line" style="height: 50px; transform: translateY(5px);"></div>
+                <div class="gene-line" style="height: 20px; transform: translateY(20px);"></div>
+                <div class="gene-line" style="height: 55px; transform: translateY(2px);"></div>
+                <div class="gene-line" style="height: 35px; transform: translateY(12px);"></div>
+                <div class="flow-stage-label" style="bottom: -30px;">Gene expression profiles</div>
+            </div>
+
+            <!-- Stage 3: BlueMoon Structure -->
+            <div class="flow-stage flow-structure" id="flow-structure">
+                <div class="structure-node" style="top: 30%; left: 40%; width: 8px; height: 8px;"></div>
+                <div class="structure-node" style="top: 50%; left: 70%; width: 5px; height: 5px; opacity: 0.5;"></div>
+                <div class="structure-node" style="top: 70%; left: 30%; width: 7px; height: 7px;"></div>
+                <div class="structure-node" style="top: 40%; left: 50%; width: 12px; height: 12px;"></div>
+                <div class="structure-node" style="top: 60%; left: 55%; width: 9px; height: 9px;"></div>
+                <div class="structure-node" style="top: 20%; left: 60%; width: 4px; height: 4px; opacity: 0.6;"></div>
+                <div class="structure-node" style="top: 80%; left: 45%; width: 6px; height: 6px;"></div>
+                <div class="flow-stage-label" style="bottom: -50px;">Shared biological structure</div>
+            </div>
+
+            <!-- Stage 4: Radial Applications -->
+            <div class="flow-app app-tl" style="top: 25%; right: 63%;">
+                <div class="cap-visual">
+                    <div class="mv-dot" style="top:10px; left:10px;"></div>
+                    <div class="mv-dot mv-light-1" style="top:25px; left:20px; background-color:#0da0e5;"></div>
+                    <div class="mv-dot" style="top:15px; left:35px;"></div>
+                    <div class="mv-dot mv-light-2" style="top:5px; left:45px; background-color:#0da0e5;"></div>
+                    <div class="mv-dot mv-light-3" style="top:20px; left:50px; background-color:#0da0e5;"></div>
+                </div>
+                <div>Response Enrichment</div>
+            </div>
+            
+            <div class="flow-app app-tr" style="top: 25%; left: 63%;">
+                <div class="cap-visual">
+                    <svg width="60" height="40">
+                        <path id="mv-traj" d="M 10,30 Q 30,10 50,25" stroke="var(--navy)" stroke-width="2" stroke-dasharray="4 4" fill="none" opacity="0"/>
+                        <circle cx="10" cy="30" r="3" fill="var(--slate)"/>
+                        <circle id="mv-traj-end" cx="50" cy="25" r="4" fill="var(--cobalt)" opacity="0"/>
+                    </svg>
+                </div>
+                <div>Longitudinal Tracking</div>
+            </div>
+            
+            <div class="flow-app app-bl" style="top: 75%; right: 63%;">
+                <div class="cap-visual">
+                    <div class="mv-dot mv-sub-1" style="top:15px; left:25px; background-color:var(--navy);"></div>
+                    <div class="mv-dot mv-sub-2" style="top:20px; left:25px; background-color:var(--navy);"></div>
+                    <div class="mv-dot mv-sub-3" style="top:18px; left:32px; background-color:var(--navy);"></div>
+                </div>
+                <div>Biological Subgroup Discovery</div>
+            </div>
+            
+            <div class="flow-app app-br" style="top: 75%; left: 63%;">
+                <div class="cap-visual">
+                    <div class="mv-circle mv-cross-1" style="left:10px; background-color:rgba(37, 99, 235, 0.5);"></div>
+                    <div class="mv-circle mv-cross-2" style="left:26px; background-color:rgba(148, 163, 184, 0.5);"></div>
+                </div>
+                <div>Therapy Comparison</div>
+            </div>
+
+        </div>
+
+        <!-- Final Punchline -->
+        <div class="punchline" id="punchline">Treatment response follows biological structure.</div>
+
+    </div>
+
+    <script>
+        // Populate Telemetry Stream
+        const datasets = [
+            { title: "Melanoma — Anti-PD1", meta: "Tumor RNA • N=51 • Responder labels", regime: "oncology", rName: "Oncology" },
+            { title: "Crohn’s Disease — Infliximab", meta: "Blood RNA • N=84 • Longitudinal", regime: "immunology", rName: "Immunology" },
+            { title: "Major Depression — SSRI", meta: "Whole Blood • N=406 • Week 8 HDRS", regime: "psychiatry", rName: "Psychiatry" },
+            { title: "NSCLC — Pembrolizumab", meta: "Tumor RNA • N=68 • OS/PFS", regime: "oncology", rName: "Oncology" },
+            { title: "TRD — Ketamine", meta: "Blood RNA • N=45 • 24h response", regime: "psychiatry", rName: "Psychiatry" },
+            { title: "Rheumatoid Arthritis — TNF Inhibitor", meta: "Synovial • N=120 • EULAR criteria", regime: "immunology", rName: "Immunology" },
+            { title: "Breast Cancer — Chemotherapy", meta: "Tumor RNA • N=210 • pCR labels", regime: "oncology", rName: "Oncology" },
+            { title: "Bipolar Disorder — Lithium", meta: "PBMC • N=72 • Clinical response", regime: "psychiatry", rName: "Psychiatry" },
+            { title: "Ulcerative Colitis — Vedolizumab", meta: "Mucosal RNA • N=73 • Remission", regime: "immunology", rName: "Immunology" },
+            { title: "Colorectal Cancer — FOLFOX", meta: "Tumor RNA • N=83 • Recurrence", regime: "oncology", rName: "Oncology" },
+            { title: "Melanoma — Anti-PD1", meta: "Tumor RNA • N=51 • Responder labels", regime: "oncology", rName: "Oncology" }, 
+            { title: "PTSD — Standard Care", meta: "Blood RNA • N=95 • CAPS score", regime: "psychiatry", rName: "Psychiatry" },
+            { title: "Psoriasis — Secukinumab", meta: "Skin RNA • N=45 • PASI response", regime: "immunology", rName: "Immunology" },
+            { title: "RCC — Sunitinib", meta: "Tumor RNA • N=42 • PFS labels", regime: "oncology", rName: "Oncology" },
+            { title: "Crohn’s Disease — Infliximab", meta: "Blood RNA • N=84 • Longitudinal", regime: "immunology", rName: "Immunology" }, 
+            { title: "Schizophrenia — Clozapine", meta: "PBMC • N=54 • PANSS score", regime: "psychiatry", rName: "Psychiatry" },
+            { title: "Prostate Cancer — Enzalutamide", meta: "Tumor RNA • N=55 • PSA response", regime: "oncology", rName: "Oncology" },
+            { title: "Multiple Sclerosis — Ocrelizumab", meta: "PBMC • N=58 • Relapse labels", regime: "immunology", rName: "Immunology" },
+            { title: "Major Depression — SSRI", meta: "Whole Blood • N=406 • Week 8 HDRS", regime: "psychiatry", rName: "Psychiatry" }, 
+            { title: "Ovarian Cancer — Platinum", meta: "Tumor RNA • N=112 • OS/PFS", regime: "oncology", rName: "Oncology" },
+            { title: "Anxiety Disorder — Escitalopram", meta: "Blood RNA • N=62 • HAM-A score", regime: "psychiatry", rName: "Psychiatry" },
+            { title: "Systemic Lupus — Belimumab", meta: "Blood RNA • N=92 • SLEDAI change", regime: "immunology", rName: "Immunology" },
+            { title: "TRD — Ketamine", meta: "Blood RNA • N=45 • 24h response", regime: "psychiatry", rName: "Psychiatry" } 
+        ];
+
+        const stream = document.getElementById('stream');
+        let htmlStr = '';
+        for(let i = 0; i < 4; i++) {
+            datasets.forEach(d => {
+                const metaStr = d.meta.replace(/ • /g, ' <span></span> ');
+                htmlStr += `<div class="cohort-card">
+                    <div class="cohort-title">${d.title}<span style="font-size:11px; font-weight:500; font-family:'JetBrains Mono', monospace; color:var(--${d.regime}); text-transform:uppercase; letter-spacing:1px;">${d.rName}</span></div>
+                    <div class="cohort-meta">${metaStr}</div>
+                </div>`;
+            });
+        }
+        stream.innerHTML = htmlStr;
+
+        const tl = gsap.timeline();
+
+        // 1. Initial Hook (0.5s - 3.5s)
+        tl.to('#text-1', { opacity: 1, y: -20, duration: 1, ease: "power2.out" }, 0.5);
+        tl.to('#text-1', { opacity: 0, duration: 1 }, 3);
+
+        // 2. Stream Starts & Hero Moment (4s - 8.5s)
+        gsap.set('#stream', { y: -50 });
+        tl.to('#stream-container', { opacity: 1, duration: 1 }, 4);
+        tl.to('#stream', { y: -300, duration: 1.5, ease: "power1.out" }, 3.5); 
+        
+        tl.to('#text-2', { opacity: 1, y: -20, duration: 1.5, ease: "power2.out" }, 5); 
+        
+        // SLOW DOWN during Hero statement
+        tl.to('#stream', { y: -450, duration: 3.5, ease: "none" }, 5);
+        
+        tl.to('#text-2', { opacity: 0, duration: 1 }, 8.5);
+
+        // 3. Fast Stream & Particle Emission (9s - 14s)
+        tl.to('#stream', { y: -3200, duration: 10, ease: "power1.inOut" }, 9);
+
+        // Counter UI
+        tl.to('#telemetry-counter', { opacity: 1, duration: 0.5 }, 9);
+        tl.to({val: 1}, {
+            val: 36,
+            duration: 5,
+            ease: "power2.inOut",
+            onUpdate: function() {
+                document.getElementById('counter-val').innerText = Math.floor(this.targets()[0].val);
+            }
+        }, 9);
+        tl.to('#telemetry-counter', { opacity: 0, duration: 1 }, 14.5);
+
+
+        const particlesLayer = document.getElementById('particles-layer');
+        const trailsSvg = document.getElementById('trails-svg');
+        const svgNS = "http://www.w3.org/2000/svg";
+
+        const numPerRegime = 60;
+        
+        const basins = [
+            {x: 1000, y: 350},
+            {x: 1400, y: 450},
+            {x: 1200, y: 700}
+        ];
+
+        const allParticles = [];
+
+        ['oncology', 'immunology', 'psychiatry'].forEach((regime, rIdx) => {
+            for (let i = 0; i < numPerRegime; i++) {
+                const p = document.createElement('div');
+                p.className = `particle ${regime}`;
+                particlesLayer.appendChild(p);
+                
+                const emitTime = 9.5 + (Math.random() * 5);
+                
+                const startX = 450; 
+                const startY = 400 + Math.random() * 200; 
+
+                const assignedBasin = basins[Math.floor(Math.random() * basins.length)];
+                
+                const r1 = Math.random();
+                const r2 = Math.random();
+                const radius = 120 * Math.sqrt(-2.0 * Math.log(r1)); 
+                const theta = 2.0 * Math.PI * r2;
+                
+                const targetX = assignedBasin.x + radius * Math.cos(theta);
+                const targetY = assignedBasin.y + radius * Math.sin(theta);
+
+                allParticles.push({ el: p, regime: regime, localX: targetX, localY: targetY });
+
+                gsap.set(p, { x: startX, y: startY, opacity: 0 });
+                
+                const travelDuration = 2 + Math.random();
+
+                // Faint motion trail
+                const line = document.createElementNS(svgNS, 'line');
+                line.setAttribute('x1', startX);
+                line.setAttribute('y1', startY);
+                line.setAttribute('x2', targetX);
+                line.setAttribute('y2', targetY);
+                line.setAttribute('stroke', `var(--${regime})`);
+                line.setAttribute('stroke-width', '1');
+                line.setAttribute('opacity', '0');
+                trailsSvg.appendChild(line);
+
+                tl.to(line, { opacity: 0.15, duration: travelDuration * 0.3 }, emitTime)
+                  .to(line, { opacity: 0, duration: travelDuration * 0.5 }, emitTime + (travelDuration * 0.3));
+
+                tl.to(p, { opacity: 0.8, duration: 0.1 }, emitTime)
+                  .to(p, { 
+                      x: targetX, 
+                      y: targetY, 
+                      duration: travelDuration, 
+                      ease: "power3.out" 
+                  }, emitTime);
+            }
+        });
+
+        // 4. Emotional Anchor (14.5s - 17.5s)
+        tl.to('#stream-container', { opacity: 0, duration: 1 }, 14.5);
+        tl.to('#text-2b', { opacity: 1, scale: 1.02, duration: 1.5, ease: "power2.out" }, 15);
+        tl.to('#text-2b', { opacity: 0, duration: 1 }, 17.5);
+
+        // 5. Non-random Organization Payoff (18s - 22.5s)
+        tl.to('#text-3', { opacity: 1, y: -20, duration: 1.5, ease: "power2.out" }, 18);
+
+        // Subtle biological shifting
+        allParticles.forEach(p => {
+            tl.to(p.el, {
+                x: p.localX + (Math.random() - 0.5) * 30,
+                y: p.localY + (Math.random() - 0.5) * 30,
+                duration: 4,
+                ease: "sine.inOut",
+                yoyo: true,
+                repeat: 1
+            }, 18);
+        });
+
+        tl.to('#text-3', { opacity: 0, duration: 1 }, 22);
+        tl.to('#particles-layer', { opacity: 0, duration: 1 }, 22.5);
+
+        // 6. Multi-Cohort Evidence with Groupwise Stagger (23s - 31.5s)
+        tl.to('#enrichment-container', { opacity: 1, duration: 1 }, 23);
+
+        const oncologyPairs = document.querySelectorAll('#group-oncology-bars .bar-pair');
+        const immunologyPairs = document.querySelectorAll('#group-immunology-bars .bar-pair');
+        const psychiatryPairs = document.querySelectorAll('#group-psychiatry-bars .bar-pair');
+
+        function animateGroup(pairs, startTime) {
+            pairs.forEach((pair, i) => {
+                const delay = startTime + (i * 0.1); 
+                const baseline = pair.querySelector('.bar-baseline');
+                const enriched = pair.querySelector('.bar-enriched');
+                const label = pair.querySelector('.pair-label');
+                
+                const targetB = baseline.getAttribute('style').match(/--target-height:\s*(\d+)%/)[1];
+                const targetE = enriched.getAttribute('style').match(/--target-height:\s*(\d+)%/)[1];
+                
+                tl.to(baseline, { height: targetB + '%', duration: 0.8, ease: "power3.out" }, delay);
+                tl.to(enriched, { height: targetE + '%', duration: 0.8, ease: "power3.out" }, delay + 0.2);
+                if (label) {
+                    tl.to(label, { opacity: 1, duration: 0.5 }, delay + 0.5);
+                }
+            });
+        }
+
+        animateGroup(oncologyPairs, 23.5);
+        animateGroup(immunologyPairs, 24.5);
+        animateGroup(psychiatryPairs, 25.5);
+
+        // HOLD SCENE for breathing room
+        tl.to('#enrichment-container', { opacity: 0, duration: 1 }, 31.5);
+
+        // 7. Radial Operational Flow (31.8s - 40.5s)
+        tl.to('#flow-bg', { opacity: 1, duration: 1 }, 31.5);
+        
+        // Step 1: Blood drop appears
+        tl.fromTo('#flow-blood', { scale: 0.8 }, { opacity: 1, scale: 1.1, duration: 1.2, ease: "power2.out" }, 31.8);
+        tl.to('#flow-blood', { opacity: 0, scale: 0.8, duration: 0.5 }, 33.2);
+        
+        // Step 2: Gene expression matrix
+        tl.fromTo('#flow-genes', { scale: 0.8 }, { opacity: 1, scale: 1, duration: 1.5, ease: "power2.out" }, 33.2);
+        tl.to('.gene-line', { height: (i) => [50,20,60,30,55,40,25][i], duration: 1.2, ease: "sine.inOut", yoyo: true, repeat: 1 }, 33.4);
+        tl.to('#flow-genes', { opacity: 0, scale: 0.8, duration: 0.5 }, 34.8);
+
+        // Step 3: Organized Biological Structure
+        tl.fromTo('#flow-structure', { scale: 0.5, rotation: -45 }, { opacity: 1, scale: 1, rotation: 0, duration: 1.2, ease: "back.out(1.5)" }, 34.8);
+        
+        // Anchoring Sentence
+        tl.fromTo('#flow-title', { y: 20 }, { opacity: 1, y: 0, duration: 1.5, ease: "power2.out" }, 35.0);
+
+        // Step 4: Applications emerge sequentially
+        tl.fromTo('.app-tl', { x: 20, y: 20 }, { opacity: 1, x: 0, y: 0, duration: 1, ease: "power2.out" }, 37.0);
+        tl.fromTo('.mv-light-1', { opacity: 0.3, scale: 1 }, { opacity: 1, scale: 1.5, duration: 0.8, yoyo: true, repeat: -1 }, 37.5);
+        tl.fromTo('.mv-light-2', { opacity: 0.3, scale: 1 }, { opacity: 1, scale: 1.5, duration: 0.8, yoyo: true, repeat: -1, delay: 0.3 }, 37.5);
+        tl.fromTo('.mv-light-3', { opacity: 0.3, scale: 1 }, { opacity: 1, scale: 1.5, duration: 0.8, yoyo: true, repeat: -1, delay: 0.6 }, 37.5);
+
+        tl.fromTo('.app-tr', { x: -20, y: 20 }, { opacity: 1, x: 0, y: 0, duration: 1, ease: "power2.out" }, 37.6);
+        tl.to('#mv-traj', { opacity: 1, strokeDashoffset: 0, duration: 1.5, ease: "none" }, 37.8);
+        tl.to('#mv-traj-end', { opacity: 1, duration: 0.5 }, 39.0);
+
+        tl.fromTo('.app-bl', { x: 20, y: -20 }, { opacity: 1, x: 0, y: 0, duration: 1, ease: "power2.out" }, 38.2);
+        tl.to('.mv-sub-1', { x: -8, y: -8, duration: 1.5, ease: "power2.out" }, 38.7);
+        tl.to('.mv-sub-2', { x: -8, y: -2, duration: 1.5, ease: "power2.out" }, 38.7);
+        tl.to('.mv-sub-3', { x: 10, y: 5, backgroundColor: '#E11D48', duration: 1.5, ease: "power2.out" }, 38.7);
+
+        tl.fromTo('.app-br', { x: -20, y: -20 }, { opacity: 1, x: 0, y: 0, duration: 1, ease: "power2.out" }, 38.8);
+        tl.fromTo('.mv-cross-1', { x: -10 }, { x: 4, duration: 2, ease: "power1.inOut" }, 39.3);
+        tl.fromTo('.mv-cross-2', { x: 10 }, { x: -4, duration: 2, ease: "power1.inOut" }, 39.3);
+
+        // Flow fades out
+        tl.to(['#flow-layer', '#flow-bg'], { opacity: 0, duration: 1 }, 41.5);
+
+        // 8. Final Punchline (42.5s - 48.5s)
+        tl.to('#punchline', { opacity: 1, y: -20, duration: 1.5, ease: "power2.out" }, 42.5);
+        
+        tl.to({}, { duration: 6 });  
+    </script>
+</body>
+</html>

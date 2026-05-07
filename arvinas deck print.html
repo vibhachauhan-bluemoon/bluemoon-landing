@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlueMoonBio - Arvinas Deck</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap');
+        
+        :root {
+            --bg-color: #080d12;
+            --surface-color: #1a2a35;
+            --text-primary: #dde3ea;
+            --text-secondary: #aaaaaa;
+            --accent-cobalt: #00BFFF;
+            --accent-gold: #FFAA00;
+            --glow-cobalt: rgba(0, 191, 255, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+        }
+
+        .deck-container {
+            width: 100%;
+        }
+
+        .slide {
+            width: 1440px;
+            height: 810px;
+            padding: 60px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: none !important;
+            page-break-after: always;
+            position: relative;
+            background: var(--bg-color);
+            background-image: radial-gradient(circle at center, rgba(0,191,255,0.03) 0%, transparent 80%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            animation: none !important;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1) translateY(0);
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            color: var(--accent-cobalt);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(0, 191, 255, 0.1);
+            box-shadow: 0 0 15px var(--glow-cobalt);
+            transform: scale(1.1);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .progress-bar-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--accent-cobalt);
+            width: 0%;
+            transition: width 0.4s ease;
+            box-shadow: 0 0 10px var(--accent-cobalt);
+        }
+
+        .slide-content { display: flex; gap: 80px; height: 100%; align-items: center; padding: 0 40px; }
+        
+        .text-column { flex: 1.2; display: flex; flex-direction: column; gap: 20px; opacity: 1; }
+        .visual-column { flex: 0.8; height: 100%; display: flex; align-items: center; justify-content: center; opacity: 1; }
+
+        .slide-headline { 
+            font-size: 3.5rem; 
+            font-family: 'Inter', sans-serif; 
+            font-weight: 300; 
+            color: var(--text-primary); 
+            line-height: 1.2; 
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+        
+        .slide.active .text-column { opacity: 1; }
+        .slide.active .visual-column { opacity: 1; }
+
+        .narrative-list { list-style: none; font-size: 1.6rem; line-height: 1.8; color: var(--text-secondary); }
+        .narrative-list > li { margin-bottom: 20px; padding-left: 30px; position: relative; }
+        .narrative-list > li::before { content: "•"; color: var(--accent-cobalt); position: absolute; left: 0; font-size: 1.5rem; top: -1px; text-shadow: 0 0 10px var(--accent-cobalt); }
+        .narrative-list strong { color: #fff; font-weight: 500; }
+
+        .killer-line-box {
+            font-size: 3.2rem;
+            font-weight: 300;
+            line-height: 1.4;
+            color: var(--text-primary);
+            text-align: left;
+            border-left: 4px solid var(--accent-cobalt);
+            padding-left: 40px;
+            position: relative;
+        }
+        
+        .killer-line-box::before {
+            content: '';
+            position: absolute;
+            top: 0; bottom: 0; left: 0; width: 60px;
+            background: linear-gradient(90deg, rgba(0, 191, 255, 0.1), transparent);
+            z-index: -1;
+        }
+
+        .killer-line-box .highlight {
+            color: var(--accent-gold);
+            font-weight: 500;
+            text-shadow: 0 0 20px rgba(255, 170, 0, 0.4);
+            display: block;
+            margin-top: 5px;
+        }
+
+        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+        
+        .title-slide { align-items: center; text-align: center; justify-content: center; padding: 0 100px;}
+        .title-slide h1 { font-size: 4.5rem; font-weight: 300; color: #fff; margin-bottom: 20px; line-height: 1.1; }
+        .title-slide h2 { font-size: 2.2rem; font-weight: 300; color: var(--accent-gold); margin-bottom: 40px; }
+        .title-slide .sub-line { font-size: 1.4rem; color: #aaa; letter-spacing: 2px; text-transform: uppercase; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; display: inline-block;}
+        
+        .logo-badge {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.2rem;
+            letter-spacing: 4px;
+            color: var(--accent-cobalt);
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            display: inline-block;
+            padding: 8px 24px;
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            border-radius: 30px;
+            background: rgba(0, 191, 255, 0.05);
+        }
+
+        .pipeline-box {
+            background: rgba(0, 191, 255, 0.05);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: #fff;
+            width: 280px;
+            box-shadow: 0 0 30px rgba(0,191,255,0.1);
+        }
+        .pipeline-arrow {
+            color: var(--accent-cobalt);
+            font-size: 3rem;
+            font-weight: 300;
+            margin: 0 20px;
+        }
+
+    
+        @page { size: 1440px 810px; margin: 0; }
+        * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        .controls, .progress-bar-container { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div class="deck-container">
+        
+
+        <!-- Slide 0: TITLE -->
+        <div class="slide active title-slide" id="slide-title">
+            <h1 style="font-size: 4.5rem; margin-bottom: 15px; margin-top: -10px; line-height: 1.2;">Mapping Patient Biology to Mechanism Compatibility</h1>
+            <h2 style="font-size: 2.2rem; color: var(--accent-gold); margin-bottom: 60px; text-transform: none; font-weight: 400;">A unified biological representation for patient selection and mechanism evaluation</h2>
+            <div style="font-size: 0.9rem; color: var(--text-secondary); letter-spacing: 2px; text-transform: uppercase;">BlueMoonBio</div>
+        </div>
+
+        <!-- Slide 1: HOOK -->
+        <div class="slide title-slide" id="slide-0" style="justify-content: center; padding-top: 0;">
+            <h1 style="font-size: 3.8rem; margin-bottom: 5px; margin-top: -20px;">Treatment Outcomes Follow Biological Structure</h1>
+            <h2 style="font-size: 2rem; color: var(--accent-gold); margin-bottom: 30px;">— Representative retrospective enrichment across independent datasets —</h2>
+            
+            <div class="card" style="width: 100%; max-width: 900px; margin: 0 auto; text-align: left; padding: 40px; background: rgba(13, 17, 23, 0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px;">
+                <div style="display:flex; margin-left:140px; margin-bottom:30px; font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase;">
+                    <div style="flex:1; color:#aaa;">Baseline</div>
+                    <div style="flex:1; color:#00BFFF; padding-left:25px;">Stratified Cohort</div>
+                    <div style="flex:1; color:#FFAA00; padding-left:25px;">Fully Selected</div>
+                </div>
+
+                <div style="display:flex; align-items:center; margin-bottom: 35px; width: 100%;">
+                    <div style="width: 140px; color:#ccc; font-size:15px; font-weight:700; letter-spacing:1px; font-family:'Inter', sans-serif;">Melanoma</div>
+                    <div style="flex:1; padding-right: 15px;"><div style="width: 100%; background: rgba(255,255,255,0.05); height: 10px; border-radius: 5px; position: relative;"><div style="width: 52%; height: 100%; background: #4a4d53; border-radius: 5px;"></div><div style="position: absolute; top: -20px; left: 52%; transform: translateX(-50%); font-size: 12px; color: #aaa; font-weight: 600;">52%</div></div></div>
+                    <div style="color:#00BFFF; font-weight:bold; opacity:0.4; margin-right: 15px;">&rarr;</div>
+                    <div style="flex:1; padding-right: 15px;"><div style="width: 100%; background: rgba(255,255,255,0.05); height: 10px; border-radius: 5px; position: relative;"><div style="width: 72%; height: 100%; background: #00BFFF; border-radius: 5px; box-shadow: 0 0 10px rgba(0,191,255,0.3);"></div><div style="position: absolute; top: -20px; left: 72%; transform: translateX(-50%); font-size: 12px; color: #00BFFF; font-weight: 600;">72%</div></div></div>
+                    <div style="color:#00BFFF; font-weight:bold; opacity:0.4; margin-right: 15px;">&rarr;</div>
+                    <div style="flex:1;"><div style="width: 100%; background: rgba(255,255,255,0.05); height: 10px; border-radius: 5px; position: relative;"><div style="width: 81%; height: 100%; background: #FFAA00; border-radius: 5px; box-shadow: 0 0 15px rgba(255,170,0,0.5);"></div><div style="position: absolute; top: -20px; left: 81%; transform: translateX(-50%); font-size: 13px; color: #fff; font-weight: 700;">81%</div><div style="position: absolute; top: -38px; left: 81%; transform: translateX(-50%); font-size: 11px; color: #FFAA00; font-weight: 700; white-space: nowrap;">+29 pts</div></div></div>
+                </div>
+
+                <div style="display:flex; align-items:center; margin-bottom: 35px; width: 100%;">
+                    <div style="width: 140px; color:#ccc; font-size:15px; font-weight:700; letter-spacing:1px; font-family:'Inter', sans-serif;">Crohn's</div>
+                    <div style="flex:1; padding-right: 15px;"><div style="width: 100%; background: rgba(255,255,255,0.05); height: 10px; border-radius: 5px; position: relative;"><div style="width: 41%; height: 100%; background: #4a4d53; border-radius: 5px;"></div><div style="position: absolute; top: -20px; left: 41%; transform: translateX(-50%); font-size: 12px; color: #aaa; font-weight: 600;">41%</div></div></div>
+                    <div style="color:#00BFFF; font-weight:bold; opacity:0.4; margin-right: 15px;">&rarr;</div>
+                    <div style="flex:1; padding-right: 15px;"><div style="width: 100%; background: rgba(255,255,255,0.05); height: 10px; border-radius: 5px; position: relative;"><div style="width: 53%; height: 100%; background: #00BFFF; border-radius: 5px; box-shadow: 0 0 10px rgba(0,191,255,0.3);"></div><div style="position: absolute; top: -20px; left: 53%; transform: translateX(-50%); font-size: 12px; color: #00BFFF; font-weight: 600;">53%</div></div></div>
+                    <div style="color:#00BFFF; font-weight:bold; opacity:0.4; margin-right: 15px;">&rarr;</div>
+                    <div style="flex:1;"><div style="width: 100%; background: rgba(255,255,255,0.05); height: 10px; border-radius: 5px; position: relative;"><div style="width: 56%; height: 100%; background: #FFAA00; border-radius: 5px; box-shadow: 0 0 15px rgba(255,170,0,0.5);"></div><div style="position: absolute; top: -20px; left: 56%; transform: translateX(-50%); font-size: 13px; color: #fff; font-weight: 700;">56%</div><div style="position: absolute; top: -38px; left: 56%; transform: translateX(-50%); font-size: 11px; color: #FFAA00; font-weight: 700; white-space: nowrap;">+15 pts</div></div></div>
+                </div>
+
+                <div style="display:flex; align-items:center; margin-bottom: 35px; width: 100%;">
+                    <div style="width: 140px; color:#ccc; font-size:15px; font-weight:700; letter-spacing:1px; font-family:'Inter', sans-serif;">RA</div>
+                    <div style="flex:1; padding-right: 15px;"><div style="width: 100%; background: rgba(255,255,255,0.05); height: 10px; border-radius: 5px; position: relative;"><div style="width: 52%; height: 100%; background: #4a4d53; border-radius: 5px;"></div><div style="position: absolute; top: -20px; left: 52%; transform: translateX(-50%); font-size: 12px; color: #aaa; font-weight: 600;">52%</div></div></div>
+                    <div style="color:#00BFFF; font-weight:bold; opacity:0.4; margin-right: 15px;">&rarr;</div>
+                    <div style="flex:1; padding-right: 15px;"><div style="width: 100%; background: rgba(255,255,255,0.05); height: 10px; border-radius: 5px; position: relative;"><div style="width: 56%; height: 100%; background: #00BFFF; border-radius: 5px; box-shadow: 0 0 10px rgba(0,191,255,0.3);"></div><div style="position: absolute; top: -20px; left: 56%; transform: translateX(-50%); font-size: 12px; color: #00BFFF; font-weight: 600;">56%</div></div></div>
+                    <div style="color:#00BFFF; font-weight:bold; opacity:0.4; margin-right: 15px;">&rarr;</div>
+                    <div style="flex:1;"><div style="width: 100%; background: rgba(255,255,255,0.05); height: 10px; border-radius: 5px; position: relative;"><div style="width: 64%; height: 100%; background: #FFAA00; border-radius: 5px; box-shadow: 0 0 15px rgba(255,170,0,0.5);"></div><div style="position: absolute; top: -20px; left: 64%; transform: translateX(-50%); font-size: 13px; color: #fff; font-weight: 700;">64%</div><div style="position: absolute; top: -38px; left: 64%; transform: translateX(-50%); font-size: 11px; color: #FFAA00; font-weight: 700; white-space: nowrap;">+12 pts</div></div></div>
+                </div>
+
+                <div style="display:flex; align-items:center; margin-bottom: 10px; width: 100%;">
+                    <div style="width: 140px; color:#ccc; font-size:15px; font-weight:700; letter-spacing:1px; font-family:'Inter', sans-serif;">Depression</div>
+                    <div style="flex:1; padding-right: 15px;"><div style="width: 100%; background: rgba(255,255,255,0.05); height: 10px; border-radius: 5px; position: relative;"><div style="width: 50%; height: 100%; background: #4a4d53; border-radius: 5px;"></div><div style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 12px; color: #aaa; font-weight: 600;">50%</div></div></div>
+                    <div style="color:#00BFFF; font-weight:bold; opacity:0.4; margin-right: 15px;">&rarr;</div>
+                    <div style="flex:1; padding-right: 15px;"><div style="width: 100%; background: rgba(255,255,255,0.05); height: 10px; border-radius: 5px; position: relative;"><div style="width: 66%; height: 100%; background: #00BFFF; border-radius: 5px; box-shadow: 0 0 10px rgba(0,191,255,0.3);"></div><div style="position: absolute; top: -20px; left: 66%; transform: translateX(-50%); font-size: 12px; color: #00BFFF; font-weight: 600;">66%</div></div></div>
+                    <div style="color:#00BFFF; font-weight:bold; opacity:0.4; margin-right: 15px;">&rarr;</div>
+                    <div style="flex:1;"><div style="width: 100%; background: rgba(255,255,255,0.05); height: 10px; border-radius: 5px; position: relative;"><div style="width: 70%; height: 100%; background: #FFAA00; border-radius: 5px; box-shadow: 0 0 15px rgba(255,170,0,0.5);"></div><div style="position: absolute; top: -20px; left: 70%; transform: translateX(-50%); font-size: 13px; color: #fff; font-weight: 700;">70%</div><div style="position: absolute; top: -38px; left: 70%; transform: translateX(-50%); font-size: 11px; color: #FFAA00; font-weight: 700; white-space: nowrap;">+20 pts</div></div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: CORE PROBLEM -->
+        <div class="slide" id="slide-1">
+            <h2 class="slide-headline">Most Trials Fail Because We Treat the Wrong Patients</h2>
+            <div class="slide-content">
+                <div class="text-column">
+                    <ul class="narrative-list">
+                        <li>Response rates stall ~50% across diseases</li>
+                        <li>Responders diluted by non-responders</li>
+                        <li>Signal exists — hidden in the cohort</li>
+                    </ul>
+                </div>
+                <div class="visual-column">
+                    <div class="killer-line-box">
+                        Same drug.<br>
+                        <span class="highlight">Wrong patients.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: THE SHIFT -->
+        <div class="slide" id="slide-2">
+            <h2 class="slide-headline">Patients Align to Different Treatments</h2>
+            <div class="slide-content">
+                <div class="text-column">
+                    <ul class="narrative-list">
+                        <li>Patients misaligned with one therapy may respond to another</li>
+                        <li>The system naturally structures compatibility</li>
+                    </ul>
+                </div>
+                <div class="visual-column">
+                    <div class="killer-line-box" style="border-left-color: var(--accent-gold);">
+                        Patients don't fail treatment.<br>
+                        <span class="highlight" style="color: var(--accent-cobalt); text-shadow: 0 0 20px rgba(0, 191, 255, 0.4);">Treatments fail alignment.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: THE SYSTEM -->
+        <div class="slide" id="slide-3">
+            <h2 class="slide-headline">The Biological Translation Engine</h2>
+            <div class="slide-content" style="flex-direction: column; justify-content: center; align-items: center;">
+                <div style="display: flex; align-items: center; justify-content: center; width: 100%; margin-top: 50px;">
+                    <div style="display: flex; flex-direction: column; align-items: center; margin-right: 15px;">
+                        <svg width="40" height="50" viewBox="0 0 24 30" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 20px rgba(255, 63, 63, 0.4)); margin-bottom: 8px;">
+                            <path d="M12 0C12 0 3 12.5 3 19.5C3 24.7467 7.02944 29 12 29C16.9706 29 21 24.7467 21 19.5C21 12.5 12 0 12 0Z" fill="#ff4a4a" opacity="0.9"/>
+                            <path d="M9 20C9 18 10 16 12 16" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <div style="font-size: 1rem; color: #ff4a4a; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;">Blood</div>
+                    </div>
+                    <div class="pipeline-arrow" style="margin: 0 30px 0 15px;">&rarr;</div>
+                    <div class="pipeline-box">
+                        Transcriptomics<br><span style="font-size: 1.2rem; color: #aaa; font-weight: 300;">(Raw Data)</span>
+                    </div>
+                    <div class="pipeline-arrow">&rarr;</div>
+                    <div class="pipeline-box">
+                        Latent Space<br><span style="font-size: 1.2rem; color: #aaa; font-weight: 300;">(Geometry)</span>
+                    </div>
+                    <div class="pipeline-arrow">&rarr;</div>
+                    <div class="pipeline-box" style="border-color: var(--accent-gold); box-shadow: 0 0 40px rgba(255,170,0,0.15);">
+                        Biological Coordinates<br><span style="font-size: 1.2rem; color: #aaa; font-weight: 300;">(Patient Position)</span>
+                    </div>
+                </div>
+                <p style="margin-top: 80px; font-size: 1.6rem; color: var(--text-secondary); text-align: center; max-width: 800px; font-weight: 300;">
+                    A unified geometric representation linking patient profiles to measurable biological shifts.
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 5: CROSS-DIAGNOSTIC STRUCTURE -->
+        <div class="slide" id="slide-4">
+            <h2 class="slide-headline">Biological Structure Does Not Follow Diagnosis</h2>
+            <div class="slide-content">
+                <div class="text-column" style="flex: 0.8; padding-right: 2rem;">
+                    <ul class="narrative-list">
+                        <li>Diagnostic labels mask true biological similarities</li>
+                        <li>Patients organize into distinct geometric clusters</li>
+                        <li>Clusters are highly mixed across clinical labels</li>
+                        <li>The same biological structure appears across diseases and tissue types</li>
+                    </ul>
+                </div>
+                <div class="visual-column" style="flex: 1.2;">
+                    <img src="../docs/figures/structure_across_domains.png" style="width: 100%; border-radius: 8px; box-shadow: 0 0 30px rgba(0,191,255,0.1); border: 1px solid rgba(0,191,255,0.2);">
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: MECHANISM LAYER -->
+        <div class="slide" id="slide-5">
+            <h2 class="slide-headline">Biological Position Maps to Mechanism Compatibility Across Domains</h2>
+            <div class="slide-content">
+                <div class="text-column" style="flex: 0.8; padding-right: 2rem;">
+                    <ul class="narrative-list">
+                        <li>Subtypes occupy distinct regions of mechanism space</li>
+                        <li>Position defines compatibility with underlying biological programs</li>
+                    </ul>
+                </div>
+                <div class="visual-column" style="flex: 1.2;">
+                    <img src="../docs/figures/mechanism_across_domains.png" style="width: 100%; border-radius: 8px; box-shadow: 0 0 30px rgba(0,191,255,0.1); border: 1px solid rgba(0,191,255,0.2);">
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Slide 8: FAILURE & REROUTING -->
+        <div class="slide" id="slide-7">
+            <h2 class="slide-headline">Non-Response Is Structured, Not Random</h2>
+            <div class="slide-content">
+                <div class="text-column" style="flex: 0.8; padding-right: 2rem;">
+                    <ul class="narrative-list">
+                        <li>Low compatibility indicates mechanism mismatch</li>
+                        <li>Mismatched patients can be rerouted via relative score (&Delta;S)</li>
+                        <li>Alternative mechanisms map directly to unserved patients</li>
+                    </ul>
+                </div>
+                <div class="visual-column" style="flex: 1.2;">
+                    <img src="../docs/figures/rerouting_map.png" style="width: 100%; border-radius: 8px; box-shadow: 0 0 30px rgba(0,191,255,0.1); border: 1px solid rgba(0,191,255,0.2);">
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: WHAT THIS ENABLES -->
+        <div class="slide" id="slide-8">
+            <h2 class="slide-headline">Implications for Mechanism-Driven Development</h2>
+            <div class="slide-content">
+                <div class="text-column" style="flex: 2;">
+                    <ul class="narrative-list">
+                        <li>Identify patients aligned to a mechanism</li>
+                        <li>Explain structured non-response in trials</li>
+                        <li>Evaluate new mechanisms before clinical deployment</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+                <!-- Slide X: WHAT WE DO -->
+        <div class="slide" id="slide-new">
+            <h2 class="slide-headline">What We Do</h2>
+            <div class="slide-content" style="display:block; padding: 0;">
+                <div style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: flex-start; gap: 40px; padding-top: 20px;">
+                    
+                    <div style="display: flex; gap: 30px; align-items: stretch; flex-grow: 1;">
+                        
+                        <!-- Input Card -->
+                        <div style="flex: 1; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 40px; display: flex; flex-direction: column; box-shadow: inset 0 0 20px rgba(0,0,0,0.5);">
+                            <div style="color: #00BFFF; font-weight: bold; font-size: 1.4rem; margin-bottom: 25px; letter-spacing: 2px; text-transform: uppercase;">Input</div>
+                            <ul class="narrative-list" style="margin-bottom: auto;">
+                                <li>Baseline transcriptomic data</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Output Card -->
+                        <div style="flex: 1.5; background: rgba(255,170,0,0.05); border: 1px solid rgba(255,170,0,0.2); border-radius: 12px; padding: 40px; display: flex; flex-direction: column; box-shadow: 0 0 30px rgba(255,170,0,0.05);">
+                            <div style="color: #FFAA00; font-weight: bold; font-size: 1.4rem; margin-bottom: 25px; letter-spacing: 2px; text-transform: uppercase;">Output</div>
+                            <ul class="narrative-list" style="margin-bottom: auto;">
+                                <li>Ranked cohort (enrichment)</li>
+                                <li>Structured non-response clusters</li>
+                                <li>Rerouting hypotheses</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Engagement Card -->
+                        <div style="flex: 1.5; background: rgba(0,191,255,0.08); border: 1px solid rgba(0,191,255,0.4); border-radius: 12px; padding: 40px; display: flex; flex-direction: column; box-shadow: 0 0 40px rgba(0,191,255,0.15);">
+                            <div style="color: #00BFFF; font-weight: bold; font-size: 1.4rem; margin-bottom: 25px; letter-spacing: 2px; text-transform: uppercase;">Engagement</div>
+                            <ul class="narrative-list" style="margin-bottom: auto; color: #fff;">
+                                <li>Pilot on existing datasets</li>
+                                <li>Retrospective analysis &rarr; prospective application</li>
+                            </ul>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: CLOSE -->
+        <div class="slide title-slide" id="slide-9">
+            <div class="logo-badge" style="margin-bottom: 25px;">BlueMoonBio</div>
+            <h1 style="font-size: 4.8rem; margin-bottom: 15px; margin-top: -10px;">One System</h1>
+            <h2 style="font-size: 2.2rem; color: var(--accent-gold); margin-bottom: 40px; text-transform: none;">A single biological representation links subtype, behavior, and mechanism across diseases.</h2>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button class="nav-btn" id="prev-btn" onclick="prevSlide()" disabled>&larr;</button>
+            <button class="nav-btn" id="next-btn" onclick="nextSlide()">&rarr;</button>
+        </div>
+
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progress"></div>
+        </div>
+    </div>
+
+    
+</body>
+</html>

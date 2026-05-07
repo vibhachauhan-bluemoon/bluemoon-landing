@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BlueMoon Signal Animation - Concept 2</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;600&display=swap');
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #03060d; /* Very deep navy/black */
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .text-layer {
+            display: none;
+        }
+
+        /* Failure Stack */
+        #failure-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            color: rgba(255, 255, 255, 0.7);
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            font-size: 2.2rem;
+            letter-spacing: 0.02em;
+            transition: opacity 1s ease;
+        }
+        .fail-text {
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        /* Insight Stack */
+        #insight-stack {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 3.5rem;
+            letter-spacing: -0.02em;
+        }
+        .insight-text {
+            opacity: 0;
+            transition: opacity 1s ease;
+            text-shadow: 0 0 30px rgba(0, 150, 255, 0.4);
+        }
+
+        #logo-container {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas"></canvas>
+
+    <div class="text-layer">
+        <div id="failure-stack">
+            <div id="t1" class="fail-text">Failed trial.</div>
+            <div id="t2" class="fail-text">No enrichment.</div>
+            <div id="t3" class="fail-text">No signal.</div>
+        </div>
+        <div id="insight-stack">
+            <div id="t4" class="insight-text">This wasn't failure.</div>
+            <div id="t5" class="insight-text">It was misalignment.</div>
+        </div>
+    </div>
+    
+    <div id="logo-container">— BlueMoon</div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        const NUM_PARTICLES = 600; // Denser cloud for failure
+        const particles = [];
+        
+        const axisStartX = width * 0.2;
+        const axisStartY = height * 0.8;
+        const axisEndX = width * 0.8;
+        const axisEndY = height * 0.2;
+        
+        for (let i = 0; i < NUM_PARTICLES; i++) {
+            particles.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 1.5, // slightly faster chaos initially
+                vy: (Math.random() - 0.5) * 1.5,
+                baseSize: Math.random() * 2.0 + 1.0,
+                targetX: 0,
+                targetY: 0,
+                isTopCluster: false
+            });
+        }
+        
+        particles.forEach((p, i) => {
+            let t = Math.random();
+            if (t > 0.75) {
+                p.isTopCluster = true;
+            }
+            
+            let spread = p.isTopCluster ? (Math.random() * 20 - 10) : (Math.random() * 120 - 60);
+            p.targetX = axisStartX + t * (axisEndX - axisStartX) - spread + (Math.random()*20 - 10);
+            p.targetY = axisStartY + t * (axisEndY - axisStartY) + spread + (Math.random()*20 - 10);
+        });
+
+        let startTime = null;
+
+        function animate(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+
+            ctx.clearRect(0, 0, width, height);
+
+            // TIMELINE
+            // 0-2s: Chaotic, T1 fades in
+            if (elapsed > 500) document.getElementById('t1').style.opacity = 1;
+            // 2-4s: T2 fades in
+            if (elapsed > 2500) document.getElementById('t2').style.opacity = 1;
+            // 4-6s: T3 fades in
+            if (elapsed > 4500) document.getElementById('t3').style.opacity = 1;
+            
+            // 6-8s: Particles slow and align
+            let alignProgress = 0;
+            if (elapsed > 6000 && elapsed <= 9000) {
+                let t = (elapsed - 6000) / 3000;
+                alignProgress = t * t * (3 - 2 * t); // Smoothstep
+            } else if (elapsed > 9000) {
+                alignProgress = 1;
+            }
+
+            // 10s: Previous text disappears, T4 appears
+            if (elapsed > 10000) {
+                document.getElementById('failure-stack').style.opacity = 0;
+                document.getElementById('t4').style.opacity = 1;
+            }
+            
+            // 12s: T5 appears
+            if (elapsed > 12000) {
+                document.getElementById('t5').style.opacity = 1;
+            }
+
+            // 14s: Logo appears
+            if (elapsed > 14000) {
+                document.getElementById('logo-container').style.opacity = 1;
+            }
+
+            // 8-10s: Highlight cluster, dim rest
+            let glowProgress = 0;
+            if (elapsed > 8000 && elapsed <= 10000) {
+                glowProgress = (elapsed - 8000) / 2000;
+            } else if (elapsed > 10000) {
+                glowProgress = 1;
+            }
+
+            particles.forEach(p => {
+                if (alignProgress === 0) {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.x < 0) p.x = width;
+                    if (p.x > width) p.x = 0;
+                    if (p.y < 0) p.y = height;
+                    if (p.y > height) p.y = 0;
+                } else {
+                    // Slow down drift and snap to target
+                    p.x += (p.targetX - p.x) * 0.03 * alignProgress;
+                    p.y += (p.targetY - p.y) * 0.03 * alignProgress;
+                    p.x += Math.sin(elapsed * 0.001 + p.targetX) * 0.1 * (1 - alignProgress * 0.5);
+                    p.y += Math.cos(elapsed * 0.001 + p.targetY) * 0.1 * (1 - alignProgress * 0.5);
+                }
+
+                // Default styles
+                let r = 80, g = 100, b = 130;
+                let alpha = 0.6;
+                let size = p.baseSize;
+                let glow = 0;
+
+                // Color transitioning
+                if (glowProgress > 0) {
+                    if (p.isTopCluster) {
+                        r = 80 - (30 * glowProgress);
+                        g = 100 + (100 * glowProgress);
+                        b = 130 + (125 * glowProgress);
+                        alpha = 0.6 + (0.4 * glowProgress);
+                        size = p.baseSize * (1 + 1.5 * glowProgress); // Gets bigger
+                        glow = 20 * glowProgress;
+                        
+                        // Add pulse after full glow
+                        if (glowProgress === 1) {
+                            let pulse = Math.sin(elapsed * 0.004) * 0.5 + 0.5;
+                            alpha = 0.8 + (0.2 * pulse);
+                            glow = 15 + (15 * pulse);
+                        }
+                    } else {
+                        // Dim others HARD
+                        r = 80 - (40 * glowProgress);
+                        g = 100 - (50 * glowProgress);
+                        b = 130 - (60 * glowProgress);
+                        alpha = 0.6 - (0.5 * glowProgress); // Drops to 0.1
+                        size = p.baseSize * (1 - 0.3 * glowProgress);
+                    }
+                }
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+                
+                if (glow > 0) {
+                    ctx.shadowBlur = glow;
+                    ctx.shadowColor = `rgba(0, 200, 255, ${alpha})`;
+                } else {
+                    ctx.shadowBlur = 0;
+                }
+                
+                ctx.fill();
+            });
+
+            if (elapsed >= 18000) {
+                startTime = null;
+            }
+            requestAnimationFrame(animate);
+        }
+
+        requestAnimationFrame(animate);
+
+    </script>
+</body>
+</html>

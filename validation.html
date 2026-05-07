@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BlueMoonBio — Validation</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #05070c;
+  --accent: #00BFFF;
+  --surface: #0d1117;
+  --border: #30363d;
+  --text-primary: #E6EDF3;
+  --text-muted: #9BA3AF;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 60px 24px;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 24px;
+    max-width: 1100px;
+    margin: auto;
+}
+.logo {
+    font-size: 26px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+}
+.nav-links {
+    display: flex;
+    gap: 24px;
+}
+.nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+.nav-links a:hover {
+    color: var(--text-primary);
+}
+
+h1 {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+h2 {
+    font-size: 32px;
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+p {
+    color: var(--text-muted);
+    font-size: 18px;
+    max-width: 700px;
+    margin-bottom: 20px;
+}
+.highlight {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+}
+.card p.highlight {
+    font-size: 22px;
+    margin: 0;
+    line-height: 1.4;
+}
+
+ul {
+    color: var(--text-muted);
+    font-size: 18px;
+    line-height: 1.8;
+    padding-left: 20px;
+}
+li {
+    margin-bottom: 10px;
+}
+
+.plot {
+    width: 100%;
+    max-width: 800px;
+    margin: 40px auto;
+    display: block;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #000;
+}
+.caption {
+    font-size: 14px;
+    color: #6b7280;
+    text-align: center;
+    margin-top: -20px;
+    margin-bottom: 40px;
+}
+
+button {
+    background: var(--accent);
+    border: none;
+    color: #000;
+    font-weight: 600;
+    padding: 16px 32px;
+    font-size: 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: block;
+    margin: 0 auto;
+}
+button:hover {
+    transform: translateY(-2px); 
+    box-shadow: 0 0 20px rgba(0,191,255,0.5);
+}
+
+.section {
+    border-top: 1px solid var(--border);
+}
+
+.section {
+    border-top: 1px solid #111827;
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+.fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+</style>
+</head>
+
+<body>
+
+<!-- 1. HEADER -->
+<header class="nav">
+    <div class="logo">BlueMoonBio</div>
+    <div class="nav-links">
+        <a href="index2.html">Home</a>
+        <a>Technology</a>
+        <a>Use Cases</a>
+        <a>Contact</a>
+    </div>
+</header>
+
+<!-- 2. HERO -->
+<section class="container">
+    <h1>Validation</h1>
+    <p>
+    The system is evaluated across independent cohorts using a fixed biological representation with no dataset-specific training.
+    </p>
+</section>
+
+<!-- 3. KEY CLAIM -->
+<section class="container" style="padding-top:0;">
+    <div class="card" style="border-left: 4px solid var(--accent);">
+        <p class="highlight">
+        Biological structure is preserved across datasets, and treatment response follows alignment within that structure.
+        </p>
+    </div>
+</section>
+
+<!-- 4. DATASET INVENTORY -->
+<section class="container section">
+    <h2>Dataset Coverage</h2>
+    <p>
+    Validation performed across multiple independent cohorts spanning psychiatry, immunology, oncology, and systemic disease.
+    </p>
+    <ul>
+        <li>Psychiatry (MDD, TRD)</li>
+        <li>Immunology (RA, inflammatory disease)</li>
+        <li>Oncology (treatment response cohorts)</li>
+        <li>Infectious and systemic datasets</li>
+    </ul>
+</section>
+
+<!-- 5. CORE PROOF — ENRICHMENT -->
+<section class="container section">
+    <h2>Response Enrichment</h2>
+    <p>Patients aligned with biological structure show higher response rates.</p>
+
+    <img src="plots/enrichment_curve.png" class="plot">
+
+    <p class="caption">
+    Top-X enrichment curve demonstrating increased response in biologically aligned patients.
+    </p>
+</section>
+
+<!-- 6. STRUCTURE EXISTS -->
+<section class="container section">
+    <h2>Biological Structure</h2>
+    <p>Patients organize into consistent biological states across datasets.</p>
+
+    <img src="plots/latent_scatter.png" class="plot">
+</section>
+
+<!-- 7. FAILURE IS STRUCTURED -->
+<section class="container section">
+    <h2>Why patients don't respond</h2>
+    <p>Non-response is not random — it follows distinct biological patterns.</p>
+
+    <img src="plots/failure_decomposition.png" class="plot">
+</section>
+
+<!-- 8. CROSS-DATASET CONSISTENCY -->
+<section class="container section">
+    <h2>Cross-Dataset Consistency</h2>
+    <p>The effect is observed across independent cohorts.</p>
+
+    <img src="plots/lift_distribution.png" class="plot">
+</section>
+
+<!-- 9. POPULATION-AWARE -->
+<section class="container section">
+    <h2>Population-Aware Decoding (Optional)</h2>
+    <p>
+    Conditional interpretation based on population context (e.g., sex) improves enrichment in balanced cohorts without altering the underlying system.
+    </p>
+</section>
+
+<!-- 10. METHOD -->
+<section class="container section">
+    <h2>Method</h2>
+    <ul>
+        <li>Fixed biological projection (no retraining)</li>
+        <li>Out-of-sample evaluation</li>
+        <li>No dataset-specific tuning</li>
+    </ul>
+</section>
+
+<!-- 11. FINAL STATEMENT -->
+<section class="container section">
+    <div class="card" style="border-left: 4px solid #22c55e;">
+        <h2 style="margin-top:0; font-size: 28px;">
+        We do not train models per dataset.<br>
+        <span style="color: #22c55e;">We measure the structure that all datasets share.</span>
+        </h2>
+    </div>
+</section>
+
+<!-- 12. CTA -->
+<section class="container">
+    <button>Request Pilot</button>
+</section>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.container').forEach(el => {
+        el.classList.add('fade-up');
+        observer.observe(el);
+    });
+});
+</script>
+
+</body>
+</html>

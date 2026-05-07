@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BlueMoonBio Signal Animation - Lift is Built</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0c0f12; 
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .text-layer {
+            display: none;
+        }
+
+        .overlay-text {
+            position: absolute;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 3.5rem;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            opacity: 0;
+            text-align: center;
+            transition: opacity 1s ease;
+        }
+
+        #t1 {
+            transform: translateY(0px);
+        }
+
+        #logo-container {
+            display: none;
+        }
+
+        #axis-label {
+            position: absolute;
+            left: -60px;
+            top: 50%;
+            transform: translateY(-50%) rotate(-90deg);
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 400;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+            opacity: 0;
+            transition: opacity 1s ease;
+            z-index: 2;
+        }
+
+        .axis-container {
+            position: absolute;
+            width: 80%;
+            height: 60%;
+            z-index: 2;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="axis-container">
+        <div id="axis-label">RESPONSE RATE (%)</div>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <div class="text-layer">
+        <div id="t1" class="overlay-text">We didn't change the outcome.<br><span style="color:#00b4ff;">We found it.</span></div>
+    </div>
+    
+    <div id="logo-container">— @bluemoonbio</div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        let startTime = null;
+
+        const maxRate = 80; 
+        
+        const numDots = 40;
+        const dots = [];
+        
+        function initDots(startX, plotHeight, startY) {
+            for (let i = 0; i < numDots; i++) {
+                let inTop = i < 12;
+                let isResponder = inTop ? Math.random() < 0.7 : Math.random() < 0.2;
+                
+                let y = startY - plotHeight + (i / numDots) * plotHeight;
+                dots.push({
+                    id: i,
+                    isResponder: isResponder,
+                    startX: startX,
+                    startY: y,
+                    inTop: inTop,
+                    currentX: startX,
+                    currentY: y
+                });
+            }
+        }
+
+        let dotsInitialized = false;
+
+        function animate(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+
+            ctx.clearRect(0, 0, width, height);
+
+            const plotWidth = width * 0.6;
+            const plotHeight = height * 0.5;
+            const startX = width * 0.15;
+            const startY = height * 0.7; 
+            const barWidth = 100;
+            const stripX = startX + barWidth + 80;
+            const b2X = stripX + 120;
+
+            if (!dotsInitialized) {
+                initDots(stripX, plotHeight, startY);
+                dotsInitialized = true;
+            }
+
+            if (elapsed > 500) {
+                document.getElementById('axis-label').style.opacity = 1;
+            }
+
+            if (elapsed > 12000) {
+                document.getElementById('t1').style.opacity = 1;
+            }
+            if (elapsed > 13000) {
+                document.getElementById('logo-container').style.opacity = 1;
+            }
+
+            // Draw Y-axis Grid
+            ctx.textAlign = "right";
+            ctx.textBaseline = "middle";
+            ctx.font = "300 12px Inter, sans-serif";
+            
+            for (let i = 0; i <= maxRate; i += 20) {
+                let y = startY - (i / maxRate) * plotHeight;
+                ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+                ctx.fillText(i + "%", startX - 15, y);
+                
+                ctx.beginPath();
+                ctx.moveTo(startX - 10, y);
+                ctx.lineTo(startX + plotWidth, y);
+                ctx.strokeStyle = i === 0 ? "rgba(255, 255, 255, 0.5)" : "rgba(255, 255, 255, 0.05)";
+                ctx.stroke();
+            }
+
+            // --- BAR 1: All Patients ---
+            let b1Height = 0;
+            if (elapsed > 500) {
+                let t = Math.min(1, (elapsed - 500) / 1000);
+                b1Height = (32 / maxRate) * plotHeight * (1 - Math.pow(1 - t, 3));
+            }
+            
+            ctx.fillStyle = "#34495e"; 
+            ctx.fillRect(startX + 20, startY - b1Height, barWidth, b1Height);
+
+            if (elapsed > 1500) {
+                ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+                ctx.font = "600 16px Inter, sans-serif";
+                ctx.textAlign = "center";
+                ctx.fillText("32%", startX + 20 + barWidth/2, startY - b1Height - 15);
+
+                ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+                ctx.font = "400 14px Inter, sans-serif";
+                ctx.fillText("All patients", startX + 20 + barWidth/2, startY + 25);
+            }
+
+            // --- DOT STRIP RANKING ---
+            let stripAlpha = 0;
+            if (elapsed > 1500 && elapsed < 2500) {
+                stripAlpha = Math.min(1, (elapsed - 1500) / 1000);
+            } else if (elapsed >= 2500 && elapsed < 5500) {
+                stripAlpha = 1;
+            }
+
+            // Cutoff Line Animation
+            let cutoffY = startY - plotHeight + (12 / numDots) * plotHeight + 5;
+            if (elapsed > 2500 && elapsed < 5500) {
+                let lineAlpha = Math.min(1, (elapsed - 2500) / 500);
+                ctx.strokeStyle = `rgba(255, 255, 255, ${lineAlpha * 0.8})`;
+                ctx.lineWidth = 1;
+                ctx.setLineDash([4, 4]);
+                ctx.beginPath();
+                ctx.moveTo(stripX - 25, cutoffY);
+                ctx.lineTo(stripX + 25, cutoffY);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                
+                ctx.fillStyle = `rgba(255, 255, 255, ${lineAlpha * 0.8})`;
+                ctx.font = "400 11px Inter, sans-serif";
+                ctx.textAlign = "left";
+                ctx.fillText("Top 30%", stripX + 35, cutoffY);
+                ctx.beginPath();
+                ctx.moveTo(stripX + 15, cutoffY);
+                ctx.lineTo(stripX + 30, cutoffY);
+                ctx.strokeStyle = `rgba(255,255,255,${lineAlpha * 0.4})`;
+                ctx.stroke();
+            }
+
+            // Animate and draw dots
+            let migrationT = 0;
+            if (elapsed > 4500 && elapsed <= 6000) {
+                let t = (elapsed - 4500) / 1500;
+                migrationT = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; 
+            } else if (elapsed > 6000) {
+                migrationT = 1;
+            }
+
+            dots.forEach(d => {
+                let a = stripAlpha;
+                let glow = 0;
+                if (!d.inTop) {
+                    if (elapsed > 3000) {
+                        a = Math.max(0, stripAlpha - (elapsed - 3000) / 500);
+                    }
+                } else {
+                    if (elapsed > 3000 && elapsed <= 4500) {
+                        if (d.isResponder) {
+                            glow = 8 * Math.min(1, (elapsed - 3000) / 500);
+                        }
+                    }
+                    if (elapsed > 4500) {
+                        d.currentX = d.startX + (b2X - d.startX) * migrationT;
+                        a = Math.max(0, 1 - migrationT * 1.5); 
+                    }
+                }
+
+                if (a > 0) {
+                    ctx.beginPath();
+                    ctx.arc(d.currentX, d.currentY, 3, 0, Math.PI * 2);
+                    ctx.fillStyle = d.isResponder ? `rgba(0, 180, 255, ${a})` : `rgba(120, 120, 125, ${a})`;
+                    
+                    if (glow > 0) {
+                        ctx.shadowBlur = glow;
+                        ctx.shadowColor = `rgba(0, 180, 255, ${a})`;
+                    } else {
+                        ctx.shadowBlur = 0;
+                    }
+                    
+                    ctx.fill();
+                }
+            });
+            ctx.shadowBlur = 0;
+
+            // --- BAR 2: Structured Cohort ---
+            // Layer 1: Aligned (48%)
+            let l1Height = 0;
+            if (elapsed > 5000) {
+                let t = Math.min(1, (elapsed - 5000) / 1000);
+                l1Height = (48 / maxRate) * plotHeight * (1 - Math.pow(1 - t, 3));
+            }
+
+            // Layer 2: Recovered (+10% -> 58%)
+            let l2Height = 0;
+            if (elapsed > 7000) {
+                let t = Math.min(1, (elapsed - 7000) / 1000);
+                l2Height = (10 / maxRate) * plotHeight * (1 - Math.pow(1 - t, 3));
+            }
+
+            // Layer 3: Reassigned (+9% -> 67%)
+            let l3Height = 0;
+            if (elapsed > 9000) {
+                let t = Math.min(1, (elapsed - 9000) / 1000);
+                l3Height = (9 / maxRate) * plotHeight * (1 - Math.pow(1 - t, 3));
+            }
+
+            // Draw Layer 1
+            if (l1Height > 0) {
+                ctx.fillStyle = "#1f618d"; 
+                ctx.fillRect(b2X, startY - l1Height, barWidth, l1Height);
+            }
+            
+            // Draw Layer 2
+            if (l2Height > 0) {
+                ctx.fillStyle = "#0c0f12";
+                ctx.fillRect(b2X, startY - l1Height - 1, barWidth, 1);
+                ctx.fillStyle = "#2980b9"; 
+                ctx.fillRect(b2X, startY - l1Height - l2Height, barWidth, l2Height);
+            }
+
+            // Draw Layer 3
+            if (l3Height > 0) {
+                ctx.fillStyle = "#0c0f12";
+                ctx.fillRect(b2X, startY - l1Height - l2Height - 1, barWidth, 1);
+                ctx.fillStyle = "#00b4ff"; 
+                ctx.fillRect(b2X, startY - l1Height - l2Height - l3Height, barWidth, l3Height);
+            }
+
+            // Labels for Bar 2
+            if (elapsed > 5500) {
+                ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+                ctx.font = "400 14px Inter, sans-serif";
+                ctx.textAlign = "center";
+                ctx.fillText("Structured", b2X + barWidth/2, startY + 25);
+            }
+
+            if (elapsed > 5500) {
+                let totalHeight = l1Height + l2Height + l3Height;
+                let currentPct = Math.round((totalHeight / plotHeight) * maxRate);
+                
+                ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+                ctx.font = "600 16px Inter, sans-serif";
+                ctx.textAlign = "center";
+                ctx.fillText(currentPct + "%", b2X + barWidth/2, startY - totalHeight - 15);
+            }
+
+            // Annotations
+            ctx.textAlign = "left";
+            ctx.font = "400 13px Inter, sans-serif";
+            
+            if (elapsed > 6000) {
+                let y = startY - l1Height/2;
+                ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+                ctx.fillText("Aligned", b2X + barWidth + 20, y);
+                ctx.beginPath(); ctx.moveTo(b2X + barWidth + 5, y); ctx.lineTo(b2X + barWidth + 15, y); ctx.strokeStyle = "rgba(255,255,255,0.3)"; ctx.stroke();
+            }
+
+            if (elapsed > 8000) {
+                let y = startY - l1Height - l2Height/2;
+                ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+                ctx.fillText("Recovered", b2X + barWidth + 20, y);
+                ctx.beginPath(); ctx.moveTo(b2X + barWidth + 5, y); ctx.lineTo(b2X + barWidth + 15, y); ctx.strokeStyle = "rgba(255,255,255,0.3)"; ctx.stroke();
+            }
+
+            if (elapsed > 10000) {
+                let y = startY - l1Height - l2Height - l3Height/2;
+                ctx.fillStyle = "rgba(0, 180, 255, 0.9)"; 
+                ctx.fillText("Reassigned", b2X + barWidth + 20, y);
+                ctx.beginPath(); ctx.moveTo(b2X + barWidth + 5, y); ctx.lineTo(b2X + barWidth + 15, y); ctx.strokeStyle = "rgba(0,180,255,0.6)"; ctx.stroke();
+            }
+
+            // Fade background for final text
+            if (elapsed > 12000) {
+                let dimT = Math.min(1, (elapsed - 12000) / 1000);
+                ctx.fillStyle = `rgba(12, 15, 18, ${dimT * 0.7})`;
+                ctx.fillRect(0, 0, width, height);
+            }
+
+            if (elapsed >= 16000) {
+                startTime = null;
+            }
+            requestAnimationFrame(animate);
+        }
+
+        requestAnimationFrame(animate);
+
+    </script>
+</body>
+</html>

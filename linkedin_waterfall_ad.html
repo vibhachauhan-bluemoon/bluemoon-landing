@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BlueMoonBio Signal Animation - Waterfall Clinical</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0c0f12; /* Dark, flat scientific background */
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .text-layer {
+            display: none;
+        }
+
+        .overlay-text {
+            position: absolute;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 3rem;
+            letter-spacing: -0.01em;
+            opacity: 0;
+            text-align: center;
+            line-height: 1.2;
+            transition: opacity 0.2s ease;
+        }
+
+        #t0 {
+            transform: translateY(-20px);
+        }
+
+        #t1 {
+            transform: translateY(40px);
+            color: #bbbbbb;
+            font-weight: 400;
+            font-size: 2.2rem;
+        }
+
+        #t2 {
+            transform: translateY(-20px);
+        }
+
+        #t3 {
+            transform: translateY(40px);
+            color: #00b4ff;
+            font-weight: 400;
+            font-size: 2.2rem;
+        }
+
+        #logo-container {
+            display: none;
+        }
+
+        #axis-label {
+            position: absolute;
+            left: -60px;
+            top: 50%;
+            transform: translateY(-50%) rotate(-90deg);
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 400;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            z-index: 2;
+        }
+
+        .axis-container {
+            position: absolute;
+            width: 80%;
+            height: 60%;
+            z-index: 2;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="axis-container">
+        <div id="axis-label">% Change from Baseline</div>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <div class="text-layer">
+        <div id="t0" class="overlay-text">Trial result</div>
+        <div id="t1" class="overlay-text">No enrichment.</div>
+        <div id="t2" class="overlay-text">Failed trials still contain responders.</div>
+        <div id="t3" class="overlay-text"></div>
+    </div>
+    
+    <div id="logo-container">— @bluemoonbio</div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        const NUM_BARS = 120;
+        const bars = [];
+        
+        // Generate messy dataset
+        for (let i = 0; i < NUM_BARS; i++) {
+            let isResponder = Math.random() < 0.35;
+            let score;
+            
+            // Messy logic
+            if (isResponder) {
+                if (Math.random() < 0.8) {
+                    score = Math.random() * 0.5 + 0.1; 
+                } else {
+                    score = Math.random() * -0.3 - 0.05; 
+                }
+            } else {
+                if (Math.random() < 0.85) {
+                    score = Math.random() * -0.5 - 0.0; 
+                } else {
+                    score = Math.random() * 0.3 + 0.05; 
+                }
+            }
+            
+            bars.push({
+                id: i,
+                isResponder: isResponder,
+                score: score,
+                initialIndex: i, 
+                sortedIndex: 0,
+                currentX: 0
+            });
+        }
+        
+        bars.sort((a, b) => b.score - a.score);
+        bars.forEach((b, i) => {
+            b.sortedIndex = i;
+        });
+        bars.sort((a, b) => a.initialIndex - b.initialIndex);
+
+        let startTime = null;
+
+        function animate(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+
+            ctx.clearRect(0, 0, width, height);
+
+            if (elapsed > 500 && elapsed < 4000) {
+                document.getElementById('t0').style.opacity = 1;
+            } else {
+                document.getElementById('t0').style.opacity = 0;
+            }
+
+            if (elapsed > 1500 && elapsed < 4000) {
+                document.getElementById('t1').style.opacity = 1;
+            } else {
+                document.getElementById('t1').style.opacity = 0;
+            }
+
+            let sortProgress = 0;
+            if (elapsed > 4500) {
+                document.getElementById('axis-label').style.opacity = 1;
+            }
+            if (elapsed > 5000 && elapsed <= 7500) {
+                let t = (elapsed - 5000) / 2500;
+                sortProgress = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+            } else if (elapsed > 7500) {
+                sortProgress = 1;
+            }
+
+            let highlightProgress = 0;
+            if (elapsed > 8500 && elapsed <= 9500) {
+                highlightProgress = (elapsed - 8500) / 1000;
+            } else if (elapsed > 9500) {
+                highlightProgress = 1;
+            }
+
+            if (elapsed > 9500) {
+                document.getElementById('t2').style.opacity = 1;
+            }
+            if (elapsed > 11500) {
+                document.getElementById('t3').style.opacity = 1;
+            }
+            if (elapsed > 12500) {
+                document.getElementById('logo-container').style.opacity = 1;
+            }
+
+            const plotWidth = width * 0.7;
+            const plotHeightHalf = height * 0.3;
+            const startX = width * 0.15;
+            const startY = height * 0.5; 
+            const barWidth = (plotWidth / NUM_BARS) * 0.85;
+            const gap = (plotWidth / NUM_BARS) * 0.15;
+
+            // Draw Y-axis Ticks
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+            ctx.font = "300 12px Inter, sans-serif";
+            ctx.textAlign = "right";
+            ctx.textBaseline = "middle";
+            
+            ctx.fillText("+50%", startX - 15, startY - plotHeightHalf);
+            ctx.beginPath(); ctx.moveTo(startX - 10, startY - plotHeightHalf); ctx.lineTo(startX, startY - plotHeightHalf); ctx.strokeStyle="rgba(255,255,255,0.2)"; ctx.stroke();
+            
+            ctx.fillText("0%", startX - 15, startY);
+            ctx.beginPath(); ctx.moveTo(startX - 10, startY); ctx.lineTo(startX + plotWidth, startY); ctx.strokeStyle="rgba(255,255,255,0.5)"; ctx.stroke();
+            
+            ctx.fillText("-50%", startX - 15, startY + plotHeightHalf);
+            ctx.beginPath(); ctx.moveTo(startX - 10, startY + plotHeightHalf); ctx.lineTo(startX, startY + plotHeightHalf); ctx.strokeStyle="rgba(255,255,255,0.2)"; ctx.stroke();
+
+            // Legend
+            if (elapsed > 10500) {
+                ctx.font = "400 12px Inter, sans-serif";
+                ctx.textAlign = "left";
+                
+                ctx.fillStyle = "rgba(0,180,255,0.9)";
+                ctx.fillRect(width - 160, height - 80, 12, 12);
+                ctx.fillStyle = "rgba(255,255,255,0.7)";
+                ctx.fillText("Responder", width - 140, height - 74);
+            
+                ctx.fillStyle = "rgba(120,120,125,0.7)";
+                ctx.fillRect(width - 160, height - 55, 12, 12);
+                ctx.fillStyle = "rgba(255,255,255,0.7)";
+                ctx.fillText("Non-responder", width - 140, height - 49);
+            }
+
+            const cutoffIndex = Math.floor(NUM_BARS * 0.3);
+
+            // Draw bars
+            bars.forEach(b => {
+                let idx = b.initialIndex * (1 - sortProgress) + b.sortedIndex * sortProgress;
+                b.currentX = startX + idx * (barWidth + gap);
+                
+                let barPixelHeight = (b.score / 0.5) * plotHeightHalf; 
+                
+                let baseR = b.isResponder ? 0 : 120;
+                let baseG = b.isResponder ? 180 : 120;
+                let baseB = b.isResponder ? 255 : 125;
+                let alpha = 0.9;
+
+                if (highlightProgress > 0) {
+                    if (b.sortedIndex < cutoffIndex) {
+                        ctx.shadowBlur = 12 * highlightProgress;
+                        ctx.shadowColor = "rgba(0, 180, 255, 0.6)";
+                    } else {
+                        ctx.shadowBlur = 0;
+                        alpha = 0.9 - (0.75 * highlightProgress); 
+                    }
+                } else {
+                    ctx.shadowBlur = 0;
+                }
+
+                ctx.fillStyle = `rgba(${baseR}, ${baseG}, ${baseB}, ${alpha})`;
+
+                if (barPixelHeight > 0) {
+                    ctx.fillRect(b.currentX, startY - barPixelHeight, barWidth, barPixelHeight);
+                } else {
+                    ctx.fillRect(b.currentX, startY, barWidth, Math.abs(barPixelHeight));
+                }
+
+                // Top "R" Labels - visible only in the top 30% cutoff area
+                if (elapsed > 9000 && highlightProgress > 0.5 && b.sortedIndex < cutoffIndex && b.isResponder) {
+                    ctx.shadowBlur = 0;
+                    ctx.fillStyle = `rgba(255,255,255,${highlightProgress})`;
+                    ctx.font = "600 10px Inter, sans-serif";
+                    ctx.textAlign = "center";
+                
+                    let labelY = barPixelHeight > 0 
+                        ? startY - barPixelHeight - 12 
+                        : startY + Math.abs(barPixelHeight) + 12;
+                
+                    ctx.fillText("R", b.currentX + barWidth/2, labelY);
+                }
+            });
+            ctx.shadowBlur = 0;
+
+            // Cutoff Line Animation
+            if (elapsed > 8500) {
+                let lineAlpha = Math.min(1, (elapsed - 8500) / 1000);
+                const cutoffX = startX + cutoffIndex * (barWidth + gap) - gap/2;
+
+                ctx.strokeStyle = `rgba(255,255,255,${lineAlpha * 0.6})`;
+                ctx.lineWidth = 1;
+                ctx.setLineDash([5,5]);
+
+                ctx.beginPath();
+                ctx.moveTo(cutoffX, startY - plotHeightHalf - 20);
+                ctx.lineTo(cutoffX, startY + plotHeightHalf + 20);
+                ctx.stroke();
+
+                ctx.setLineDash([]);
+                
+                ctx.fillStyle = `rgba(255,255,255,${lineAlpha})`;
+                ctx.textAlign = "center";
+                ctx.font = "600 12px Inter, sans-serif";
+                ctx.fillText("Top 30%", cutoffX, startY - plotHeightHalf - 30);
+            }
+
+            if (elapsed >= 16000) {
+                startTime = null;
+            }
+            requestAnimationFrame(animate);
+        }
+
+        requestAnimationFrame(animate);
+
+    </script>
+</body>
+</html>

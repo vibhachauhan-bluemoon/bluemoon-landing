@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BlueMoonBio Signal Animation - Structure Drift</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0c0f12; 
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .text-layer {
+            display: none;
+        }
+
+        .overlay-text {
+            position: absolute;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 3rem;
+            letter-spacing: -0.01em;
+            opacity: 0;
+            text-align: center;
+            transition: opacity 0.2s ease; /* fast snap */
+        }
+
+        #t1 {
+            transform: translateY(-20px);
+        }
+        
+        #t2 {
+            transform: translateY(-20px);
+        }
+
+        #t3 {
+            transform: translateY(40px);
+            color: #00b4ff;
+            font-weight: 400;
+            font-size: 2.5rem;
+        }
+
+        #logo-container {
+            display: none;
+        }
+
+        .axis-label {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.4);
+            font-weight: 400;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            z-index: 2;
+        }
+        #axis-x {
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        #axis-y {
+            left: 60px;
+            top: 50%;
+            transform: translateY(-50%) rotate(-90deg);
+        }
+
+        #metric-container {
+            display: none;
+        }
+        #metric-val {
+            color: #ffffff;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="axis-x" class="axis-label">BIOLOGICAL COMPONENT 1</div>
+    <div id="axis-y" class="axis-label">BIOLOGICAL COMPONENT 2</div>
+
+    <div id="metric-container">
+        Mean Intra-Cluster Distance: <span id="metric-val">1.42</span>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <div class="text-layer">
+        <div id="t1" class="overlay-text">Younger cohort</div>
+        <div id="t2" class="overlay-text">Older cohort</div>
+        <div id="t3" class="overlay-text">Structure degrades.</div>
+    </div>
+    
+    <div id="logo-container">— @bluemoonbio</div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        let startTime = null;
+
+        const numPoints = 250;
+        const points = [];
+
+        const clusters = [
+            { id: 0, cx: 0.4, cy: 0.4, rBase: 40, color: "0, 180, 255" },   // Neon Blue
+            { id: 1, cx: 0.6, cy: 0.35, rBase: 35, color: "120, 120, 125" }, // Gray
+            { id: 2, cx: 0.5, cy: 0.65, rBase: 45, color: "31, 97, 141" }    // Deep Blue
+        ];
+
+        for (let i = 0; i < numPoints; i++) {
+            let c = clusters[i % 3];
+            
+            // Box-Muller transform for normal distribution density
+            let u1 = Math.random();
+            let u2 = Math.random();
+            let z0 = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+            let z1 = Math.sqrt(-2.0 * Math.log(u1)) * Math.sin(2.0 * Math.PI * u2);
+            
+            let initialOffsetR = Math.sqrt(z0*z0 + z1*z1) * (c.rBase / 2); 
+            let angle = Math.atan2(z1, z0);
+
+            // Give ~5 points per cluster a visible distance line
+            let hasLine = (i < 15);
+
+            points.push({
+                cluster: c,
+                baseR: initialOffsetR,
+                angle: angle,
+                hasLine: hasLine,
+                currentX: 0,
+                currentY: 0
+            });
+        }
+
+        const metricEl = document.getElementById('metric-val');
+
+        function animate(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+
+            ctx.clearRect(0, 0, width, height);
+
+            // Grid
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.03)";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            for(let x=0; x<width; x+=50) { ctx.moveTo(x, 0); ctx.lineTo(x, height); }
+            for(let y=0; y<height; y+=50) { ctx.moveTo(0, y); ctx.lineTo(width, y); }
+            ctx.stroke();
+
+            // Timeline:
+            // 0 - 1s: Fade in T1
+            // 1s - 3s: Hold T1
+            // 3s - 6s: Drift
+            // 6s - 7.5s: Hold (Pause!)
+            // 7.5s: T2 snaps in
+            // 9s: T3 snaps in
+            // 10s: Logo snaps in
+
+            if (elapsed > 500 && elapsed < 2500) {
+                document.getElementById('t1').style.opacity = 1;
+            } else {
+                document.getElementById('t1').style.opacity = 0;
+            }
+
+            let driftProgress = 0;
+            if (elapsed > 3000 && elapsed <= 6000) {
+                let t = (elapsed - 3000) / 3000;
+                // smoothstep
+                driftProgress = t * t * (3 - 2 * t);
+            } else if (elapsed > 6000) {
+                driftProgress = 1;
+            }
+
+            if (elapsed > 7500) {
+                document.getElementById('t2').style.opacity = 1;
+            }
+            if (elapsed > 9000) {
+                document.getElementById('t3').style.opacity = 1;
+            }
+            if (elapsed > 10000) {
+                document.getElementById('logo-container').style.opacity = 1;
+            }
+
+            // Update Metric (1.42 -> 3.85)
+            let currentMetric = 1.42 + (driftProgress * (3.85 - 1.42));
+            metricEl.innerText = currentMetric.toFixed(2);
+            if (driftProgress > 0 && driftProgress < 1) {
+                metricEl.style.color = "#00b4ff";
+            } else {
+                metricEl.style.color = "#ffffff";
+            }
+
+            // Dim background for final text
+            if (elapsed > 8000) {
+                let dimT = Math.min(1, (elapsed - 8000) / 500);
+                ctx.fillStyle = `rgba(12, 15, 18, ${dimT * 0.65})`;
+                ctx.fillRect(0, 0, width, height);
+            }
+
+            // Draw boundaries (faint circles that expand and blur)
+            clusters.forEach(c => {
+                let cx = c.cx * width;
+                let cy = c.cy * height;
+                
+                // Radius expands by up to 3x, opacity drops
+                let boundaryR = (c.rBase * 1.5) * (1 + driftProgress * 1.8);
+                let alpha = 0.2 * (1 - driftProgress * 0.7);
+                
+                ctx.beginPath();
+                ctx.arc(cx, cy, boundaryR, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(${c.color}, ${alpha})`;
+                ctx.lineWidth = 1;
+                ctx.setLineDash([4, 4]);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            });
+
+            // Draw distance lines FIRST so they are underneath points
+            ctx.lineWidth = 0.5;
+            points.forEach(p => {
+                let cx = p.cluster.cx * width;
+                let cy = p.cluster.cy * height;
+                
+                let currentR = p.baseR * (1 + driftProgress * 2.8);
+                p.currentX = cx + Math.cos(p.angle) * currentR;
+                p.currentY = cy + Math.sin(p.angle) * currentR;
+
+                // Add very subtle micro-drift (jitter) to make it feel alive, but not chaotic
+                p.currentX += Math.sin(elapsed * 0.001 + p.angle) * (1 + driftProgress * 2);
+                p.currentY += Math.cos(elapsed * 0.001 + p.angle) * (1 + driftProgress * 2);
+
+                if (p.hasLine) {
+                    ctx.beginPath();
+                    ctx.moveTo(cx, cy);
+                    ctx.lineTo(p.currentX, p.currentY);
+                    // Line fades slightly as it gets longer
+                    let lineAlpha = 0.3 * (1 - driftProgress * 0.5);
+                    if (elapsed > 8000) lineAlpha *= 0.3; // Dim with screen
+                    ctx.strokeStyle = `rgba(255, 255, 255, ${lineAlpha})`;
+                    ctx.stroke();
+                }
+            });
+
+            // Draw points
+            points.forEach(p => {
+                let alpha = 0.8;
+                if (elapsed > 8000) {
+                    alpha *= 0.4; // Dim with screen
+                }
+
+                ctx.beginPath();
+                ctx.arc(p.currentX, p.currentY, 3, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${p.cluster.color}, ${alpha})`;
+                ctx.fill();
+            });
+
+            // Draw Cluster Centers (small crosses to anchor the visual)
+            clusters.forEach(c => {
+                let cx = c.cx * width;
+                let cy = c.cy * height;
+                let alpha = 0.5;
+                if (elapsed > 8000) alpha *= 0.4;
+
+                ctx.beginPath();
+                ctx.moveTo(cx - 5, cy);
+                ctx.lineTo(cx + 5, cy);
+                ctx.moveTo(cx, cy - 5);
+                ctx.lineTo(cx, cy + 5);
+                ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+            });
+
+            if (elapsed >= 14000) {
+                startTime = null;
+            }
+            requestAnimationFrame(animate);
+        }
+
+        requestAnimationFrame(animate);
+
+    </script>
+</body>
+</html>

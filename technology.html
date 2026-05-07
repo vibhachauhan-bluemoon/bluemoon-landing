@@ -263,7 +263,7 @@
     <!-- HERO -->
     <section class="section hero-section">
         <div class="hero-bg">
-            <iframe src="bg_choice_12_interactive.html"></iframe>
+            <iframe src="./bg_choice_12_interactive.html"></iframe>
         </div>
         <div class="hero-text fade-in">
             Patients and therapies organize into measurable biological structure.
@@ -297,7 +297,7 @@
                 <div class="play-btn-circle"><div class="play-icon"></div></div>
             </div>
             <div class="replay-hint">Click to restart sequence</div>
-            <iframe id="iframe2" src="linkedin_disease_biology_ad.html"></iframe>
+            <iframe id="iframe2" src="./linkedin_disease_biology_ad.html"></iframe>
         </div>
         <div class="key-line fade-in">Shared biology can produce shared response across diseases.</div>
     </section>
@@ -310,7 +310,7 @@
                 <div class="play-btn-circle"><div class="play-icon"></div></div>
             </div>
             <div class="replay-hint">Click to restart sequence</div>
-            <iframe id="iframe3" src="linkedin_ad.html"></iframe>
+            <iframe id="iframe3" src="./linkedin_ad.html"></iframe>
         </div>
     </section>
 
@@ -322,7 +322,7 @@
                 <div class="play-btn-circle"><div class="play-icon"></div></div>
             </div>
             <div class="replay-hint">Click to restart sequence</div>
-            <iframe id="iframe4" src="linkedin_lift_ad.html"></iframe>
+            <iframe id="iframe4" src="./linkedin_lift_ad.html"></iframe>
         </div>
         <div class="small-annotation fade-in">No disease-specific retraining.</div>
         <div class="key-line fade-in" style="margin-top: 30px;">Input required: gene expression only.</div>
@@ -336,7 +336,7 @@
                 <div class="play-btn-circle"><div class="play-icon"></div></div>
             </div>
             <div class="replay-hint">Click to restart sequence</div>
-            <iframe id="iframe5" src="linkedin_waterfall_ad.html"></iframe>
+            <iframe id="iframe5" src="./linkedin_waterfall_ad.html"></iframe>
         </div>
     </section>
 
@@ -348,7 +348,7 @@
                 <div class="play-btn-circle"><div class="play-icon"></div></div>
             </div>
             <div class="replay-hint">Click to restart sequence</div>
-            <iframe id="iframe6" src="linkedin_aging_drift_ad.html"></iframe>
+            <iframe id="iframe6" src="./linkedin_aging_drift_ad.html"></iframe>
         </div>
         <div class="key-line fade-in">Input required: gene expression only.</div>
     </section>
@@ -502,10 +502,8 @@
             if(overlay) overlay.classList.add('hidden');
             
             const iframe = document.getElementById(iframeId);
-            // Quick src swap to force reload and restart animation from 0s
-            const src = iframe.src;
-            iframe.src = '';
-            setTimeout(() => { iframe.src = src; }, 10);
+            // Safely reload the iframe
+            iframe.src = iframe.src;
         }
 
         function restartVideo(container, videoId) {

@@ -8,7 +8,7 @@
 <style>
 :root {
   --bg: #05070c;
-  --accent: #3b82f6;
+  --accent: #0da0e5;
   --surface: #0d1117;
   --border: #30363d;
   --text-primary: #E6EDF3;
@@ -222,7 +222,6 @@ button.secondary:hover {
     width: 100%;
     max-width: 900px;
     margin: auto;
-    
     background: transparent;
 }
 .scatter-container #scatter1 {
@@ -294,7 +293,7 @@ button.secondary:hover {
 
 /* SVG Colors & Transitions */
 .piece-1 path { fill: #9ca3af; transition: fill 1.5s ease; }
-.piece-2 path { fill: #3b82f6; transition: fill 1.5s ease; }
+.piece-2 path { fill: #0da0e5; transition: fill 1.5s ease; }
 .piece-3 path { fill: #22c55e; transition: fill 1.5s ease; }
 .piece-4 path { fill: #f59e0b; transition: fill 1.5s ease; }
 
@@ -302,7 +301,7 @@ button.secondary:hover {
 .failure-bar.unified .piece-2 path,
 .failure-bar.unified .piece-3 path,
 .failure-bar.unified .piece-4 path {
-    fill: #3b82f6;
+    fill: #0da0e5;
 }
 .failure-bar.unified .piece-2,
 .failure-bar.unified .piece-3,
@@ -465,7 +464,7 @@ button.secondary:hover {
 
 .metric.highlight {
     font-size: 36px;
-    color: #3b82f6;
+    color: #0da0e5;
     font-weight: 600;
     line-height: 1.1;
 }
@@ -489,10 +488,10 @@ button.secondary:hover {
 <header class="nav">
     <div class="logo">BlueMoon<span style="color: var(--accent);">Bio</span></div>
     <div class="nav-links">
-        <a onclick="scrollToSection('hero')">Home</a>
-        <a onclick="scrollToSection('product')">Technology</a>
-        <a onclick="scrollToSection('validation')">Validation</a>
-        <a onclick="openDossier()" style="color: var(--accent); font-weight: 600;">Validation Dossier</a>
+        <a onclick="scrollToSection('hero')">Platform</a>
+        <a href="technology.html">Technology</a>
+        <a onclick="scrollToSection('validation')">Evidence</a>
+        <a onclick="openForm()">Contact</a>
     </div>
 </header>
 
@@ -524,19 +523,20 @@ button.secondary:hover {
         </div>
         <div>
             <div style="display:flex; justify-content:space-between; font-size:13px; color:#fff; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">
-                With BlueMoon OS <span style="color:#3b82f6; font-weight:600;">71%</span>
+                With BlueMoon OS <span style="color:var(--accent); font-weight:600;">71%</span>
             </div>
             <div style="width:100%; height:4px; background:rgba(255,255,255,0.1); border-radius:2px; position:relative;">
-                <div style="position:absolute; top:0; left:0; height:100%; width:71%; background:#3b82f6; border-radius:2px; box-shadow: 0 0 12px rgba(59,130,246,0.8);"></div>
+                <div style="position:absolute; top:0; left:0; height:100%; width:71%; background:var(--accent); border-radius:2px; box-shadow: 0 0 12px rgba(13,160,229,0.8);"></div>
             </div>
         </div>
     </div>
 
     <div class="cta" style="margin-top:40px;">
         <button onclick="scrollToSection('validation')">View Validation</button>
-        <button class="secondary" onclick="openForm()">Request Pilot</button>
+        <button class="secondary" onclick="openForm()">Contact Us</button>
     </div>
 </section>
+
 
 <!-- PRODUCT BLOCK -->
 <section id="product" class="section fade-up" style="text-align:center; padding:120px 24px; border-top:1px solid var(--border);">
@@ -552,7 +552,7 @@ button.secondary:hover {
         </div>
         <div class="card glass" style="flex:1; min-width:220px; text-align:left;">
             <h3 style="color:var(--accent); margin-top:0;">Alignment Layer</h3>
-            <p style="color:#E6EDF3;">Position determines response</p>
+            <p style="color:#E6EDF3;">Biological position influences response probability</p>
         </div>
         <div class="card glass" style="flex:1; min-width:220px; text-align:left;">
             <h3 style="color:var(--accent); margin-top:0;">Outcome Layer</h3>
@@ -607,7 +607,7 @@ Higher alignment &rarr; higher response
 
 <!-- VALIDATION STACK -->
 <section id="validation" class="section fade-up" style="padding:120px 24px; text-align:center; border-top:1px solid var(--border);">
-    <h2 style="color:#fff; font-size:36px;">Validation</h2>
+    <h2 style="color:#fff; font-size:36px;">Evidence</h2>
     <p style="margin:auto; max-width:600px; font-size:18px;">
     Evaluated across independent cohorts using a fixed biological representation.
     </p>
@@ -619,47 +619,7 @@ Higher alignment &rarr; higher response
     Treatment outcomes improve as we move from observation to intervention:
     </p>
 
-    <div class="glass" style="margin:80px auto 0 auto; max-width:800px; padding:40px;">
-        <div class="failure-bar">
-            <div class="puzzle-wrapper piece-1">
-                <svg viewBox="0 0 250 130" class="puzzle-svg">
-                    <path d="M 0 30 L 100 30 C 120 30, 110 15, 105 15 C 90 15, 100 0, 125 0 C 150 0, 160 15, 145 15 C 140 15, 130 30, 150 30 L 250 30 L 250 130 L 0 130 Z" />
-                </svg>
-                <div class="puzzle-text">
-                    Baseline
-                    <div class="puzzle-sub">Observed response rate</div>
-                </div>
-            </div>
-            <div class="puzzle-wrapper piece-2">
-                <svg viewBox="0 0 250 130" class="puzzle-svg">
-                    <path d="M 0 30 L 100 30 C 120 30, 110 15, 105 15 C 90 15, 100 0, 125 0 C 150 0, 160 15, 145 15 C 140 15, 130 30, 150 30 L 250 30 L 250 130 L 150 130 C 130 130, 140 115, 145 115 C 160 115, 150 100, 125 100 C 100 100, 90 115, 105 115 C 110 115, 120 130, 100 130 L 0 130 Z" />
-                </svg>
-                <div class="puzzle-text">
-                    Alignment
-                    <div class="puzzle-sub">Selecting patients likely to respond</div>
-                </div>
-            </div>
-            <div class="puzzle-wrapper piece-3">
-                <svg viewBox="0 0 250 130" class="puzzle-svg">
-                    <path d="M 0 30 L 100 30 C 120 30, 110 15, 105 15 C 90 15, 100 0, 125 0 C 150 0, 160 15, 145 15 C 140 15, 130 30, 150 30 L 250 30 L 250 130 L 150 130 C 130 130, 140 115, 145 115 C 160 115, 150 100, 125 100 C 100 100, 90 115, 105 115 C 110 115, 120 130, 100 130 L 0 130 Z" />
-                </svg>
-                <div class="puzzle-text">
-                    Movement
-                    <div class="puzzle-sub">Biological change during treatment</div>
-                </div>
-            </div>
-            <div class="puzzle-wrapper piece-4">
-                <svg viewBox="0 0 250 130" class="puzzle-svg">
-                    <path d="M 0 30 L 250 30 L 250 130 L 150 130 C 130 130, 140 115, 145 115 C 160 115, 150 100, 125 100 C 100 100, 90 115, 105 115 C 110 115, 120 130, 100 130 L 0 130 Z" />
-                </svg>
-                <div class="puzzle-text">
-                    Rerouting
-                    <div class="puzzle-sub">Redirecting non-responders</div>
-                </div>
-            </div>
-        </div>
-        <p class="small" style="margin:25px auto 0 auto; text-align:center; max-width:100%; color:#E6EDF3; font-size:16px;">Each layer explains a different mechanism of response &mdash; from selection to intervention</p>
-    </div>
+
 
 
 
@@ -678,7 +638,7 @@ Higher alignment &rarr; higher response
                         <!-- Median Marker -->
                         <div style="position: absolute; left: 42%; bottom: 12%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; pointer-events: none; z-index: 10;">
                             <div style="color: #9ca3af; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">median</div>
-                            <div style="width:6px; height:6px; border-radius:50%; background:#3b82f6; box-shadow:0 0 10px rgba(59,130,246,0.6);"></div>
+                            <div style="width:6px; height:6px; border-radius:50%; background:var(--accent); box-shadow:0 0 10px rgba(13,160,229,0.6);"></div>
                         </div>
 
                         <!-- Bars -->
@@ -747,7 +707,7 @@ Higher alignment &rarr; higher response
                     <span>max</span>
                 </div>
 
-                <div class="metric highlight">
+                <div class="metric highlight" style="color: var(--accent);">
                     100%
                     <span>cohorts improved</span>
                 </div>
@@ -784,7 +744,7 @@ Higher alignment &rarr; higher response
     </p>
     <div class="cta" style="margin-top:40px;">
         <button onclick="openForm()">Submit Dataset</button>
-        <button class="secondary" onclick="openDossier()">Request Validation Dossier</button>
+        <button class="secondary" onclick="openDossier()">Request Evidence Dossier</button>
         <p class="small" style="margin:25px auto 0 auto; text-align:center; max-width:100%; color: var(--text-muted);">Detailed validation results are shared with qualified partners upon request.</p>
     </div>
 </section>
@@ -989,7 +949,7 @@ if(sCanvas) {
                 sCtx.fillStyle = `rgba(59, 130, 246, ${alpha})`;
                 if (isOrganized) {
                     sCtx.shadowBlur = 15;
-                    sCtx.shadowColor = '#3b82f6';
+                    sCtx.shadowColor = '#0da0e5';
                 } else {
                     sCtx.shadowBlur = 0;
                 }

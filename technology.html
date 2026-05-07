@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technology | BlueMoon OS</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        :root {
+            --bg: #05070c;
+            --accent: #0da0e5;
+            --surface: #0d1117;
+            --border: #30363d;
+            --text-primary: #E6EDF3;
+            --text-muted: #9BA3AF;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .nav-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 40px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: linear-gradient(to bottom, rgba(5,7,12,0.95), transparent);
+            backdrop-filter: blur(5px);
+        }
+
+        .logo { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; cursor: pointer; color: #fff; text-decoration: none; }
+        .logo span { font-weight: 300; opacity: 0.8; }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding: 60px 20px;
+            box-sizing: border-box;
+        }
+
+        .hero-section {
+            border-bottom: none;
+        }
+
+        .hero-text {
+            font-size: 42px;
+            font-weight: 300;
+            max-width: 800px;
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+            z-index: 10;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+        }
+
+        .anim-container {
+            width: 100%;
+            max-width: 1200px;
+            height: 60vh;
+            min-height: 500px;
+            margin: 40px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            pointer-events: none; /* Prevents iframe from stealing scroll */
+        }
+
+        .minimal-copy {
+            font-size: 32px;
+            font-weight: 400;
+            color: var(--text-primary);
+            max-width: 800px;
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+            margin-bottom: 20px;
+            z-index: 10;
+        }
+
+        .key-line {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 20px;
+            z-index: 10;
+        }
+
+        .small-annotation {
+            font-size: 16px;
+            color: var(--text-muted);
+            margin-top: 15px;
+            font-style: italic;
+            z-index: 10;
+        }
+
+        .cta-container {
+            display: flex;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            background: var(--accent);
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            padding: 14px 28px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            transform: translateY(-2px); 
+            box-shadow: 0 0 20px rgba(59,130,246,0.5);
+        }
+        button.secondary {
+            background: rgba(255,255,255,0.05);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        button.secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: none;
+        }
+
+        /* Subtle hero background */
+        .hero-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1;
+            opacity: 0.5;
+            mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+        }
+        
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            cursor: pointer;
+            transition: opacity 0.5s ease;
+        }
+        .play-overlay:hover {
+            background: rgba(0,0,0,0.1);
+        }
+        .play-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .play-btn-circle {
+            width: 70px; height: 70px;
+            background: rgba(59,130,246,0.9);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 0 20px rgba(59,130,246,0.4);
+        }
+        .play-overlay:hover .play-btn-circle {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(59,130,246,0.8);
+        }
+        .play-icon {
+            width: 0; height: 0;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            border-left: 20px solid white;
+            margin-left: 6px; /* optical center */
+        }
+        .replay-hint {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            color: rgba(255,255,255,0.5);
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 10;
+        }
+        .anim-container:hover .replay-hint {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="nav-header">
+        <a href="index.html" class="logo">BlueMoon<span style="color: var(--accent);">Bio</span></a>
+        <div class="nav-links">
+            <a href="index.html">Platform</a>
+            <a href="technology.html">Technology</a>
+            <a href="index.html#validation">Evidence</a>
+            <a href="mailto:partners@bluemoon.bio">Contact</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="section hero-section">
+        <div class="hero-bg">
+            <iframe src="bg_choice_12_interactive.html"></iframe>
+        </div>
+        <div class="hero-text fade-in">
+            Patients and therapies organize into measurable biological structure.
+        </div>
+        <div style="position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); color: var(--text-muted); font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; animation: bounce 2s infinite;">
+            Scroll to Explore
+        </div>
+    </section>
+
+    <!-- SECTION 1 -->
+    <section class="section">
+        <div class="minimal-copy fade-in">Built from real patient transcriptomic cohorts linked to clinical outcomes.</div>
+        <div class="anim-container fade-in" onclick="restartVideo(this, 'video1')">
+            <div class="play-overlay">
+                <div class="play-btn-circle"><div class="play-icon"></div></div>
+            </div>
+            <div class="replay-hint">Click to restart</div>
+            <!-- Broadcast-quality Evidence Suite Animation -->
+            <video id="video1" autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover; background: #fff;">
+                <source src="Evidence_Suite_Animation.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div class="key-line fade-in">Input required: gene expression only.</div>
+    </section>
+
+    <!-- SECTION 2 -->
+    <section class="section">
+        <div class="minimal-copy fade-in">Clinical labels do not fully describe biology.</div>
+        <div class="anim-container fade-in" onclick="restartIframe(this, 'iframe2')">
+            <div class="play-overlay">
+                <div class="play-btn-circle"><div class="play-icon"></div></div>
+            </div>
+            <div class="replay-hint">Click to restart sequence</div>
+            <iframe id="iframe2" src="linkedin_disease_biology_ad.html"></iframe>
+        </div>
+        <div class="key-line fade-in">Shared biology can produce shared response across diseases.</div>
+    </section>
+
+    <!-- SECTION 3 -->
+    <section class="section">
+        <div class="minimal-copy fade-in">Many failed trials still contain biological responders.</div>
+        <div class="anim-container fade-in" onclick="restartIframe(this, 'iframe3')">
+            <div class="play-overlay">
+                <div class="play-btn-circle"><div class="play-icon"></div></div>
+            </div>
+            <div class="replay-hint">Click to restart sequence</div>
+            <iframe id="iframe3" src="linkedin_ad.html"></iframe>
+        </div>
+    </section>
+
+    <!-- SECTION 4 -->
+    <section class="section">
+        <div class="minimal-copy fade-in">Response enrichment emerges from biological alignment.</div>
+        <div class="anim-container fade-in" onclick="restartIframe(this, 'iframe4')">
+            <div class="play-overlay">
+                <div class="play-btn-circle"><div class="play-icon"></div></div>
+            </div>
+            <div class="replay-hint">Click to restart sequence</div>
+            <iframe id="iframe4" src="linkedin_lift_ad.html"></iframe>
+        </div>
+        <div class="small-annotation fade-in">No disease-specific retraining.</div>
+        <div class="key-line fade-in" style="margin-top: 30px;">Input required: gene expression only.</div>
+    </section>
+
+    <!-- SECTION 5 -->
+    <section class="section">
+        <div class="minimal-copy fade-in">Aggregate failure can still contain recoverable biological structure.</div>
+        <div class="anim-container fade-in" onclick="restartIframe(this, 'iframe5')">
+            <div class="play-overlay">
+                <div class="play-btn-circle"><div class="play-icon"></div></div>
+            </div>
+            <div class="replay-hint">Click to restart sequence</div>
+            <iframe id="iframe5" src="linkedin_waterfall_ad.html"></iframe>
+        </div>
+    </section>
+
+    <!-- SECTION 6 -->
+    <section class="section">
+        <div class="minimal-copy fade-in">Biological aging appears as continuous structural drift in transcriptomic space.</div>
+        <div class="anim-container fade-in" onclick="restartIframe(this, 'iframe6')">
+            <div class="play-overlay">
+                <div class="play-btn-circle"><div class="play-icon"></div></div>
+            </div>
+            <div class="replay-hint">Click to restart sequence</div>
+            <iframe id="iframe6" src="linkedin_aging_drift_ad.html"></iframe>
+        </div>
+        <div class="key-line fade-in">Input required: gene expression only.</div>
+    </section>
+    <!-- SECTION 7 -->
+    <section class="section">
+        <div class="minimal-copy fade-in" style="max-width: 800px; margin: 0 auto 60px auto;">Each layer explains a different mechanism of response &mdash; from selection to intervention.</div>
+        <div class="failure-bar">
+            <div class="puzzle-wrapper piece-1">
+                <svg viewBox="0 0 250 130" class="puzzle-svg">
+                    <path d="M 0 30 L 100 30 C 120 30, 110 15, 105 15 C 90 15, 100 0, 125 0 C 150 0, 160 15, 145 15 C 140 15, 130 30, 150 30 L 250 30 L 250 130 L 0 130 Z" />
+                </svg>
+                <div class="puzzle-text">
+                    Baseline
+                    <div class="puzzle-sub">Observed response rate</div>
+                </div>
+            </div>
+            <div class="puzzle-wrapper piece-2">
+                <svg viewBox="0 0 250 130" class="puzzle-svg">
+                    <path d="M 0 30 L 100 30 C 120 30, 110 15, 105 15 C 90 15, 100 0, 125 0 C 150 0, 160 15, 145 15 C 140 15, 130 30, 150 30 L 250 30 L 250 130 L 150 130 C 130 130, 140 115, 145 115 C 160 115, 150 100, 125 100 C 100 100, 90 115, 105 115 C 110 115, 120 130, 100 130 L 0 130 Z" />
+                </svg>
+                <div class="puzzle-text">
+                    Alignment
+                    <div class="puzzle-sub">Selecting patients likely to respond</div>
+                </div>
+            </div>
+            <div class="puzzle-wrapper piece-3">
+                <svg viewBox="0 0 250 130" class="puzzle-svg">
+                    <path d="M 0 30 L 100 30 C 120 30, 110 15, 105 15 C 90 15, 100 0, 125 0 C 150 0, 160 15, 145 15 C 140 15, 130 30, 150 30 L 250 30 L 250 130 L 150 130 C 130 130, 140 115, 145 115 C 160 115, 150 100, 125 100 C 100 100, 90 115, 105 115 C 110 115, 120 130, 100 130 L 0 130 Z" />
+                </svg>
+                <div class="puzzle-text">
+                    Movement
+                    <div class="puzzle-sub">Biological change during treatment</div>
+                </div>
+            </div>
+            <div class="puzzle-wrapper piece-4">
+                <svg viewBox="0 0 250 130" class="puzzle-svg">
+                    <path d="M 0 30 L 250 30 L 250 130 L 150 130 C 130 130, 140 115, 145 115 C 160 115, 150 100, 125 100 C 100 100, 90 115, 105 115 C 110 115, 120 130, 100 130 L 0 130 Z" />
+                </svg>
+                <div class="puzzle-text">
+                    Rerouting
+                    <div class="puzzle-sub">Redirecting non-responders</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- FINAL SECTION -->
+    <section class="section" style="min-height: 60vh; border-bottom: none; justify-content: center;">
+        <h2 class="fade-in" style="font-size: 42px; font-weight: 600; margin-bottom: 12px; letter-spacing: -0.02em;">BlueMoon OS</h2>
+        <div class="fade-in" style="font-size: 20px; color: var(--text-muted); margin-bottom: 50px;">A biological operating system built from transcriptomics.</div>
+        
+        <div class="cta-container fade-in">
+            <button onclick="window.location.href='mailto:partners@bluemoon.bio'">Contact Us</button>
+            <button class="secondary" onclick="window.open('BlueMoonBio_Evaluation_v2.pdf', '_blank')">Evidence Dossier</button>
+        </div>
+    </section>
+
+    <style>
+        /* Real SVG Puzzle Stack Component */
+        .failure-bar {
+            display: flex;
+            flex-direction: column-reverse; /* Stacks DOM elements bottom-to-top visually */
+            align-items: center;
+            width: 250px;
+            margin: 0 auto;
+        }
+
+        .puzzle-wrapper {
+            position: relative;
+            width: 250px;
+            height: 130px;
+            opacity: 0;
+            filter: drop-shadow(0 8px 12px rgba(0,0,0,0.4));
+            transition: filter 1.5s ease;
+        }
+
+        .piece-2, .piece-3, .piece-4 {
+            margin-bottom: -30px; /* Snaps the hole perfectly over the tab below it */
+        }
+
+        /* Initial flying-in scattered state */
+        .piece-1 { transform: translate(-200px, 150px) rotate(-25deg) scale(1.1); z-index: 1; }
+        .piece-2 { transform: translate(250px, 100px) rotate(20deg) scale(1.15); z-index: 2; }
+        .piece-3 { transform: translate(-220px, 50px) rotate(-15deg) scale(1.1); z-index: 3; }
+        .piece-4 { transform: translate(180px, 0px) rotate(25deg) scale(1.2); z-index: 4; }
+
+        /* SVG Colors & Transitions */
+        .piece-1 path { fill: #9ca3af; transition: fill 1.5s ease; }
+        .piece-2 path { fill: var(--accent); transition: fill 1.5s ease; }
+        .piece-3 path { fill: #22c55e; transition: fill 1.5s ease; }
+        .piece-4 path { fill: #f59e0b; transition: fill 1.5s ease; }
+
+        /* Unified System Glow */
+        .failure-bar.unified .piece-2 path,
+        .failure-bar.unified .piece-3 path,
+        .failure-bar.unified .piece-4 path {
+            fill: var(--accent);
+        }
+        .failure-bar.unified .piece-2,
+        .failure-bar.unified .piece-3,
+        .failure-bar.unified .piece-4 {
+            filter: drop-shadow(0 0 25px rgba(13,160,229,0.8));
+        }
+
+        /* Slow magnetic lock-in */
+        .puzzle-wrapper.visible {
+            opacity: 1;
+            transform: translate(0, 0) rotate(0deg) scale(1);
+            transition: all 2.2s cubic-bezier(0.25, 1.2, 0.4, 1);
+        }
+
+        .puzzle-svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .puzzle-text {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+            pointer-events: none;
+        }
+        .piece-1 .puzzle-text { top: 56px; }
+        .piece-2 .puzzle-text, .piece-3 .puzzle-text, .piece-4 .puzzle-text { top: 40px; }
+
+        .puzzle-sub {
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: none;
+            margin-top: 4px;
+            line-height: 1.2;
+            padding: 0 15px;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
+            40% { transform: translateY(-10px) translateX(-50%); }
+            60% { transform: translateY(-5px) translateX(-50%); }
+        }
+    </style>
+
+    <script>
+        function restartIframe(container, iframeId) {
+            const overlay = container.querySelector('.play-overlay');
+            if(overlay) overlay.classList.add('hidden');
+            
+            const iframe = document.getElementById(iframeId);
+            // Quick src swap to force reload and restart animation from 0s
+            const src = iframe.src;
+            iframe.src = '';
+            setTimeout(() => { iframe.src = src; }, 10);
+        }
+
+        function restartVideo(container, videoId) {
+            const overlay = container.querySelector('.play-overlay');
+            if(overlay) overlay.classList.add('hidden');
+
+            const video = document.getElementById(videoId);
+            video.currentTime = 0;
+            video.play();
+        }
+
+        // Simple intersection observer for fade-in animations on scroll
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // Stop observing once it's visible to keep it that way
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.fade-in');
+            elements.forEach(el => observer.observe(el));
+
+            // Puzzle Stack Intersection Observer
+            const failureBar = document.querySelector('.failure-bar');
+            if (failureBar) {
+                const puzzleObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            setTimeout(() => {
+                                const pieces = document.querySelectorAll('.puzzle-wrapper');
+                                pieces.forEach((piece, index) => {
+                                    setTimeout(() => {
+                                        piece.classList.add('visible');
+                                    }, index * 400); // Stagger by 400ms
+                                });
+                                
+                                // Make the pieces unified neon blue after assembly
+                                setTimeout(() => {
+                                    document.querySelector('.failure-bar').classList.add('unified');
+                                }, 2500);
+                            }, 500); // Small delay before starting
+                        }
+                    });
+                }, { threshold: 0.5 });
+                puzzleObserver.observe(failureBar);
+            }
+        });
+    </script>
+</body>
+</html>
